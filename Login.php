@@ -1,31 +1,45 @@
 <?php 
-    session_start();
    include("Config.php");
    
    if($_SERVER["REQUEST_METHOD"] == "POST") {
       // username and password sent from form 
       
-      $myusername = mysqli_real_escape_string($db,$_POST['username']);
-      $mypassword = mysqli_real_escape_string($db,$_POST['password']); 
+      $myusername = $_POST['emailAddress'];
+      $mypassword = $_POST['password']; 
+
+      // $sql = "SELECT userID FROM User WHERE email = 'admin@email.com' and password = 'admin'";
+      $sql = "SELECT * FROM User WHERE email = '$myusername' and password = '$mypassword'";
+      // $sql = "SELECT * FROM User WHERE email = * and password = *";
+
+      $result = mysqli_query( $dataBase, $sql );
+      // $row = mysqli_fetch_array( $result, MYSQLI_ASSOC );
+      // $active = $row['active'];
       
-      $sql = "SELECT id FROM admin WHERE username = '$myusername' and passcode = '$mypassword'";
-      $result = mysqli_query($db,$sql);
-      $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-      $active = $row['active'];
-      
-      $count = mysqli_num_rows($result);
+      $count = mysqli_num_rows( $result );
+
+      // debug_to_console( mysqli_fetch_assoc($result) );
       
       // If result matched $myusername and $mypassword, table row must be 1 row
         
       if($count == 1) {
-         session_register("myusername");
+        session_start();
          $_SESSION['login_user'] = $myusername;
          
-         header("location: welcome.php");
+         header( 'Location: Welcome.php' );
       }else {
          $error = "Your Login Name or Password is invalid";
       }
    }
+
+    function debug_to_console( $data ) {
+        if ( is_array( $data ) )
+            $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
+        else
+            $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
+
+        echo $output;
+    }
+
 ?>
 <html>
    
@@ -52,7 +66,7 @@
             <div style = "margin:30px">
                
                <form action = "" method = "post">
-                  <label>UserName  :</label><input type = "text" name = "username" class = "box"/><br /><br />
+                  <label>Email Address  :</label><input type = "text" name = "emailAddress" class = "box"/><br /><br />
                   <label>Password  :</label><input type = "password" name = "password" class = "box" /><br/><br />
                   <input type = "submit" value = " Submit "/><br />
                </form>
