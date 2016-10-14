@@ -7,38 +7,58 @@
       $myusername = $_POST['emailAddress'];
       $mypassword = $_POST['password']; 
 
-      // $sql = "SELECT userID FROM User WHERE email = 'admin@email.com' and password = 'admin'";
       $sql = "SELECT * FROM User WHERE email = '$myusername' and password = '$mypassword'";
-      // $sql = "SELECT * FROM User WHERE email = * and password = *";
 
       $result = mysqli_query( $dataBase, $sql );
-      // $row = mysqli_fetch_array( $result, MYSQLI_ASSOC );
-      // $active = $row['active'];
-      
       $count = mysqli_num_rows( $result );
 
-      // debug_to_console( mysqli_fetch_assoc($result) );
-      
       // If result matched $myusername and $mypassword, table row must be 1 row
-        
       if($count == 1) {
         session_start();
          $_SESSION['login_user'] = $myusername;
+
+         $typeOfUser = getUserType(mysqli_fetch_row($result));
          
-         header( 'Location: Welcome.php' );
+         navigate( $typeOfUser );
       }else {
          $error = "Your Login Name or Password is invalid";
       }
    }
 
-    function debug_to_console( $data ) {
-        if ( is_array( $data ) )
-            $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
-        else
-            $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
+   function navigate( $typeOfUser ){
+    switch ( $typeOfUser ) {
+        case 0:
+            header( 'Location: Admin.php' );
+            break;
 
-        echo $output;
+        case 1:
+            header( 'Location: Research.php' );
+            break;
+
+        case 2:
+            header( 'Location: Faculty.php' );
+            break;
+
+        case 3:
+            header( 'Location: Student.php' );
+            break;
     }
+   }
+
+
+   function getUserType( $result ){
+        $typeOfUserIndex = 5;
+        return $result[ $typeOfUserIndex ];
+   }
+
+   function debug_to_console( $data ) {
+       if ( is_array( $data ) )
+           $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
+       else
+           $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
+
+       echo $output;
+   }
 
 ?>
 <html>
