@@ -45,7 +45,6 @@
     }
    }
 
-
    function getUserType( $result ){
         $typeOfUserIndex = 5;
         return $result[ $typeOfUserIndex ];
