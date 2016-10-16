@@ -3,33 +3,48 @@
    include("Config.php");
    
    if($_SERVER["REQUEST_METHOD"] == "POST") {
-      $firstName = $_POST['firstNameInput'];
-      $lastName = $_POST['lastNameInput'];
+      $firstName    = $_POST['firstNameInput'];
+      $lastName     = $_POST['lastNameInput'];
       $emailAddress = $_POST['emailInput'];
-      $phoneNumber = $_POST['phoneInput'];
-      $password = $_POST['password1Input'];
-      $confirmPassword = $_POST['password2Input'];
-      $typeOfUser = $_POST['userType'];
-
-  //     INSERT INTO `User`(`firstName`, `lastName`, `email`, `phoneNumber`, `typeOfUser`, `password`) 
-		// VALUES ('admin','admin','admin@email.com','1155783456',0,'admin');
-		// INSERT INTO `Admin`(`adminID`)
-		// VALUES( LAST_INSERT_ID() );
+      $phoneNumber  = $_POST['phoneInput'];
+      $password1    = $_POST['password1Input'];
+      $password2    = $_POST['password2Input'];
+      $typeOfUser   = getCorrectUserType( $_POST['userType'] );
 
       $sql = "INSERT INTO `User`(`firstName`, `lastName`, `email`, `phoneNumber`, `typeOfUser`, `password`)
-      		  VALUES ( '$firstName', '$lastName', '$emailAddress', '$phoneNumber', 0, '$password');";
+      		  VALUES ( '$firstName', '$lastName', '$emailAddress', '$phoneNumber', $typeOfUser, '$password1');";
 
-	  if (mysqli_query($dataBase, $sql)) {
-	  		$adminSql = "INSERT INTO `Admin`(`adminID`)
-      		  			VALUES ( LAST_INSERT_ID() );";
+      switch ($typeOfUser) {
+      	case 0:
+      		if (mysqli_query($dataBase, $sql)) {
+	  			$sql = "INSERT INTO `Admin`(`adminID`)
+      		  				VALUES ( LAST_INSERT_ID() );";
 
-			if (mysqli_query($dataBase, $adminSql)) {
-		    	echo "New record created successfully";
+				if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+				else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
 			}
-			else {
-		    	echo "Error: " . $sql . "<br>" . mysqli_error($dataBase);
+      		break;
+
+  		case 2:
+  			$department   = $_POST['departmentID'];
+
+  			if (mysqli_query($dataBase, $sql)) {
+	  			$sql = "INSERT INTO `Faculty`(`facultyID`, `officeLocation`, `departmentID`, `facultyType`)
+						VALUES ( LAST_INSERT_ID(), 100, $department, 1 );";
+
+				if (mysqli_query($dataBase, $sql)) {
+					$sql = "INSERT INTO `FullTimeFaculty`(`fullTimeFacultyID`)
+							VALUES ( LAST_INSERT_ID() );";
+
+					if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+					else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+				}
 			}
-		}
+			
+  			break;
+      }
+
+	  
       // $count = mysqli_num_rows( $result );
 
       // // If result matched $myusername and $mypassword, table row must be 1 row
@@ -45,48 +60,45 @@
       // }
    }
 
-   // function navigate( $typeOfUser ){
-   //  switch ( $typeOfUser ) {
-   //      case 0:
-   //          header( 'Location: Admin.php' );
-   //          break;
+   function getCorrectUserType( $formType ){
+   		$ftFaculty = 0;
+   		$ptFaculty = 1;
+   		$ftStudent = 2;
+   		$ptStudent = 3;
+   		$admin     = 4;
+   		$research  = 5;
 
-   //      case 1:
-   //          header( 'Location: Research.php' );
-   //          break;
+   		switch ($formType) {
+   			case $ftFaculty:
+   			case $ptFaculty:
+   				return 2;
+   				break;
+   			
+   			case $ftStudent:
+   			case $ptStudent:
+   				return 3;
+   				break;
 
-   //      case 2:
-   //          header( 'Location: Faculty.php' );
-   //          break;
+   			case $admin:
+   				return 0;
+   				break;
 
-   //      case 3:
-   //          header( 'Location: Student.php' );
-   //          break;
-   //  }
-   // }
+   			case $research:
+   				return 1;
+   				break;
+   		}
+   }
 
-   // function getUserType( $result ){
-   //      $typeOfUserIndex = 5;
-   //      return $result[ $typeOfUserIndex ];
-   // }
 
-   // function debug_to_console( $data ) {
-   //     if ( is_array( $data ) )
-   //         $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
-   //     else
-   //         $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
-
-   //     echo $output;
-   // }
 
 ?>
-<html">
+<html>
    
    <head>
 	  <link rel="stylesheet" type="text/css" href="css/admin.css">
 	  <script src="javascript/admin.js"></script>
 	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-      <title>Welcome </title>
+      <title>Admin Page</title>
    </head>
    
    <body>
@@ -98,12 +110,7 @@
 		  <li class="dropdown">
 		    <a href="#" class="dropbtn">Menu</a>
 		    <div class="dropdown-content">
-			  <button type="button" name="searchButton" onclick="javascript:generateNewUserForm()">Add new User</button>
-
-			<!-- 
-		      <form action="" method = "post">
-			    <input type="submit" name="addUser" />
-				</form> -->
+			  <a href=# onclick="javascript:generateNewUserForm()">Add New User</a>
 		    </div>
 		  </li>
 
@@ -113,7 +120,7 @@
       <div id="menuSelect"></div>
       <div id="success">
       		<?php
-      			echo $sql;
+      			echo $typeOfUser;
       		?>
       </div>
    </body>

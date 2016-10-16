@@ -1,27 +1,29 @@
 function generateNewUserForm(){
 	var addFormToThisElement = document.getElementById( "menuSelect" );
 	var formItemsArray = new Array();
+	var isRequired = true;
 
 	var form = document.createElement("form");
 		form.setAttribute('method',"post");
 		form.setAttribute('action'," ");
+		form.setAttribute('id', "newUserForm");
 
-	var firstNameLabel = createLabel( "firstName", "First Name " );
+	var firstNameLabel = createLabel( "firstName", "First Name ", isRequired );
 	addToArray( formItemsArray, firstNameLabel );
 
-	var lastNameLabel = createLabel( "lastName", "Last Name " );
+	var lastNameLabel = createLabel( "lastName", "Last Name ", isRequired );
 	addToArray( formItemsArray, lastNameLabel );
 
-	var emailLabel = createLabel( "email", "Email Address " );
+	var emailLabel = createLabel( "email", "Email Address ", isRequired );
 	addToArray( formItemsArray, emailLabel );
 
 	var phoneNumberLabel = createLabel( "phone", "Phone Number " );
 	addToArray( formItemsArray, phoneNumberLabel );
 
-	var password1Label = createLabel( "password1", "Password " );
+	var password1Label = createLabel( "password1", "Password ", isRequired );
 	addToArray( formItemsArray, password1Label );
 
-	var password2Label = createLabel( "password2", "Confirm Password " );
+	var password2Label = createLabel( "password2", "Confirm Password ", isRequired );
 	addToArray( formItemsArray, password2Label );
 
 	var userTypeRadioButtonArray = createUserTypeRadio( 
@@ -39,6 +41,7 @@ function generateNewUserForm(){
 	var submitButton = document.createElement("input");
 		submitButton.setAttribute('type',"submit");
 		submitButton.setAttribute('value',"Submit");
+		submitButton.setAttribute('id', "submitButton");
 	addToArray( formItemsArray, submitButton );
 
 	appendObjectsToForm( form, formItemsArray );
@@ -46,13 +49,13 @@ function generateNewUserForm(){
 	addFormToThisElement.appendChild( form );
 }
 
-function createLabel( idAttribute, innerText ){	
+function createLabel( idAttribute, innerText, isRequired ){	
 	var returnLabel = document.createElement( "label" );
 		returnLabel.setAttribute( 'id', (idAttribute + "Label") );
 		returnLabel.setAttribute( 'class', "formLabel" );
 		returnLabel.innerText = innerText;
 
-	var input = createInput( idAttribute + "Input" );
+	var input = createInput( idAttribute + "Input", isRequired );
 	var br = document.createElement( "br" ); 
 
 	returnLabel.appendChild( input );
@@ -76,6 +79,10 @@ function createUserTypeRadio(){
 			radioButton.setAttribute( 'value', i );
 			radioButton.setAttribute( 'class', "radioButton");
 
+		if( arguments[i].includes("Faculty") ){
+			radioButton.setAttribute( 'onclick', "additionalFacultyOptions()" );
+		}
+
 		var br = document.createElement( "br" );
 
 		returnLabel.appendChild( radioButton );
@@ -87,10 +94,36 @@ function createUserTypeRadio(){
 	return returnRadioArray;
 }
 
-function createInput( nameAttribute ){
+function additionalFacultyOptions(){
+	var form = document.getElementById( "newUserForm" );
+	var studentRadioButton = document.getElementById( "fullTimeStudentLabel" );
+
+	var departments = document.createElement( "select" );
+		departments.setAttribute('name', "departmentID");
+		departments.setAttribute('id', "deptID");
+
+	var dept1 = document.createElement( "option" );
+		dept1.setAttribute('value', "44412345");
+		dept1.setAttribute('id', "mathDept")
+		dept1.innerText = "Mathematics";
+
+	var dept2 = document.createElement( "option" );
+		dept2.setAttribute('value', "44412347");
+		dept2.innerText = "Art & Art History";
+
+	departments.appendChild( dept1 );
+	departments.appendChild( dept2 );
+
+	form.insertBefore( departments, studentRadioButton );
+}
+
+function createInput( nameAttribute, isRequired ){
 	var returnInput = document.createElement( "input" );
 		returnInput.setAttribute( 'type', "text" );
 		returnInput.setAttribute( 'name', nameAttribute );
+
+	if( isRequired ){ returnInput.setAttribute( 'required', "true" ); }
+
 	return returnInput;
 }
 
