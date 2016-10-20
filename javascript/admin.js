@@ -1,4 +1,5 @@
 function generateNewUserForm(){
+	clearOut();
 	var addFormToThisElement = document.getElementById( "menuSelect" );
 	var formItemsArray = new Array();
 	var isRequired = true;
@@ -37,6 +38,85 @@ function generateNewUserForm(){
 	for( button in userTypeRadioButtonArray ){ 
 		addToArray(formItemsArray, userTypeRadioButtonArray[ button ]);
 	}
+
+	var submitButton = document.createElement("input");
+		submitButton.setAttribute('type',"submit");
+		submitButton.setAttribute('value',"Submit");
+		submitButton.setAttribute('id', "submitButton");
+	addToArray( formItemsArray, submitButton );
+
+	appendObjectsToForm( form, formItemsArray );
+
+	addFormToThisElement.appendChild( form );
+}
+
+function createCourse(){
+	clearOut();
+	var addFormToThisElement = document.getElementById( "menuSelect" );
+	var formItemsArray = new Array();
+	var isRequired = true;
+
+	var form = document.createElement("form");
+		form.setAttribute('method',"post");
+		form.setAttribute('action'," ");
+		form.setAttribute('id', "createCourseForm");
+
+	var departmentIDLabel = createLabel( "departmentID", "Department ID", isRequired );
+	addToArray( formItemsArray, departmentIDLabel );
+
+	var creditHoursLabel = createLabel( "creditHours", "Credit Hours ", isRequired );
+	addToArray( formItemsArray, creditHoursLabel );
+
+	var courseNameLabel = createLabel( "courseName", "Email Address ", isRequired );
+	addToArray( formItemsArray, courseNameLabel );
+
+	var textbookLabel = createLabel( "textbook", "Textbook " );
+	addToArray( formItemsArray, textbookLabel );
+
+	var descriptionLabel = createLabel( "description", "Description ", isRequired );
+	addToArray( formItemsArray, descriptionLabel );
+
+	var courseCodeLabel = createLabel( "courseCode", "Course Code ", isRequired );
+	addToArray( formItemsArray, courseCodeLabel );
+
+	var submitButton = document.createElement("input");
+		submitButton.setAttribute('type',"submit");
+		submitButton.setAttribute('value',"Submit");
+		submitButton.setAttribute('id', "submitButton");
+	addToArray( formItemsArray, submitButton );
+
+	appendObjectsToForm( form, formItemsArray );
+
+	addFormToThisElement.appendChild( form );
+}
+
+
+function createSection(){
+	clearOut();
+	var addFormToThisElement = document.getElementById( "menuSelect" );
+	var formItemsArray = new Array();
+	var isRequired = true;
+
+	var form = document.createElement("form");
+		form.setAttribute('method',"post");
+		form.setAttribute('action'," ");
+		form.setAttribute('id', "createSectionForm");
+
+	var courseIDLabel = createLabel( "courseID", "Course ID", isRequired );
+	addToArray( formItemsArray, courseIDLabel );
+
+	var termIDLabel = createLabel( "termID", "Term ", isRequired );
+	addToArray( formItemsArray, termIDLabel );
+
+	var timeslotIDLabel = createLabel( "timeSlot", "Timeslot", isRequired );
+	addToArray( formItemsArray, timeslotIDLabel );
+
+	var roomIDLabel = createLabel( "roomID", "Room ID" , isRequired);
+	addToArray( formItemsArray, roomIDLabel );
+
+	var facultyIDLabel = createLabel( "facultyID", "Faculty ID", isRequired );
+	addToArray( formItemsArray, facultyIDLabel );
+
 
 	var submitButton = document.createElement("input");
 		submitButton.setAttribute('type',"submit");
@@ -145,4 +225,8 @@ function camelize(str) {
   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
     return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
   }).replace(/\s+/g, '');
+}
+
+function clearOut(){
+	document.getElementById( "menuSelect" ).innerHTML = "";
 }
