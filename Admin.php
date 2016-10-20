@@ -3,6 +3,7 @@
    include("Config.php");
    
    if($_SERVER["REQUEST_METHOD"] == "POST") {
+      if($_POST['hiddenButton'] == 0){
       $firstName    = $_POST['firstNameInput'];
       $lastName     = $_POST['lastNameInput'];
       $emailAddress = $_POST['emailInput'];
@@ -12,39 +13,78 @@
       $typeOfUser   = getCorrectUserType( $_POST['userType'] );
 
       $sql = "INSERT INTO `User`(`firstName`, `lastName`, `email`, `phoneNumber`, `typeOfUser`, `password`)
-      		  VALUES ( '$firstName', '$lastName', '$emailAddress', '$phoneNumber', $typeOfUser, '$password1');";
+              VALUES ( '$firstName', '$lastName', '$emailAddress', '$phoneNumber', $typeOfUser, '$password1');";
 
       switch ($typeOfUser) {
-      	case 0:
-      		if (mysqli_query($dataBase, $sql)) {
-	  			$sql = "INSERT INTO `Admin`(`adminID`)
-      		  				VALUES ( LAST_INSERT_ID() );";
+         case 0:
+            if (mysqli_query($dataBase, $sql)) {
+            $sql = "INSERT INTO `Admin`(`adminID`)
+                        VALUES ( LAST_INSERT_ID() );";
 
-				if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-				else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
-			}
-      		break;
+            if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+            else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+         }
+            break;
 
-  		case 2:
-  			$department   = $_POST['departmentID'];
+      case 2:
+         $department   = $_POST['departmentID'];
 
-  			if (mysqli_query($dataBase, $sql)) {
-	  			$sql = "INSERT INTO `Faculty`(`facultyID`, `officeLocation`, `departmentID`, `facultyType`)
-						VALUES ( LAST_INSERT_ID(), 100, $department, 1 );";
+         if (mysqli_query($dataBase, $sql)) {
+            $sql = "INSERT INTO `Faculty`(`facultyID`, `officeLocation`, `departmentID`, `facultyType`)
+                  VALUES ( LAST_INSERT_ID(), 100, $department, 1 );";
 
-				if (mysqli_query($dataBase, $sql)) {
-					$sql = "INSERT INTO `FullTimeFaculty`(`fullTimeFacultyID`)
-							VALUES ( LAST_INSERT_ID() );";
+            if (mysqli_query($dataBase, $sql)) {
+               $sql = "INSERT INTO `FullTimeFaculty`(`fullTimeFacultyID`)
+                     VALUES ( LAST_INSERT_ID() );";
 
-					if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-					else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
-				}
-			}
-			
-  			break;
+               if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+               else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+            }
+         }
+         
+         break;
       }
+}
 
-	  
+if($_POST['hiddenButton'] == 1){
+
+      $department    = $_POST['departmentIDInput'];
+      $creditHours     = $_POST['creditHoursInput'];
+      $courseName = $_POST['courseNameInput'];
+      $textbook  = $_POST['textbookInput'];
+      $description    = $_POST['descriptionInput'];
+      $courseCode    = $_POST['courseCodeInput'];
+      
+         $sql = "INSERT INTO `Course`(`departmentID`, `creditHours`, `courseName`, `description`, `textBook`, `courseCode`)
+              VALUES ( '$department', '$creditHours', '$courseName', '$description', '$textbook', '$courseCode');";
+
+         if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+            else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+   }
+
+if($_POST['hiddenButton'] == 2){
+
+      $course    = $_POST['courseIDInput'];
+      $term     = $_POST['termIDInput'];
+      $timeslot = $_POST['timeslotInput'];
+      $room  = $_POST['roomIDInput'];
+      $faculty    = $_POST['facultyIDInput'];
+      $sectionNum    = $_POST['sectionNumInput'];
+      
+
+      $sqler ="SELECT buildingID FROM `Room` WHERE `roomID`= 1";
+
+      if($building =   mysqli_query($dataBase, $sqler)){ echo "Building was found"; }
+            else { echo "Error: " . $sqler . "<br>" . mysqli_error($dataBase); }
+            
+            $row = mysqli_fetch_assoc($building);
+            
+         $sql = "INSERT INTO `Section`(`courseID`, `sectionNum`, `timeslotID`, `termID`, `buildingID`, `roomID`, `facultyID`)
+              VALUES ( '$course', '$sectionNum', '$timeslot', '$term', '$row[0]', '$room' , '$faculty');";
+
+         if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+            else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+   }     
       // $count = mysqli_num_rows( $result );
 
       // // If result matched $myusername and $mypassword, table row must be 1 row
@@ -61,32 +101,32 @@
    }
 
    function getCorrectUserType( $formType ){
-   		$ftFaculty = 0;
-   		$ptFaculty = 1;
-   		$ftStudent = 2;
-   		$ptStudent = 3;
-   		$admin     = 4;
-   		$research  = 5;
+         $ftFaculty = 0;
+         $ptFaculty = 1;
+         $ftStudent = 2;
+         $ptStudent = 3;
+         $admin     = 4;
+         $research  = 5;
 
-   		switch ($formType) {
-   			case $ftFaculty:
-   			case $ptFaculty:
-   				return 2;
-   				break;
-   			
-   			case $ftStudent:
-   			case $ptStudent:
-   				return 3;
-   				break;
+         switch ($formType) {
+            case $ftFaculty:
+            case $ptFaculty:
+               return 2;
+               break;
+            
+            case $ftStudent:
+            case $ptStudent:
+               return 3;
+               break;
 
-   			case $admin:
-   				return 0;
-   				break;
+            case $admin:
+               return 0;
+               break;
 
-   			case $research:
-   				return 1;
-   				break;
-   		}
+            case $research:
+               return 1;
+               break;
+         }
    }
 
 
@@ -95,33 +135,35 @@
 <html>
    
    <head>
-	  <link rel="stylesheet" type="text/css" href="css/admin.css">
-	  <script src="javascript/admin.js"></script>
-	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+     <link rel="stylesheet" type="text/css" href="css/admin.css">
+     <script src="javascript/admin.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
       <title>Admin Page</title>
    </head>
    
    <body>
       <h1>Welcome <?php echo $login_session; ?></h1> 
 
-     	<ul>
-		  <li><a class="active" href="Admin.php">Home</a></li>
+      <ul>
+        <li><a class="active" href="Admin.php">Home</a></li>
 
-		  <li class="dropdown">
-		    <a href="#" class="dropbtn">Menu</a>
-		    <div class="dropdown-content">
-			  <a href=# onclick="javascript:generateNewUserForm()">Add New User</a>
-		    </div>
-		  </li>
+        <li class="dropdown">
+          <a href="#" class="dropbtn">Menu</a>
+          <div class="dropdown-content">
+           <a href=# onclick="javascript:generateNewUserForm()">Add New User</a>
+           <a href=# onclick="javascript:createCourse()">Add New Course</a>
+           <a href=# onclick="javascript:createSection()">Add New Section</a>
+          </div>
+        </li>
 
-		  <li><a class = "active" href = "Logout.php">Sign Out</a></li>
-		</ul>
+        <li><a class = "active" href = "Logout.php">Sign Out</a></li>
+      </ul>
       
       <div id="menuSelect"></div>
       <div id="success">
-      		<?php
-      			echo $typeOfUser;
-      		?>
+            <?php
+               echo $typeOfUser;
+            ?>
       </div>
    </body>
    

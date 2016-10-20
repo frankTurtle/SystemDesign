@@ -39,6 +39,13 @@ function generateNewUserForm(){
 		addToArray(formItemsArray, userTypeRadioButtonArray[ button ]);
 	}
 
+	var hiddenButton = document.createElement("input");
+		hiddenButton.setAttribute('type',"hidden");
+		hiddenButton.setAttribute('value',"0");
+                hiddenButton.setAttribute("name", "hiddenButton");
+                hiddenButton.setAttribute('id', "hiddenButton");
+	addToArray( formItemsArray, hiddenButton );
+
 	var submitButton = document.createElement("input");
 		submitButton.setAttribute('type',"submit");
 		submitButton.setAttribute('value',"Submit");
@@ -67,7 +74,7 @@ function createCourse(){
 	var creditHoursLabel = createLabel( "creditHours", "Credit Hours ", isRequired );
 	addToArray( formItemsArray, creditHoursLabel );
 
-	var courseNameLabel = createLabel( "courseName", "Email Address ", isRequired );
+	var courseNameLabel = createLabel( "courseName", "Course Name", isRequired );
 	addToArray( formItemsArray, courseNameLabel );
 
 	var textbookLabel = createLabel( "textbook", "Textbook " );
@@ -79,10 +86,18 @@ function createCourse(){
 	var courseCodeLabel = createLabel( "courseCode", "Course Code ", isRequired );
 	addToArray( formItemsArray, courseCodeLabel );
 
+	var hiddenButton = document.createElement("input");
+		hiddenButton.setAttribute('type',"hidden");
+                hiddenButton.setAttribute("name", "hiddenButton");
+		hiddenButton.setAttribute('value',"1");
+		hiddenButton.setAttribute('id', "hiddenButton");
+	addToArray( formItemsArray, hiddenButton );
+
 	var submitButton = document.createElement("input");
 		submitButton.setAttribute('type',"submit");
 		submitButton.setAttribute('value',"Submit");
 		submitButton.setAttribute('id', "submitButton");
+
 	addToArray( formItemsArray, submitButton );
 
 	appendObjectsToForm( form, formItemsArray );
@@ -104,6 +119,9 @@ function createSection(){
 
 	var courseIDLabel = createLabel( "courseID", "Course ID", isRequired );
 	addToArray( formItemsArray, courseIDLabel );
+        
+        var sectionNumLabel = createLabel( "sectionNum", "Section Number" , isRequired);
+	addToArray( formItemsArray, sectionNumLabel );
 
 	var termIDLabel = createLabel( "termID", "Term ", isRequired );
 	addToArray( formItemsArray, termIDLabel );
@@ -116,6 +134,13 @@ function createSection(){
 
 	var facultyIDLabel = createLabel( "facultyID", "Faculty ID", isRequired );
 	addToArray( formItemsArray, facultyIDLabel );
+
+	var hiddenButton = document.createElement("input");
+		hiddenButton.setAttribute('type',"hidden");
+                hiddenButton.setAttribute("name", "hiddenButton");
+		hiddenButton.setAttribute('value',"2");
+		hiddenButton.setAttribute('id', "hiddenButton");
+	addToArray( formItemsArray, hiddenButton );
 
 
 	var submitButton = document.createElement("input");
