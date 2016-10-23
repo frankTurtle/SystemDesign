@@ -60,6 +60,39 @@
                   }
                }
                break;
+
+            case 3:
+               if (mysqli_query($dataBase, $sql)) {
+                  if( $userType == 2 ){
+                     $sql = "INSERT INTO `Student`(`studentID`, `studentType` )
+                           VALUES ( LAST_INSERT_ID(), 1 );";
+
+                     if (mysqli_query($dataBase, $sql)) {
+                        $sql = "INSERT INTO `FullTimeStudent`(`fullTimeStudentID`)
+                              VALUES ( LAST_INSERT_ID() );";
+
+                        if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+                        else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+                     }
+                     else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }   
+                  }
+
+                  if( $userType == 1 ){
+                     $sql = "INSERT INTO `Student`(`studentID`, `studentType` )
+                           VALUES ( LAST_INSERT_ID(), 0 );";
+
+                     if (mysqli_query($dataBase, $sql)) {
+                        $sql = "INSERT INTO `PartTimeStudent`(`partTimeStudentID`)
+                              VALUES ( LAST_INSERT_ID() );";
+
+                        if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+                        else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+                     }
+                     else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }   
+                  }
+               }
+               break;
+
          }
       }
 
@@ -108,10 +141,7 @@
                $sql = "INSERT INTO `Prerequisites`(`prerequisiteID`, `courseID`)
                         VALUES ( '$courseID3', '$lastID' );";
 
-               if (!mysqli_query($dataBase, $sql)) {  
-                  echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); 
-                  $printSuccess = False;
-               }
+               if (!mysqli_query($dataBase, $sql)) {  echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
                else{ $printSuccess = True; }
             }
          }
