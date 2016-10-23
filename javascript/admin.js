@@ -11,6 +11,28 @@ function unhideDepartmentList(){
 }
 
 
+var counter = 0;
+
+function addPrerequisite( elementToAppendTo ){
+	 var limit = 3;
+
+     if (counter == limit)  {
+          alert("You have reached the limit of adding " + counter + " inputs");
+     }
+     else {
+     		for( var i = counter; i < limit; i++ ){
+     			var select = document.getElementById( 'prerequisite' + (i+1) );
+
+     			if( select.style.display == 'none' ){
+     				select.setAttribute('style', 'display:');
+     				counter++;
+     				break;
+     			}
+     		}
+     }
+}
+
+
 // function generateNewUserForm(){
 // 	clearOut();
 // 	var addFormToThisElement = document.getElementById( "menuSelect" );

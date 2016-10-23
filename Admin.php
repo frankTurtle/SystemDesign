@@ -64,18 +64,60 @@
       }
 
       if($_POST['hiddenButton'] == 1){
-         $department  = $_POST['departmentIDInput'];
+         $department  = $_POST['departmentID'];
          $creditHours = $_POST['creditHoursInput'];
          $courseName  = $_POST['courseNameInput'];
          $textbook    = $_POST['textbookInput'];
          $description = $_POST['descriptionInput'];
          $courseCode  = $_POST['courseCodeInput'];
+
+         $printSuccess = False;
          
          $sql = "INSERT INTO `Course`(`departmentID`, `creditHours`, `courseName`, `description`, `textBook`, `courseCode`)
                  VALUES ( '$department', '$creditHours', '$courseName', '$description', '$textbook', '$courseCode');";
 
-         if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-         else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+         if (mysqli_query($dataBase, $sql)) {
+            $courseID1 = $_POST['prerequisite1'];
+            $courseID2 = $_POST['prerequisite2'];
+            $courseID3 = $_POST['prerequisite3'];
+            $lastID = mysqli_insert_id($dataBase);
+
+            if ($courseID1 != 'Prerequisite One'){
+               $sql = "INSERT INTO `Prerequisites`(`prerequisiteID`, `courseID`)
+                        VALUES ( '$courseID1', '$lastID' );";
+
+               if (!mysqli_query($dataBase, $sql)) {  
+                  echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); 
+                  $printSuccess = False;
+               }
+               else{ $printSuccess = True; }
+            }
+
+            if ($courseID2 != 'Prerequisite Two'){
+               $sql = "INSERT INTO `Prerequisites`(`prerequisiteID`, `courseID`)
+                        VALUES ( '$courseID2', '$lastID' );";
+
+               if (!mysqli_query($dataBase, $sql)) {  
+                  echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); 
+                  $printSuccess = False;
+               }
+               else{ $printSuccess = True; }
+            }
+
+            if ($courseID3 != 'Prerequisite Three'){
+               $sql = "INSERT INTO `Prerequisites`(`prerequisiteID`, `courseID`)
+                        VALUES ( '$courseID3', '$lastID' );";
+
+               if (!mysqli_query($dataBase, $sql)) {  
+                  echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); 
+                  $printSuccess = False;
+               }
+               else{ $printSuccess = True; }
+            }
+         }
+
+         if ( $printSuccess ) { echo "New record created successfully"; }
+         else { echo "Error: Record not created, try again later"; }
       }
 
       if($_POST['hiddenButton'] == 2){
@@ -177,6 +219,7 @@
             </select>
 
             <select id = 'departments' style='display:none;' name='departmentID'>
+               <option selected="selected">Choose A Department</option>
                <?
                   $sql = "SELECT * FROM Department";
                   $result = mysqli_query($dataBase, $sql);
@@ -196,29 +239,66 @@
       <button class="accordion">Add New Course</button>
       <div class="panel">
         <form method="post" action=" " id="createCourseForm">
-            <label id="departmentIDLabel" class="formLabel">Department ID
-               <input type="text" name="departmentIDInput" required="true"><br>
-            </label>
+            <select id = 'departments' name='departmentID'>
+               <option selected="selected">Choose A Department</option>
+               <?
+                  $sql = "SELECT * FROM Department";
+                  $result = mysqli_query($dataBase, $sql);
 
-            <label id="creditHoursLabel" class="formLabel">Credit Hours 
-               <input type="text" name="creditHoursInput" required="true"><br>
-            </label>
+                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+                  foreach ($rows as $row) { 
+                     print "<option value='" . $row['departmentID'] . "'>" . $row['deptName'] . "</option>";
+                  }
+               ?>
+            </select>
 
-            <label id="courseNameLabel" class="formLabel">Email Address 
-               <input type="text" name="courseNameInput" required="true"><br>
-            </label>
+            <input type="text" name="creditHoursInput" placeholder="Credit Hours" required="true"><br>
+            <input type="text" name="courseNameInput" placeholder="Course Name" required="true"><br>
+            <input type="text" name="textbookInput" placeholder="Textbook"><br>
+            <input type="textarea" name="descriptionInput" placeholder="Description" required="true"><br>
+            <input type="text" name="courseCodeInput" placeholder="Course Code" required="true"><br>
 
-            <label id="textbookLabel" class="formLabel">Textbook 
-               <input type="text" name="textbookInput"><br>
-            </label>
+            <select id='prerequisite1' name='prerequisite1' style='display:none;'>
+               <option selected="selected">Prerequisite One</option>
+               <?
+                  $sql = "SELECT courseID, courseName FROM Course";
+                  $result = mysqli_query($dataBase, $sql);
 
-            <label id="descriptionLabel" class="formLabel">Description 
-               <input type="text" name="descriptionInput" required="true"><br>
-            </label>
+                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+                  foreach ($rows as $row) { 
+                     print "<option value='" . $row['courseID'] . "'>" . $row['courseName'] . "</option>";
+                  }
+               ?>
+            </select>
 
-            <label id="courseCodeLabel" class="formLabel">Course Code 
-               <input type="text" name="courseCodeInput" required="true"><br>
-            </label>
+            <select id='prerequisite2' name='prerequisite2' style='display:none;'>
+               <option selected="selected">Prerequisite Two</option>
+               <?
+                  $sql = "SELECT courseID, courseName FROM Course";
+                  $result = mysqli_query($dataBase, $sql);
+
+                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+                  foreach ($rows as $row) { 
+                     print "<option value='" . $row['courseID'] . "'>" . $row['courseName'] . "</option>";
+                  }
+               ?>
+            </select>
+
+            <select id='prerequisite3' name='prerequisite3' style='display:none;'>
+               <option selected="selected">Prerequisite Three</option>
+               <?
+                  $sql = "SELECT courseID, courseName FROM Course";
+                  $result = mysqli_query($dataBase, $sql);
+
+                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+                  foreach ($rows as $row) { 
+                     print "<option value='" . $row['courseID'] . "'>" . $row['courseName'] . "</option>";
+                  }
+               ?>
+            </select>
+            
+
+            <input type="button" value="Add a Prerequisite" onClick="addPrerequisite('appendToMe');" id="prerequisiteButton">
 
             <input type="hidden" value="1" name="hiddenButton" id="hiddenButton">
             <input type="submit" value="Submit" id="submitButton">

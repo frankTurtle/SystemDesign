@@ -178,7 +178,7 @@ header {
   letter-spacing: 7px;
 }*/
 
-#newUserForm {
+#newUserForm, #createCourseForm {
   position: relative;
   width: 500px;
   margin: 50px auto 100px auto;
@@ -236,7 +236,7 @@ textarea:hover {
   color: #e2dedb;
 }
 
-#submitButton {
+#submitButton, #prerequisiteButton {
   width: 470px;
   
   /*margin: -5px 0px 0px 0px;*/
@@ -251,6 +251,6 @@ textarea:hover {
   border: solid 1px #b3aca7;
 }
 
-#submitButton:hover {
+#submitButton:hover, #prerequisiteButton:hover {
   color: #e2dedb;
 }
