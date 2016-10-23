@@ -153,20 +153,20 @@
       if($_POST['hiddenButton'] == 2){
          $course     = $_POST['courseIDInput'];
          $term       = $_POST['termIDInput'];
-         $timeslot   = $_POST['timeslotInput'];
+         $timeslot   = $_POST['timeSlotInput'];
          $room       = $_POST['roomIDInput'];
          $faculty    = $_POST['facultyIDInput'];
          $sectionNum = $_POST['sectionNumInput'];
          
-         $sqler ="SELECT buildingID FROM `Room` WHERE `roomID`= 1";
+        // $sqler ="SELECT buildingID FROM `Room` WHERE `roomID`= 1";
 
-         if($building =   mysqli_query($dataBase, $sqler)){ echo "Building was found"; }
-         else { echo "Error: " . $sqler . "<br>" . mysqli_error($dataBase); }
+        // if($building =   mysqli_query($dataBase, $sqler)){ echo "Building was found"; }
+        // else { echo "Error: " . $sqler . "<br>" . mysqli_error($dataBase); }
                
-         $row = mysqli_fetch_assoc($building);
+         //$row = mysqli_fetch_assoc($building);
                
-         $sql = "INSERT INTO `Section`(`courseID`, `sectionNum`, `timeslotID`, `termID`, `buildingID`, `roomID`, `facultyID`)
-                 VALUES ( '$course', '$sectionNum', '$timeslot', '$term', '$row[0]', '$room' , '$faculty');";
+         $sql = "INSERT INTO `Section`(`courseID`, `sectionNum`, `timeslotID`, `termID`, `roomID`, `facultyID`)
+                 VALUES ( '$course', '$sectionNum', '$timeslot', '$term', '$room' , '$faculty');";
 
          if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
          else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
@@ -340,6 +340,10 @@
         <form method="post" action=" " id="createSectionForm">
             <label id="courseIDLabel" class="formLabel">Course ID 
                <input type="text" name="courseIDInput" required="true"><br>
+            </label>
+
+            <label id="sectionNumLabel" class="formLabel">Section Num 
+               <input type="text" name="sectionNumInput" required="true"><br>
             </label>
 
             <label id="termIDLabel" class="formLabel">Term 
