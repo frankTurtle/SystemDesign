@@ -10,7 +10,8 @@
          $phoneNumber  = $_POST['phoneInput'];
          $password1    = $_POST['password1Input'];
          $password2    = $_POST['password2Input'];
-         $typeOfUser   = getCorrectUserType( $_POST['userType'] );
+         $userType     = $_POST['userType'];
+         $typeOfUser   = getCorrectUserType( $userType );
 
          $sql = "INSERT INTO `User`(`firstName`, `lastName`, `email`, `phoneNumber`, `typeOfUser`, `password`)
                  VALUES ( '$firstName', '$lastName', '$emailAddress', '$phoneNumber', $typeOfUser, '$password1');";
@@ -30,17 +31,33 @@
                $department = $_POST['departmentID'];
 
                if (mysqli_query($dataBase, $sql)) {
-                  $sql = "INSERT INTO `Faculty`(`facultyID`, `officeLocation`, `departmentID`, `facultyType`)
-                        VALUES ( LAST_INSERT_ID(), 100, $department, 1 );";
+                  if( $userType == 0 ){
+                     $sql = "INSERT INTO `Faculty`(`facultyID`, `officeLocation`, `departmentID`, `facultyType`)
+                           VALUES ( LAST_INSERT_ID(), 100, $department, 1 );";
 
-                  if (mysqli_query($dataBase, $sql)) {
-                     $sql = "INSERT INTO `FullTimeFaculty`(`fullTimeFacultyID`)
-                           VALUES ( LAST_INSERT_ID() );";
+                     if (mysqli_query($dataBase, $sql)) {
+                        $sql = "INSERT INTO `FullTimeFaculty`(`fullTimeFacultyID`)
+                              VALUES ( LAST_INSERT_ID() );";
 
-                     if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-                     else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+                        if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+                        else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+                     }
+                     else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }   
                   }
-                  else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+
+                  if( $userType == 1 ){
+                     $sql = "INSERT INTO `Faculty`(`facultyID`, `officeLocation`, `departmentID`, `facultyType`)
+                           VALUES ( LAST_INSERT_ID(), 100, $department, 0 );";
+
+                     if (mysqli_query($dataBase, $sql)) {
+                        $sql = "INSERT INTO `PartTimeFaculty`(`partTimeFacultyID`)
+                              VALUES ( LAST_INSERT_ID() );";
+
+                        if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+                        else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+                     }
+                     else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }   
+                  }
                }
                break;
          }
@@ -159,7 +176,7 @@
                <option value="5">Research Office</option>
             </select>
 
-            <select id = 'departments' style='display:none;'>
+            <select id = 'departments' style='display:none;' name='departmentID'>
                <?
                   $sql = "SELECT * FROM Department";
                   $result = mysqli_query($dataBase, $sql);
@@ -171,32 +188,8 @@
                ?>
             </select>
 
-              <!-- <label id="fullTimeFacultyLabel" class="radioLabel">Full Time Faculty 
-                  <input type="radio" name="userType" value="0" class="radioButton" onclick="additionalFacultyOptions()"><br>
-              </label>
-
-              <label id="partTimeFacultyLabel" class="radioLabel">Part Time Faculty
-                    <input type="radio" name="userType" value="1" class="radioButton" onclick="additionalFacultyOptions()"><br>
-              </label>
-
-              <label id="fullTimeStudentLabel" class="radioLabel">Full Time Student
-                  <input type="radio" name="userType" value="2" class="radioButton"><br>
-              </label>
-
-              <label id="partTimeStudentLabel" class="radioLabel">Part Time Student
-                  <input type="radio" name="userType" value="3" class="radioButton"><br>
-              </label>
-
-              <label id="administratorLabel" class="radioLabel">Administrator
-                  <input type="radio" name="userType" value="4" class="radioButton"><br>
-              </label>
-
-              <label id="researchOfficeLabel" class="radioLabel">Research Office
-                  <input type="radio" name="userType" value="5" class="radioButton"><br>
-              </label> -->
-
-              <input type="hidden" value="0" name="hiddenButton" id="hiddenButton">
-              <input type="submit" value="Submit" id="submitButton">
+            <input type="hidden" value="0" name="hiddenButton" id="hiddenButton">
+            <input type="submit" value="Submit" id="submitButton">
          </form>
       </div>
 
