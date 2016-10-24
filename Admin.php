@@ -27,6 +27,16 @@
                }
                break;
 
+            case 1:
+               if (mysqli_query($dataBase, $sql)) {
+                  $sql = "INSERT INTO `Research`(`researchID`)
+                           VALUES ( LAST_INSERT_ID() );";
+
+                  if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+                  else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+               }
+               break;
+
             case 2:
                $department = $_POST['departmentID'];
 
