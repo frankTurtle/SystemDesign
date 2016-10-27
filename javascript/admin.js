@@ -32,6 +32,33 @@ function addPrerequisite( elementToAppendTo ){
      }
 }
 
+function toggleElement(){
+	for(var i = 0; i < arguments.length; i++) {
+		if( document.getElementById( arguments[i] ) == null ){ 
+			hideElement( arguments[i].id ); 
+			continue;
+	 	}
+		if( document.getElementById( arguments[i] ).style.display == ''){
+			hideElement( arguments[i] );
+		}
+		else{
+			showElement( arguments[i] );
+		}
+	}
+}
+
+function hideElement( elementID ){
+    document.getElementById( elementID ).style.display = 'none';   
+}
+
+function showElement( elementID ){
+	document.getElementById( elementID ).style.display = '';
+}
+
+function success(){
+	var success = getElementById( 'alertSuccess' );
+	success.innerHTML = '<span class="closebtn">&times;</span><strong>Success!</strong> New record created successfully!';
+}
 
 // function generateNewUserForm(){
 // 	clearOut();

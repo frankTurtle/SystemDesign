@@ -69,7 +69,7 @@ button.accordion.active, button.accordion:hover {
 /* Style the accordion panel. Note: hidden by default */
 div.panel {
     padding: 0 18px;
-    background-color: white;
+    background-color: #707070;
     max-height: 0;
     overflow: hidden;
     transition: 0.6s ease-in-out;
@@ -83,15 +83,10 @@ div.panel.show {
 }
 
 
-
-
-
-
-
 @import url(http://fonts.googleapis.com/css?family=Lato:100,300,400);
 
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-  color: #aca49c;
+  color: #707070;
   font-size: 0.875em;
 }
 
@@ -100,7 +95,7 @@ input:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholde
 }
 
 input::-moz-placeholder, textarea::-moz-placeholder {
-  color: #aca49c;
+  color: #707070;
   font-size: 0.875em;
 }
 
@@ -109,7 +104,7 @@ input:focus::-moz-placeholder, textarea:focus::-moz-placeholder {
 }
 
 input::placeholder, textarea::placeholder {
-  color: #aca49c;
+  color: #707070;
   font-size: 0.875em;
 }
 
@@ -118,7 +113,7 @@ input:focus::placeholder, textarea::focus:placeholder {
 }
 
 input::-ms-placeholder, textarea::-ms-placeholder {
-  color: #aca49c;
+  color: #707070;
   font-size: 0.875em;
 }
 
@@ -164,7 +159,7 @@ input:hover:focus::-ms-placeholder, textarea:hover::focus:-ms-placeholder {
   color: #cbc6c1;
 }
 
-/*body {
+body {
   font-family: 'Lato', sans-serif;
   background: #e2dedb;
   color: #b3aca7;
@@ -176,9 +171,9 @@ header {
   font-size: 2.3em;
   text-align: center;
   letter-spacing: 7px;
-}*/
+}
 
-#newUserForm, #createCourseForm {
+#newUserForm, #createCourseForm, #searchUserForm {
   position: relative;
   width: 500px;
   margin: 50px auto 100px auto;
@@ -191,7 +186,7 @@ input, select {
   height: 50px;
   padding: 0px 15px 0px 15px;
   
-  background: transparent;
+  background: white;
   outline: none;
   color: #726659;
   
@@ -253,4 +248,52 @@ textarea:hover {
 
 #submitButton:hover, #prerequisiteButton:hover {
   color: #e2dedb;
+}
+
+.button {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+    background-color:#ededed;
+    -webkit-border-top-left-radius:6px;
+    -moz-border-radius-topleft:6px;
+    border-top-left-radius:6px;
+    -webkit-border-top-right-radius:6px;
+    -moz-border-radius-topright:6px;
+    border-top-right-radius:6px;
+    -webkit-border-bottom-right-radius:6px;
+    -moz-border-radius-bottomright:6px;
+    border-bottom-right-radius:6px;
+    -webkit-border-bottom-left-radius:6px;
+    -moz-border-radius-bottomleft:6px;
+    border-bottom-left-radius:6px;
+    text-indent:3px;
+    border:5px solid #dcdcdc;
+    display:inline-block;
+    color:#777777;
+    font-family:arial;
+    font-size:25px;
+    font-weight:bold;
+    font-style:normal;
+    height:200px;
+    line-height:100px;
+    width:200px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #ffffff;
+    outline:none;
+    margin: 10% 10%;
+}
+.button:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+    background-color:#dfdfdf;
+    outline:none;
+}
+
+.button:active {
+    position:relative;
+    top:1px;
+    outline:none;
 }
