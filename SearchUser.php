@@ -34,19 +34,23 @@
          }
    }
 
+   // function getUserTypeString( $numberIn ){
+
+   // }
+
    function searchUser(){
       $formValuesDictionary = [
-         "firstName"   => ( isset($_POST['firstNameInput']) ? $_POST['firstNameInput'] : NULL ),
-         "lastName"    => ( isset($_POST['lastNameInput']) ? $_POST['lastNameInput'] : NULL ),
-         "email"       => ( isset($_POST['emailInput']) ? $_POST['emailInput'] : NULL ),
-         "phoneNumber" => ( isset($_POST['phoneInput']) ? $_POST['phoneInput'] : NULL ),
-         "typeOfUser"  => ( ($_POST['userType'] != "Type of User") ? getCorrectUserType($_POST['userType']) : NULL )
+         "firstName"   => ( isset($_POST['firstNameInput']) ? $_POST['firstNameInput'] : -1 ),
+         "lastName"    => ( isset($_POST['lastNameInput']) ? $_POST['lastNameInput'] : -1 ),
+         "email"       => ( isset($_POST['emailInput']) ? $_POST['emailInput'] : -1 ),
+         "phoneNumber" => ( isset($_POST['phoneInput']) ? $_POST['phoneInput'] : -1 ),
+         "typeOfUser"  => ( ($_POST['userType'] !== "Type of User") ? getCorrectUserType($_POST['userType']) : -1 )
       ];
 
       $searchSql = "SELECT * FROM User ";
 
       foreach ($formValuesDictionary as $key => $value) {
-         if( $value != NULL ){
+         if( $value > -1 ){
                if( strpos($searchSql, 'WHERE') === false ){ $searchSql .= "WHERE "; }
                $searchSql .= "`$key` LIKE '%" . $value . "%' AND ";
          }
@@ -93,7 +97,7 @@
 			<tbody class="table-hover">
 				<?
                   	$result = mysqli_query($dataBase, searchUser());
-
+                  	
                   	while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
 
                   	foreach ($rows as $row) { 
