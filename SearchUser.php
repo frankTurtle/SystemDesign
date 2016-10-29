@@ -48,7 +48,7 @@
       foreach ($formValuesDictionary as $key => $value) {
          if( $value != NULL ){
                if( strpos($searchSql, 'WHERE') === false ){ $searchSql .= "WHERE "; }
-               $searchSql .= "'$key' LIKE '%" . $value . "%' AND ";
+               $searchSql .= "`$key` LIKE '%" . $value . "%' AND ";
          }
       }
 
@@ -78,7 +78,7 @@
 		</ul>
 
 		<br>
-		
+
 		<table class="table-fill">
 			<thead>
 				<tr>
@@ -92,20 +92,19 @@
 
 			<tbody class="table-hover">
 				<?
-                  $result = mysqli_query($dataBase, searchUser());
+                  	$result = mysqli_query($dataBase, searchUser());
 
-                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+                  	while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
 
-                  foreach ($rows as $row) { 
-                  	print "<tr>";
-                  	print "<td class='text-left'>" . $row['firstName'] . "</td>";
-                  	print "<td class='text-left'>" . $row['lastName'] . "</td>";
-                  	print "<td class='text-left'>" . $row['email'] . "</td>";
-                  	print "<td class='text-left'>" . $row['phoneNumber'] . "</td>";
-                  	print "<td class='text-left'>" . $row['typeOfUser'] . "</td>";
-                  	print "</tr>";
-                  }
-
+                  	foreach ($rows as $row) { 
+	                  	print "<tr>";
+	                  	print "<td class='text-left'>" . $row['firstName'] . "</td>";
+	                  	print "<td class='text-left'>" . $row['lastName'] . "</td>";
+	                  	print "<td class='text-left'>" . $row['email'] . "</td>";
+	                  	print "<td class='text-left'>" . $row['phoneNumber'] . "</td>";
+	                  	print "<td class='text-left'>" . $row['typeOfUser'] . "</td>";
+	                  	print "</tr>";
+                  	}
                ?>
 			</tbody>
 		</table>
