@@ -174,6 +174,10 @@
          if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
          else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
       }
+
+      if($_POST['hiddenButton'] == 5){
+         echo "here";
+      }
    }
 
    function getCorrectUserType( $formType ){
@@ -201,6 +205,28 @@
                break;
          }
    }
+
+   function searchUser(){
+      $formValuesDictionary = [
+         "firstName"   => ( isset($_POST['firstNameInput']) ? $_POST['firstNameInput'] : NULL ),
+         "lastName"    => ( isset($_POST['lastNameInput']) ? $_POST['lastNameInput'] : NULL ),
+         "email"       => ( isset($_POST['emailInput']) ? $_POST['emailInput'] : NULL ),
+         "phoneNumber" => ( isset($_POST['phoneInput']) ? $_POST['phoneInput'] : NULL ),
+         "typeOfUser"  => ( ($_POST['userType'] != "Type of User") ? getCorrectUserType($_POST['userType']) : NULL )
+      ];
+
+      $finalSql;
+      $searchSql = "SELECT * FROM User ";
+
+      foreach ($formValuesDictionary as $key => $value) {
+         if( $value != NULL ){
+               if( strpos($searchSql, 'WHERE') === false ){ $searchSql .= "WHERE "; }
+               $searchSql .= "'$key' LIKE '%" . $value . "%' AND ";
+         }
+      }
+
+      $finalSql = ( strpos($searchSql, 'AND') == true ) ? substr($searchSql, 0, -4) : $searchSql;
+   }
 ?>
 
 
@@ -209,8 +235,9 @@
    <head>
      <link rel="stylesheet" type="text/css" href="css/admin.css">
      <script src="javascript/admin.js" type="text/javascript"></script>
+
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-      <title>Admin Page</title>
+     <title>Admin Page</title>
    </head>
    
    <body>
@@ -279,13 +306,13 @@
          </div>
         
          <div id="searchUserDiv" style="display:none">
-            <form method="post" action=" " id="searchUserForm">
-               <input type="text" name="firstNameInput" placeholder="First Name"><br>
+            <form method="post" action="SearchUser.php" id="searchUserForm">
+               <input name="firstNameInput" placeholder="First Name" id="firstName"><br>
                <input type="text" name="lastNameInput" placeholder="Last Name"><br>
                <input type="text" name="emailInput" placeholder="Email Address"><br>
                <input type="text" placeholder="Phone Number" name="phoneInput"><br>
 
-               <select name="userType" required="true" onchange="unhideDepartmentList()" id="selectTypeOfUser">
+               <select name="userType" required="true" id="selectTypeOfUser">
                   <option selected="selected">Type of User</option>
                   <option value="0">Full Time Faculty</option>
                   <option value="1">Part Time Faculty</option>
@@ -293,19 +320,6 @@
                   <option value="3">Part Time Student</option>
                   <option value="4">Administrator</option>
                   <option value="5">Research Office</option>
-               </select>
-
-               <select id = 'departments' style='display:none;' name='departmentID'>
-                  <option selected="selected">Choose A Department</option>
-                  <?
-                     $sql = "SELECT * FROM Department";
-                     $result = mysqli_query($dataBase, $sql);
-
-                     while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
-                     foreach ($rows as $row) { 
-                        print "<option value='" . $row['departmentID'] . "'>" . $row['deptName'] . "</option>";
-                     }
-                  ?>
                </select>
 
                <input type="hidden" value="5" name="hiddenButton" id="hiddenButton">
