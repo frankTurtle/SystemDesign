@@ -181,6 +181,37 @@
          if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
          else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
       }
+       if($_POST['hiddenButton'] == 3){
+         $course2ID  = $_POST['course2ID'];
+         $department2  = $_POST['department2ID'];
+         $creditHours2 = $_POST['creditHours2Input'];
+         $courseName2  = $_POST['courseName2Input'];
+         $textbook2    = $_POST['textbook2Input'];
+         $description2 = $_POST['description2Input'];
+         $courseCode2  = $_POST['courseCode2Input'];
+
+         
+        
+               
+         $sql = "UPDATE `Course` SET `departmentID` = '$department2', `creditHours`='$creditHours2', `courseName`='$courseName2', `description`='$description2', `textBook`='$textbook2',`courseCode`='$courseCode2'
+                 WHERE `courseID` = '$course2ID';";
+
+         if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+         else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+      }
+      
+       if($_POST['hiddenButton'] == 4){
+         $course3ID  = $_POST['course3ID'];
+         
+         
+        
+               
+         $sql = "DELETE FROM `Course` WHERE `courseID` = '$course3ID';";
+
+         if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+         else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
+      }
+   }
    }
 
    function getCorrectUserType( $formType ){
