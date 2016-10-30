@@ -174,10 +174,6 @@
          if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
          else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
       }
-
-      if($_POST['hiddenButton'] == 5){
-         echo "here";
-      }
    }
 
    function getCorrectUserType( $formType ){
@@ -204,28 +200,6 @@
                return 1;
                break;
          }
-   }
-
-   function searchUser(){
-      $formValuesDictionary = [
-         "firstName"   => ( isset($_POST['firstNameInput']) ? $_POST['firstNameInput'] : NULL ),
-         "lastName"    => ( isset($_POST['lastNameInput']) ? $_POST['lastNameInput'] : NULL ),
-         "email"       => ( isset($_POST['emailInput']) ? $_POST['emailInput'] : NULL ),
-         "phoneNumber" => ( isset($_POST['phoneInput']) ? $_POST['phoneInput'] : NULL ),
-         "typeOfUser"  => ( ($_POST['userType'] != "Type of User") ? getCorrectUserType($_POST['userType']) : NULL )
-      ];
-
-      $finalSql;
-      $searchSql = "SELECT * FROM User ";
-
-      foreach ($formValuesDictionary as $key => $value) {
-         if( $value != NULL ){
-               if( strpos($searchSql, 'WHERE') === false ){ $searchSql .= "WHERE "; }
-               $searchSql .= "'$key' LIKE '%" . $value . "%' AND ";
-         }
-      }
-
-      $finalSql = ( strpos($searchSql, 'AND') == true ) ? substr($searchSql, 0, -4) : $searchSql;
    }
 ?>
 

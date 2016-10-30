@@ -81,37 +81,111 @@
 			<li><a class = "active" href = "Logout.php">Sign Out</a></li>
 		</ul>
 
+		<button>slide</button>
+		<script>
+			$('button').on('click', function(){
+			    $('#sliderResult').hide();
+			    $('#searchUserDiv').toggleClass('editForm');
+			})
+
+			$(document).ready(function(){
+			  $('td.text-left').on('focusout', function() {
+			    data = {};
+			    data['val'] = $(this).text();
+			    data['id'] = $(this).parent('tr').attr('data-row-id');
+			    data['index'] = $(this).attr('col-index');
+
+			    window.console&&console.log($(this).text());
+			    window.console&&console.log($(this).parent('tr').attr('data-row-id'));
+			    window.console&&console.log($(this).attr('col-index'));
+			    
+			    $.ajax({   
+			          
+			          type: "POST",  
+			          url: "EditUser.php",  
+			          cache:false,  
+			          data: data,
+			          dataType: "json",       
+			          success: function(response)  
+			          {   
+
+			          	 window.console&&console.log(response.sql);
+			          	 window.console&&console.log(response.col);
+
+			            if(response.status) {
+			              $("#msg").removeClass('alert-danger');
+			              $("#msg").addClass('alert-success').html(response.msg);
+			            } else {
+			              $("#msg").removeClass('alert-success');
+			              $("#msg").addClass('alert-danger').html(response.msg);
+			            }
+
+
+			          }   
+			        });
+			  });
+			});
+		</script>
+
 		<br>
 
-		<table class="table-fill">
-			<thead>
-				<tr>
-					<th class="text-left">First Name</th>
-					<th class="text-left">Last Name</th>
-					<th class="text-left">Email Address</th>
-					<th class="text-left">Phone Number</th>
-					<th class="text-left">User Type</th>
-				</tr>
-			</thead>
+		<div id="sliderResult" class="transition">
+			<div id="msg"></div>
+			<table class="table-fill">
+				<thead>
+					<tr>
+						<th class="text-left">First Name</th>
+						<th class="text-left">Last Name</th>
+						<th class="text-left">Email Address</th>
+						<th class="text-left">Phone Number</th>
+						<th class="text-left">User Type</th>
+					</tr>
+				</thead>
 
-			<tbody class="table-hover">
-				<?
-                  	$result = mysqli_query($dataBase, searchUser());
-                  	
-                  	while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+				<tbody class="table-hover">
+					<?
+	                  	$result = mysqli_query($dataBase, searchUser());
+	                  	while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
 
-                  	foreach ($rows as $row) { 
-	                  	print "<tr>";
-	                  	print "<td class='text-left'>" . $row['firstName'] . "</td>";
-	                  	print "<td class='text-left'>" . $row['lastName'] . "</td>";
-	                  	print "<td class='text-left'>" . $row['email'] . "</td>";
-	                  	print "<td class='text-left'>" . $row['phoneNumber'] . "</td>";
-	                  	print "<td class='text-left'>" . $row['typeOfUser'] . "</td>";
-	                  	print "</tr>";
-                  	}
-               ?>
-			</tbody>
-		</table>
+	                  	foreach ($rows as $row) { 
+	                  		$index = 0;
+
+		                  	print "<tr data-row-id=" . $row['userID'] . ">";
+		                  	print "<td class='text-left' contenteditable='true' col-index=" . $index++ . ">" . $row['firstName'] . "</td>";
+		                  	print "<td class='text-left' contenteditable='true' col-index=" . $index++ . ">" . $row['lastName'] . "</td>";
+		                  	print "<td class='text-left' contenteditable='true' col-index=" . $index++ . ">" . $row['email'] . "</td>";
+		                  	print "<td class='text-left' contenteditable='true' col-index=" . $index++ . ">" . $row['phoneNumber'] . "</td>";
+		                  	print "<td class='text-left' contenteditable='true' col-index=" . $index++ . ">" . $row['typeOfUser'] . "</td>";
+		                  	print "</tr>";
+	                  	}
+	               ?>
+				</tbody>
+
+				
+			</table>
+		</div>
+
+		<!-- <div id="searchUserDiv" class="transitionForm">
+            <form method="post" action="SearchUser.php" id="searchUserForm">
+               <input name="firstNameInput" placeholder="First Name" id="firstName"><br>
+               <input type="text" name="lastNameInput" placeholder="Last Name"><br>
+               <input type="text" name="emailInput" placeholder="Email Address"><br>
+               <input type="text" placeholder="Phone Number" name="phoneInput"><br>
+
+               <select name="userType" required="true" id="selectTypeOfUser">
+                  <option selected="selected">Type of User</option>
+                  <option value="0">Full Time Faculty</option>
+                  <option value="1">Part Time Faculty</option>
+                  <option value="2">Full Time Student</option>
+                  <option value="3">Part Time Student</option>
+                  <option value="4">Administrator</option>
+                  <option value="5">Research Office</option>
+               </select>
+
+               <input type="hidden" value="5" name="hiddenButton" id="hiddenButton">
+               <input type="submit" value="Search" id="submitButton">
+            </form>
+         </div> -->
 
 	</body>
  </html>
