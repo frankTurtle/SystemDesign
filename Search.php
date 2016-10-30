@@ -3,88 +3,6 @@
    include("Config.php");
    
    if($_SERVER["REQUEST_METHOD"] == "POST") {
-<<<<<<< HEAD
-      if($_POST['hiddenButton'] == 0){
-      $firstName    = $_POST['firstNameInput'];
-      $lastName     = $_POST['lastNameInput'];
-      $emailAddress = $_POST['emailInput'];
-      $phoneNumber  = $_POST['phoneInput'];
-      $password1    = $_POST['password1Input'];
-      $password2    = $_POST['password2Input'];
-      $typeOfUser   = getCorrectUserType( $_POST['userType'] );
-
-      $sql = "INSERT INTO `User`(`firstName`, `lastName`, `email`, `phoneNumber`, `typeOfUser`, `password`)
-              VALUES ( '$firstName', '$lastName', '$emailAddress', '$phoneNumber', $typeOfUser, '$password1');";
-
-      switch ($typeOfUser) {
-         case 0:
-            if (mysqli_query($dataBase, $sql)) {
-            $sql = "INSERT INTO `Admin`(`adminID`)
-                        VALUES ( LAST_INSERT_ID() );";
-
-            if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-            else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
-         }
-            break;
-
-      case 2:
-         $department   = $_POST['departmentID'];
-
-         if (mysqli_query($dataBase, $sql)) {
-            $sql = "INSERT INTO `Faculty`(`facultyID`, `officeLocation`, `departmentID`, `facultyType`)
-                  VALUES ( LAST_INSERT_ID(), 100, $department, 1 );";
-
-            if (mysqli_query($dataBase, $sql)) {
-               $sql = "INSERT INTO `FullTimeFaculty`(`fullTimeFacultyID`)
-                     VALUES ( LAST_INSERT_ID() );";
-
-               if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-               else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
-            }
-         }
-         
-         break;
-||||||| merged common ancestors
-      $firstName    = $_POST['firstNameInput'];
-      $lastName     = $_POST['lastNameInput'];
-      $emailAddress = $_POST['emailInput'];
-      $phoneNumber  = $_POST['phoneInput'];
-      $password1    = $_POST['password1Input'];
-      $password2    = $_POST['password2Input'];
-      $typeOfUser   = getCorrectUserType( $_POST['userType'] );
-
-      $sql = "INSERT INTO `User`(`firstName`, `lastName`, `email`, `phoneNumber`, `typeOfUser`, `password`)
-      		  VALUES ( '$firstName', '$lastName', '$emailAddress', '$phoneNumber', $typeOfUser, '$password1');";
-
-      switch ($typeOfUser) {
-      	case 0:
-      		if (mysqli_query($dataBase, $sql)) {
-	  			$sql = "INSERT INTO `Admin`(`adminID`)
-      		  				VALUES ( LAST_INSERT_ID() );";
-
-				if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-				else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
-			}
-      		break;
-
-  		case 2:
-  			$department   = $_POST['departmentID'];
-
-  			if (mysqli_query($dataBase, $sql)) {
-	  			$sql = "INSERT INTO `Faculty`(`facultyID`, `officeLocation`, `departmentID`, `facultyType`)
-						VALUES ( LAST_INSERT_ID(), 100, $department, 1 );";
-
-				if (mysqli_query($dataBase, $sql)) {
-					$sql = "INSERT INTO `FullTimeFaculty`(`fullTimeFacultyID`)
-							VALUES ( LAST_INSERT_ID() );";
-
-					if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-					else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
-				}
-			}
-			
-  			break;
-=======
       if($_POST['hiddenButton'] == 0){
          $firstName    = $_POST['firstNameInput'];
          $lastName     = $_POST['lastNameInput'];
@@ -186,55 +104,8 @@
                break;
 
          }
->>>>>>> admin
       }
-}
 
-if($_POST['hiddenButton'] == 1){
-
-      $department    = $_POST['departmentIDInput'];
-      $creditHours     = $_POST['creditHoursInput'];
-      $courseName = $_POST['courseNameInput'];
-      $textbook  = $_POST['textbookInput'];
-      $description    = $_POST['descriptionInput'];
-      $courseCode    = $_POST['courseCodeInput'];
-      
-         $sql = "INSERT INTO `Course`(`departmentID`, `creditHours`, `courseName`, `description`, `textBook`, `courseCode`)
-              VALUES ( '$department', '$creditHours', '$courseName', '$description', '$textbook', '$courseCode');";
-
-         if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-            else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
-   }
-
-if($_POST['hiddenButton'] == 2){
-
-      $course    = $_POST['courseIDInput'];
-      $term     = $_POST['termIDInput'];
-      $timeslot = $_POST['timeslotInput'];
-      $room  = $_POST['roomIDInput'];
-      $faculty    = $_POST['facultyIDInput'];
-      $sectionNum    = $_POST['sectionNumInput'];
-      
-
-      $sqler ="SELECT buildingID FROM `Room` WHERE `roomID`= 1";
-
-      if($building =   mysqli_query($dataBase, $sqler)){ echo "Building was found"; }
-            else { echo "Error: " . $sqler . "<br>" . mysqli_error($dataBase); }
-            
-            $row = mysqli_fetch_assoc($building);
-            
-         $sql = "INSERT INTO `Section`(`courseID`, `sectionNum`, `timeslotID`, `termID`, `buildingID`, `roomID`, `facultyID`)
-              VALUES ( '$course', '$sectionNum', '$timeslot', '$term', '$row[0]', '$room' , '$faculty');";
-
-<<<<<<< HEAD
-         if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
-            else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
-   }     
-      // $count = mysqli_num_rows( $result );
-||||||| merged common ancestors
-	  
-      // $count = mysqli_num_rows( $result );
-=======
       if($_POST['hiddenButton'] == 1){
          $department  = $_POST['departmentID'];
          $creditHours = $_POST['creditHoursInput'];
@@ -275,7 +146,6 @@ if($_POST['hiddenButton'] == 2){
                }
                else{ $printSuccess = True; }
             }
->>>>>>> admin
 
             if ($courseID3 != 'Prerequisite Three'){
                $sql = "INSERT INTO `Prerequisites`(`prerequisiteID`, `courseID`)
@@ -297,13 +167,6 @@ if($_POST['hiddenButton'] == 2){
          $room       = $_POST['roomIDInput'];
          $faculty    = $_POST['facultyIDInput'];
          $sectionNum = $_POST['sectionNumInput'];
-         
-        // $sqler ="SELECT buildingID FROM `Room` WHERE `roomID`= 1";
-
-        // if($building =   mysqli_query($dataBase, $sqler)){ echo "Building was found"; }
-        // else { echo "Error: " . $sqler . "<br>" . mysqli_error($dataBase); }
-               
-         //$row = mysqli_fetch_assoc($building);
                
          $sql = "INSERT INTO `Section`(`courseID`, `sectionNum`, `timeslotID`, `termID`, `roomID`, `facultyID`)
                  VALUES ( '$course', '$sectionNum', '$timeslot', '$term', '$room' , '$faculty');";
@@ -314,61 +177,6 @@ if($_POST['hiddenButton'] == 2){
    }
 
    function getCorrectUserType( $formType ){
-<<<<<<< HEAD
-         $ftFaculty = 0;
-         $ptFaculty = 1;
-         $ftStudent = 2;
-         $ptStudent = 3;
-         $admin     = 4;
-         $research  = 5;
-
-         switch ($formType) {
-            case $ftFaculty:
-            case $ptFaculty:
-               return 2;
-               break;
-            
-            case $ftStudent:
-            case $ptStudent:
-               return 3;
-               break;
-
-            case $admin:
-               return 0;
-               break;
-
-            case $research:
-               return 1;
-               break;
-         }
-||||||| merged common ancestors
-   		$ftFaculty = 0;
-   		$ptFaculty = 1;
-   		$ftStudent = 2;
-   		$ptStudent = 3;
-   		$admin     = 4;
-   		$research  = 5;
-
-   		switch ($formType) {
-   			case $ftFaculty:
-   			case $ptFaculty:
-   				return 2;
-   				break;
-   			
-   			case $ftStudent:
-   			case $ptStudent:
-   				return 3;
-   				break;
-
-   			case $admin:
-   				return 0;
-   				break;
-
-   			case $research:
-   				return 1;
-   				break;
-   		}
-=======
          $ftFaculty = 0;
          $ptFaculty = 1;
          $ftStudent = 2;
@@ -392,7 +200,6 @@ if($_POST['hiddenButton'] == 2){
                return 1;
                break;
          }
->>>>>>> admin
    }
 ?>
 
@@ -400,34 +207,18 @@ if($_POST['hiddenButton'] == 2){
 <html>
    
    <head>
-<<<<<<< HEAD
-     <link rel="stylesheet" type="text/css" href="css/admin.css">
-     <script src="javascript/admin.js"></script>
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-||||||| merged common ancestors
-	  <link rel="stylesheet" type="text/css" href="css/admin.css">
-	  <script src="javascript/admin.js"></script>
-	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-=======
      <link rel="stylesheet" type="text/css" href="css/admin.css">
      <script src="javascript/admin.js" type="text/javascript"></script>
+
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
->>>>>>> admin
-      <title>Admin Page</title>
+     <title>Admin Page</title>
    </head>
    
    <body>
       <h1>Welcome <?php echo $login_session; ?></h1> 
 
-<<<<<<< HEAD
       <ul>
-        <li><a class="active" href="Admin.php">Home</a></li>
-||||||| merged common ancestors
-     	<ul>
-		  <li><a class="active" href="Admin.php">Home</a></li>
-=======
-      <ul>
-        <li><a class="active" href="Admin.php">Home</a></li>
+        <li><a class="active" href="Search.php">Home</a></li>
 
         <!-- <li class="dropdown">
           <a href="#" class="dropbtn">Menu</a>
@@ -443,42 +234,76 @@ if($_POST['hiddenButton'] == 2){
 
       <button class="accordion">User</button> 
       <div class="panel">
-         <!-- <button class="button" onclick="move()" id="newUserButton">Add New User</button> -->
+         <div class="buttonBlock" id="buttonBlock">
+            <button class="button" onclick="toggleElement( 'buttonBlock', 'newUserDiv' );" id="addNewUserButton">Add New User</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock', 'searchUserDiv' );" id="searchUserButton">Search User</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock', 'newUserForm', 'doneButton' );" id="editUserButton">Edit User</button>
+         </div>
 
-        <form method="post" action=" " id="newUserForm">
-            <input type="text" name="firstNameInput" placeholder="First Name" required="true"><br>
-            <input type="text" name="lastNameInput" placeholder="Last Name" required="true"><br>
-            <input type="text" name="emailInput" placeholder="Email Address" required="true"><br>
-            <input type="text" placeholder="Phone Number" name="phoneInput"><br>
-            <input type="text" name="password1Input" placeholder="Password" required="true"><br>
-            <input type="text" name="password2Input" placeholder="Confirm Password" required="true"><br>
+         <div id="newUserDiv" style="display:none">
+            <form method="post" action=" " id="newUserForm">
+               <input type="text" name="firstNameInput" placeholder="First Name" required="true"><br>
+               <input type="text" name="lastNameInput" placeholder="Last Name" required="true"><br>
+               <input type="text" name="emailInput" placeholder="Email Address" required="true"><br>
+               <input type="text" placeholder="Phone Number" name="phoneInput"><br>
+               <input type="text" name="password1Input" placeholder="Password" required="true"><br>
+               <input type="text" name="password2Input" placeholder="Confirm Password" required="true"><br>
 
-            <select name="userType" required="true" onchange="unhideDepartmentList()" id="selectTypeOfUser">
-               <option selected="selected">Type of User</option>
-               <option value="0">Full Time Faculty</option>
-               <option value="1">Part Time Faculty</option>
-               <option value="2">Full Time Student</option>
-               <option value="3">Part Time Student</option>
-               <option value="4">Administrator</option>
-               <option value="5">Research Office</option>
-            </select>
+               <select name="userType" required="true" onchange="unhideDepartmentList()" id="selectTypeOfUser">
+                  <option selected="selected">Type of User</option>
+                  <option value="0">Full Time Faculty</option>
+                  <option value="1">Part Time Faculty</option>
+                  <option value="2">Full Time Student</option>
+                  <option value="3">Part Time Student</option>
+                  <option value="4">Administrator</option>
+                  <option value="5">Research Office</option>
+               </select>
 
-            <select id = 'departments' style='display:none;' name='departmentID'>
-               <option selected="selected">Choose A Department</option>
-               <?
-                  $sql = "SELECT * FROM Department";
-                  $result = mysqli_query($dataBase, $sql);
+               <select id = 'departments' style='display:none;' name='departmentID'>
+                  <option selected="selected">Choose A Department</option>
+                  <?
+                     $sql = "SELECT * FROM Department";
+                     $result = mysqli_query($dataBase, $sql);
 
-                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
-                  foreach ($rows as $row) { 
-                     print "<option value='" . $row['departmentID'] . "'>" . $row['deptName'] . "</option>";
-                  }
-               ?>
-            </select>
+                     while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+                     foreach ($rows as $row) { 
+                        print "<option value='" . $row['departmentID'] . "'>" . $row['deptName'] . "</option>";
+                     }
+                  ?>
+               </select>
 
-            <input type="hidden" value="0" name="hiddenButton" id="hiddenButton">
-            <input type="submit" value="Submit" id="submitButton">
-         </form>
+               <input type="hidden" value="0" name="hiddenButton" id="hiddenButton">
+               <input type="submit" value="Submit" id="submitButton">
+            </form>
+
+            <button id="doneButton" class="button" onclick="toggleElement( 'newUserDiv', 'buttonBlock' );">Done</button>
+         </div>
+        
+         <div id="searchUserDiv" style="display:none">
+            <form method="post" action="SearchUser.php" id="searchUserForm">
+               <input name="firstNameInput" placeholder="First Name" id="firstName"><br>
+               <input type="text" name="lastNameInput" placeholder="Last Name"><br>
+               <input type="text" name="emailInput" placeholder="Email Address"><br>
+               <input type="text" placeholder="Phone Number" name="phoneInput"><br>
+
+               <select name="userType" required="true" id="selectTypeOfUser">
+                  <option selected="selected">Type of User</option>
+                  <option value="0">Full Time Faculty</option>
+                  <option value="1">Part Time Faculty</option>
+                  <option value="2">Full Time Student</option>
+                  <option value="3">Part Time Student</option>
+                  <option value="4">Administrator</option>
+                  <option value="5">Research Office</option>
+               </select>
+
+               <input type="hidden" value="5" name="hiddenButton" id="hiddenButton">
+               <input type="submit" value="Search" id="submitButton">
+            </form>
+
+            <button id="doneButton" class="button" onclick="toggleElement( 'searchUserDiv', 'buttonBlock' );">Done</button>
+         </div>
+
+         
       </div>
 
       <button class="accordion">Add New Course</button>
@@ -528,25 +353,7 @@ if($_POST['hiddenButton'] == 2){
                   }
                ?>
             </select>
->>>>>>> admin
 
-<<<<<<< HEAD
-        <li class="dropdown">
-          <a href="#" class="dropbtn">Menu</a>
-          <div class="dropdown-content">
-           <a href=# onclick="javascript:generateNewUserForm()">Add New User</a>
-           <a href=# onclick="javascript:createCourse()">Add New Course</a>
-           <a href=# onclick="javascript:createSection()">Add New Section</a>
-          </div>
-        </li>
-||||||| merged common ancestors
-		  <li class="dropdown">
-		    <a href="#" class="dropbtn">Menu</a>
-		    <div class="dropdown-content">
-			  <a href=# onclick="javascript:generateNewUserForm()">Add New User</a>
-		    </div>
-		  </li>
-=======
             <select id='prerequisite3' name='prerequisite3' style='display:none;'>
                <option selected="selected">Prerequisite Three</option>
                <?
@@ -571,26 +378,62 @@ if($_POST['hiddenButton'] == 2){
       <button class="accordion">Add New Section</button>
       <div class="panel">
         <form method="post" action=" " id="createSectionForm">
-            <label id="courseIDLabel" class="formLabel">Course ID 
-               <input type="text" name="courseIDInput" required="true"><br>
-            </label>
+            <select id = 'courseID' name='courseID'>
+               <option selected="selected">Choose A Course</option>
+               <?
+                  $sql = "SELECT * FROM Course";
+                  $result = mysqli_query($dataBase, $sql);
 
-            <label id="sectionNumLabel" class="formLabel">Section Num 
-               <input type="text" name="sectionNumInput" required="true"><br>
-            </label>
+                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+                  foreach ($rows as $row) { 
+                     print "<option value='" . $row['courseID'] . "'>" . $row['courseName'] . "</option>";
+                  }
+               ?>
+            </select>
+                <input type="text" name="sectionNumInput" placeholder="Section Number" required="true"><br>
+           
+        
+                   <select id = 'termID' name='termID'>
+                       <option selected="selected">Choose A Term</option>
+                  <?
+                      $termSql = "SELECT * FROM Term";
+                  $termResult = mysqli_query($dataBase, $termSql);
 
-            <label id="termIDLabel" class="formLabel">Term 
-               <input type="text" name="termIDInput" required="true"><br>
-            </label>
+                  while ($termRow = mysqli_fetch_array($termResult)) { $termRows[] = $termRow; }
+                  foreach ($termRows as $rowTerm) { 
+                     print "<option value='" . $rowTerm['termID'] . "'>" . $rowTerm['semester'] . " " . $rowTerm['year'] . "</option>";
+                  }
+               ?>
+            </select>
+            
+             <select id = 'timeSlotID' name='timeSlotID'>
+                       <option selected="selected">Choose A Timeslot </option>
+                  <?
+                      $timeSlotsql = "SELECT * FROM Timeslot INNER JOIN Time ON Timeslot.timeID=Time.timeID INNER JOIN Day ON Timeslot.dayID=Day.DayID";
+                  $timeSlotresult = mysqli_query($dataBase, $timeSlotsql);
+                  
+                  
+                  while ($timeSlotrow = mysqli_fetch_array($timeSlotresult)) { $timeSlotrows[] = $timeSlotrow; }
+                  foreach ($timeSlotrows as $timeSlotrow) { 
+                     print "<option value='" . $timeSlotrow['timeslotID'] . "'>" . $timeSlotrow['timeStart'] . "-" . $timeSlotrow['timeEnd'] . " " . $timeSlotrow['days'] ."</option>";
+                  }
+               ?>
+            </select>
 
-            <label id="timeSlotLabel" class="formLabel">Timeslot 
-               <input type="text" name="timeSlotInput" required="true"><br>
-            </label>
+             <select id = 'roomID' name='roomID'>
+                       <option selected="selected">Choose A Room</option>
+                  <?
+                      $roomSql = "SELECT * FROM Room INNER JOIN Building ON Room.buildingID=Building.buildingID";
+                  $roomResult = mysqli_query($dataBase, $roomSql);
 
-            <label id="roomIDLabel" class="formLabel">Room ID 
-               <input type="text" name="roomIDInput" required="true"><br>
-            </label>
-
+                  while ($roomRow = mysqli_fetch_array($roomResult)) { $roomRows[] = $roomRow; }
+                  foreach ($roomRows as $roomRow) { 
+                     print "<option value='" . $roomRow['roomID'] . "'>" . $roomRow['roomNum'] . " " . $roomRow['buildingName'] . "</option>";
+                  }
+               ?>
+            </select>
+            
+        
             <label id="facultyIDLabel" class="formLabel">Faculty ID 
                <input type="text" name="facultyIDInput" required="true"><br>
             </label>
@@ -611,30 +454,8 @@ if($_POST['hiddenButton'] == 2){
            }
          }
       </script>
->>>>>>> admin
 
-<<<<<<< HEAD
-        <li><a class = "active" href = "Logout.php">Sign Out</a></li>
-      </ul>
-      
-      <div id="menuSelect"></div>
-||||||| merged common ancestors
-		  <li><a class = "active" href = "Logout.php">Sign Out</a></li>
-		</ul>
-      
-      <div id="menuSelect"></div>
-=======
->>>>>>> admin
       <div id="success">
-<<<<<<< HEAD
-            <?php
-               echo $typeOfUser;
-            ?>
-||||||| merged common ancestors
-      		<?php
-      			echo $typeOfUser;
-      		?>
-=======
             <?php
                echo $typeOfUser;
             ?>
@@ -644,7 +465,6 @@ if($_POST['hiddenButton'] == 2){
          <?php
             echo $id;
          ?>
->>>>>>> admin
       </div>
 
    </body>
