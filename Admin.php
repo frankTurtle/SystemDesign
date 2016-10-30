@@ -278,18 +278,24 @@
          </form>
       </div>
 
-      <button class="accordion">Add New Course</button>
+       <button class="accordion">Course</button>
       <div class="panel">
+         <div class="buttonBlock" id="buttonBlock2">
+            <button class="button" onclick="toggleElement( 'buttonBlock2', 'newCourseDiv' );" id="addNewCourseButton">Add New Course</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock2', 'editCourseDiv' );" id="editCourseButton">Edit Course</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock2', 'deleteCourseDiv' );" id="deleteCourseButton">Delete Course</button>
+         </div>
+      <div id ="newCourseDiv" style="display:none">
         <form method="post" action=" " id="createCourseForm">
             <select id = 'departments' name='departmentID'>
                <option selected="selected">Choose A Department</option>
                <?
-                  $sql = "SELECT * FROM Department";
-                  $result = mysqli_query($dataBase, $sql);
+                  $depart1Sql = "SELECT * FROM Department";
+                  $depart1Result = mysqli_query($dataBase, $depart1Sql);
 
-                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
-                  foreach ($rows as $row) { 
-                     print "<option value='" . $row['departmentID'] . "'>" . $row['deptName'] . "</option>";
+                  while ($depart1Row = mysqli_fetch_array($depart1Result)) { $depart1Rows[] = $depart1Row; }
+                  foreach ($depart1Rows as $depart1Row) { 
+                     print "<option value='" . $depart1Row['departmentID'] . "'>" . $depart1Row['deptName'] . "</option>";
                   }
                ?>
             </select>
@@ -303,12 +309,12 @@
             <select id='prerequisite1' name='prerequisite1' style='display:none;'>
                <option selected="selected">Prerequisite One</option>
                <?
-                  $sql = "SELECT courseID, courseName FROM Course";
-                  $result = mysqli_query($dataBase, $sql);
+                  $pre1Sql = "SELECT courseID, courseName FROM Course";
+                  $pre1Result = mysqli_query($dataBase, $pre1Sql);
 
-                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
-                  foreach ($rows as $row) { 
-                     print "<option value='" . $row['courseID'] . "'>" . $row['courseName'] . "</option>";
+                  while ($pre1Row = mysqli_fetch_array($pre1Result)) { $pre1Rows[] = $pre1Row; }
+                  foreach ($pre1Rows as $pre1Row) { 
+                     print "<option value='" . $pre1Row['courseID'] . "'>" . $pre1Row['courseName'] . "</option>";
                   }
                ?>
             </select>
@@ -340,45 +346,169 @@
             </select>
             
 
-            <input type="button" value="Add a Prerequisite" onClick="addPrerequisite('appendToMe');" id="prerequisiteButton">
+            <input type="button" value="Add a Prerequisite" onClick="addPrerequisite('appendToMe');" id="prerequisiteButton" style="display:display">
 
             <input type="hidden" value="1" name="hiddenButton" id="hiddenButton">
             <input type="submit" value="Submit" id="submitButton">
          </form>
-      </div>
+         <button id="doneButton" class="button" onclick="toggleElement( 'newCourseDiv', 'buttonBlock2' );">Done</button>
+         </div>
+          <div id ="editCourseDiv" style="display:none">
+         <form method="post" action=" " id="editClassForm">
+          <select id = 'course2ID'  name='course2ID'>
+               <option selected="selected">Choose A Course</option>
+               <?
+                  $course2Sql = "SELECT * FROM Course";
+                  $course2Result = mysqli_query($dataBase, $course2Sql);
+                  $courseTestRow =  array();
 
-      <button class="accordion">Add New Section</button>
+                  while ($course2Row = mysqli_fetch_array($course2Result)) { $course2Rows[] = $course2Row; }
+                  foreach ($course2Rows as $course2Row) { 
+                     
+                     print "<option value='" . $course2Row['courseID'] . "'>" . $course2Row['courseName'] . "</option>";
+                     $courseTestRow[] = $course2Row;
+                     
+                 
+                  }
+                  $courseJsonArray =json_encode($courseTestRow);
+
+               ?>
+            </select><br>
+            
+                   
+            
+            
+             <select id = 'department2ID' name='department2ID'>
+               <option selected="selected">Choose A Department</option>
+               <?
+                  $depart2Sql = "SELECT * FROM Department";
+                  $depart2Result = mysqli_query($dataBase, $depart2Sql);
+
+                  while ($depart2Row = mysqli_fetch_array($depart2Result)) { $depart2Rows[] = $depart2Row; }
+                  foreach ($depart2Rows as $depart2Row) { 
+                     print "<option value='" . $depart2Row['departmentID'] . "'>" . $depart2Row['deptName'] . "</option>";
+                  }
+               ?>
+            </select><br>
+
+            
+             
+             <input type="text" name="creditHours2Input" placeholder="Credit Hours" required="true"><br>
+            <input type="text" name="courseName2Input" placeholder="Course Name" required="true"><br>
+            <input type="text" name="textbook2Input" placeholder="Textbook"><br>
+            <input type="textarea" name="description2Input" placeholder="Description" required="true"><br>
+            <input type="text" name="courseCode2Input" placeholder="Course Code" required="true"><br>
+            <input type="hidden" value="3" name="hiddenButton" id="hiddenButton">
+            <input type="submit" value="Submit" id="submitButton">
+         </form>
+         <button id="doneButton" class="button" onclick="toggleElement( 'editCourseDiv', 'buttonBlock2' );">Done</button>
+         </div>
+          <div id ="deleteCourseDiv" style="display:none">
+         <form method="post" action=" " id="deleteClassForm">
+          <select id = 'course3ID' name='course3ID'>
+               <option selected="selected">Choose A Course to delete</option>
+               <?
+                  $course3Sql = "SELECT * FROM Course";
+                  $course3Result = mysqli_query($dataBase, $course3Sql);
+                  
+
+                  while ($course3Row = mysqli_fetch_array($course3Result)) { $course3Rows[] = $course3Row; }
+                  foreach ($course3Rows as $course3Row) { 
+                     
+                     print "<option value='" . $course3Row['courseID'] . "'>" . $course3Row['courseName'] . "</option>";
+                     
+
+                  }
+                 
+
+               ?>
+            </select><br>
+            
+            <input type="submit" value="Submit" id="submitButton">       
+            <input type="hidden" value="4" name="hiddenButton" id="hiddenButton">
+    
+         </form>
+         <button id="doneButton" class="button" onclick="toggleElement( 'deleteCourseDiv', 'buttonBlock2' );">Done</button>
+      </div>
+      
+</div>
+      <button class="accordion">Section</button>
       <div class="panel">
         <form method="post" action=" " id="createSectionForm">
-            <label id="courseIDLabel" class="formLabel">Course ID 
-               <input type="text" name="courseIDInput" required="true"><br>
-            </label>
+            <select id = 'courseID' name='courseID'>
+               <option selected="selected">Choose A Course</option>
+               <?
+                  $courseSql = "SELECT * FROM Course";
+                  $courseResult = mysqli_query($dataBase, $courseSql);
 
-            <label id="sectionNumLabel" class="formLabel">Section Num 
-               <input type="text" name="sectionNumInput" required="true"><br>
-            </label>
+                  while ($courseRow = mysqli_fetch_array($courseResult)) { $courseRows[] = $courseRow; }
+                  foreach ($courseRows as $courseRow) { 
+                     print "<option value='" . $courseRow['courseID'] . "'>" . $courseRow['courseName'] . "</option>";
+                  }
+               ?>
+            </select>
+                <input type="text" name="sectionNumInput" placeholder="Section Number" required="true"><br>
+           
+        
+                   <select id = 'termID' name='termID'>
+                       <option selected="selected">Choose A Term</option>
+                  <?
+                      $termSql = "SELECT * FROM Term";
+                  $termResult = mysqli_query($dataBase, $termSql);
 
-            <label id="termIDLabel" class="formLabel">Term 
-               <input type="text" name="termIDInput" required="true"><br>
-            </label>
+                  while ($termRow = mysqli_fetch_array($termResult)) { $termRows[] = $termRow; }
+                  foreach ($termRows as $rowTerm) { 
+                     print "<option value='" . $rowTerm['termID'] . "'>" . $rowTerm['semester'] . " " . $rowTerm['year'] . "</option>";
+                  }
+               ?>
+            </select>
+            
+             <select id = 'timeSlotID' name='timeSlotID'>
+                       <option selected="selected">Choose A Timeslot </option>
+                  <?
+                      $timeSlotsql = "SELECT * FROM Timeslot INNER JOIN Time ON Timeslot.timeID=Time.timeID INNER JOIN Day ON Timeslot.dayID=Day.DayID";
+                  $timeSlotresult = mysqli_query($dataBase, $timeSlotsql);
+                  
+                  
+                  while ($timeSlotrow = mysqli_fetch_array($timeSlotresult)) { $timeSlotrows[] = $timeSlotrow; }
+                  foreach ($timeSlotrows as $timeSlotrow) { 
+                     print "<option value='" . $timeSlotrow['timeslotID'] . "'>" . $timeSlotrow['timeStart'] . "-" . $timeSlotrow['timeEnd'] . " " . $timeSlotrow['days'] ."</option>";
+                  }
+               ?>
+            </select>
 
-            <label id="timeSlotLabel" class="formLabel">Timeslot 
-               <input type="text" name="timeSlotInput" required="true"><br>
-            </label>
+             <select id = 'roomID' name='roomID'>
+                       <option selected="selected">Choose A Room</option>
+                  <?
+                      $roomSql = "SELECT * FROM Room INNER JOIN Building ON Room.buildingID=Building.buildingID";
+                  $roomResult = mysqli_query($dataBase, $roomSql);
 
-            <label id="roomIDLabel" class="formLabel">Room ID 
-               <input type="text" name="roomIDInput" required="true"><br>
-            </label>
+                  while ($roomRow = mysqli_fetch_array($roomResult)) { $roomRows[] = $roomRow; }
+                  foreach ($roomRows as $roomRow) { 
+                     print "<option value='" . $roomRow['roomID'] . "'>" . $roomRow['roomNum'] . " " . $roomRow['buildingName'] . "</option>";
+                  }
+               ?>
+            </select>
+            
+              <select id = 'facultyID' name='facultyID'>
+                       <option selected="selected">Choose A Faculty</option>
+                  <?
+                      $facultySql = "SELECT * FROM Faculty INNER JOIN User ON Faculty.facultyID=User.userID";
+                  $facultyResult = mysqli_query($dataBase, $facultySql);
 
-            <label id="facultyIDLabel" class="formLabel">Faculty ID 
-               <input type="text" name="facultyIDInput" required="true"><br>
-            </label>
+                  while ($facultyRow = mysqli_fetch_array($facultyResult)) { $facultyRows[] = $facultyRow; }
+                  foreach ($facultyRows as $facultyRow) { 
+                     print "<option value='" . $facultyRow['facultyID'] . "'>" ."Faculty ID: ". $facultyRow['facultyID'] . " " . $facultyRow['firstName'] . " ". $facultyRow['lastName']  ."</option>";
+                  }
+               ?>
+            </select>
+        
+           
 
             <input type="hidden" value="2" name="hiddenButton" id="hiddenButton">
             <input type="submit" value="Submit" id="submitButton">
          </form>
       </div>
-
       <script>
          var acc = document.getElementsByClassName("accordion");
          var i;
