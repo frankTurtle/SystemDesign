@@ -495,6 +495,12 @@
 </div>
       <button class="accordion">Section</button>
       <div class="panel">
+         <div class="buttonBlock" id="buttonBlock3">
+            <button class="button" onclick="toggleElement( 'buttonBlock3', 'newSectionDiv' );" id="addNewSectionButton">Add New Section</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock3', 'editSectionDiv' );" id="editSectionButton">Edit Section</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock3', 'deleteSectionDiv' );" id="deleteSectionButton">Delete Section</button>
+         </div>
+         <div id ="newSectionDiv" style="display:none">
         <form method="post" action=" " id="createSectionForm">
             <select id = 'courseID' name='courseID'>
                <option selected="selected">Choose A Course</option>
@@ -507,7 +513,7 @@
                      print "<option value='" . $courseRow['courseID'] . "'>" . $courseRow['courseName'] . "</option>";
                   }
                ?>
-            </select>
+            </select><br>
                 <input type="text" name="sectionNumInput" placeholder="Section Number" required="true"><br>
            
         
@@ -522,7 +528,7 @@
                      print "<option value='" . $rowTerm['termID'] . "'>" . $rowTerm['semester'] . " " . $rowTerm['year'] . "</option>";
                   }
                ?>
-            </select>
+            </select><br>
             
              <select id = 'timeSlotID' name='timeSlotID'>
                        <option selected="selected">Choose A Timeslot </option>
@@ -536,7 +542,7 @@
                      print "<option value='" . $timeSlotrow['timeslotID'] . "'>" . $timeSlotrow['timeStart'] . "-" . $timeSlotrow['timeEnd'] . " " . $timeSlotrow['days'] ."</option>";
                   }
                ?>
-            </select>
+            </select><br>
 
              <select id = 'roomID' name='roomID'>
                        <option selected="selected">Choose A Room</option>
@@ -549,7 +555,7 @@
                      print "<option value='" . $roomRow['roomID'] . "'>" . $roomRow['roomNum'] . " " . $roomRow['buildingName'] . "</option>";
                   }
                ?>
-            </select>
+            </select><br>
             
               <select id = 'facultyID' name='facultyID'>
                        <option selected="selected">Choose A Faculty</option>
@@ -562,15 +568,16 @@
                      print "<option value='" . $facultyRow['facultyID'] . "'>" ."Faculty ID: ". $facultyRow['facultyID'] . " " . $facultyRow['firstName'] . " ". $facultyRow['lastName']  ."</option>";
                   }
                ?>
-            </select>
+            </select><br>
         
            
 
             <input type="hidden" value="2" name="hiddenButton" id="hiddenButton">
             <input type="submit" value="Submit" id="submitButton">
          </form>
+         <button id="doneButton" class="button" onclick="toggleElement( 'newSectionDiv', 'buttonBlock3' );">Done</button>
       </div>
-      
+      <div id ="editSectionDiv" style="display:none">
       <form method="post" action=" " id="EditSectionForm">
             <select id = 'section2ID' name='section2ID'>
                <option selected="selected">Choose A Section</option>
@@ -583,7 +590,7 @@
                      print "<option value='" . $sectionRow['sectionID'] . "'>" . $sectionRow['courseName'] . " ". $sectionRow['sectionNum'] ."</option>";
                   }
                ?>
-            </select>
+            </select><br>
             
             <select id = 'course5ID' name='course5ID'>
                <option selected="selected">Choose A Course</option>
@@ -596,7 +603,7 @@
                      print "<option value='" . $course5Row['courseID'] . "'>" . $course5Row['courseName'] . "</option>";
                   }
                ?>
-            </select>
+            </select><br>
                 <input type="text" name="sectionNum2Input" placeholder="Section Number" required="true"><br>
                    
                <select id = 'term2ID' name='term2ID'>
@@ -610,7 +617,7 @@
                      print "<option value='" . $row2Term['termID'] . "'>" . $row2Term['semester'] . " " . $row2Term['year'] . "</option>";
                   }
                ?>
-            </select>
+            </select><br>
                   
             
              <select id = 'timeSlot2ID' name='timeSlot2ID'>
@@ -658,8 +665,9 @@
             <input type="hidden" value="5" name="hiddenButton" id="hiddenButton">
             <input type="submit" value="Submit" id="submitButton">
          </form>
-         
-         
+         <button id="doneButton" class="button" onclick="toggleElement( 'editSectionDiv', 'buttonBlock3' );">Done</button>
+         </div>
+         <div id ="deleteSectionDiv" style="display:none">
          <form method="post" action=" " id="deleteSectionForm">
             <select id = 'section3ID' name='section3ID'>
                <option selected="selected">Choose A Section</option>
@@ -677,7 +685,9 @@
              <input type="hidden" value="6" name="hiddenButton" id="hiddenButton">
             <input type="submit" value="Submit" id="submitButton">
          </form>
-         
+         <button id="doneButton" class="button" onclick="toggleElement( 'deleteSectionDiv', 'buttonBlock3' );">Done</button>
+         </div>
+         </div>
 
       <script>
          var acc = document.getElementsByClassName("accordion");
