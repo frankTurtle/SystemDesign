@@ -230,6 +230,18 @@
          if (mysqli_query($dataBase, $section2Sql)) { echo "New record created successfully"; }
          else { echo "Error: " . $section2Sql . "<br>" . mysqli_error($dataBase); }
       }
+      
+      if($_POST['hiddenButton'] == 6){
+         $section3ID  = $_POST['section3ID'];
+         
+         
+        
+               
+         $section3sql = "DELETE FROM `Section` WHERE `sectionID` = '$section3ID';";
+
+         if (mysqli_query($dataBase, $section3sql)) { echo "New record created successfully"; }
+         else { echo "Error: " . $section3sql . "<br>" . mysqli_error($dataBase); }
+      }
    }
 
    function getCorrectUserType( $formType ){
@@ -371,12 +383,12 @@
             <select id='prerequisite2' name='prerequisite2' style='display:none;'>
                <option selected="selected">Prerequisite Two</option>
                <?
-                  $sql = "SELECT courseID, courseName FROM Course";
-                  $result = mysqli_query($dataBase, $sql);
+                  $pre2sql = "SELECT courseID, courseName FROM Course";
+                  $pre2result = mysqli_query($dataBase, $pre2sql);
 
-                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
-                  foreach ($rows as $row) { 
-                     print "<option value='" . $row['courseID'] . "'>" . $row['courseName'] . "</option>";
+                  while ($pre2row = mysqli_fetch_array($pre2result)) { $pre2rows[] = $pre2row; }
+                  foreach ($pre2rows as $pr2row) { 
+                     print "<option value='" . $pre2row['courseID'] . "'>" . $pre2row['courseName'] . "</option>";
                   }
                ?>
             </select>
@@ -384,12 +396,12 @@
             <select id='prerequisite3' name='prerequisite3' style='display:none;'>
                <option selected="selected">Prerequisite Three</option>
                <?
-                  $sql = "SELECT courseID, courseName FROM Course";
-                  $result = mysqli_query($dataBase, $sql);
+                  $pre3sql = "SELECT courseID, courseName FROM Course";
+                  $pre3result = mysqli_query($dataBase, $pre3sql);
 
-                  while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
-                  foreach ($rows as $row) { 
-                     print "<option value='" . $row['courseID'] . "'>" . $row['courseName'] . "</option>";
+                  while ($pre3row = mysqli_fetch_array($pre3result)) { $pre3rows[] = $pre3row; }
+                  foreach ($pre3rows as $pre3row) { 
+                     print "<option value='" . $pre3row['courseID'] . "'>" . $pre3row['courseName'] . "</option>";
                   }
                ?>
             </select>
@@ -646,6 +658,26 @@
             <input type="hidden" value="5" name="hiddenButton" id="hiddenButton">
             <input type="submit" value="Submit" id="submitButton">
          </form>
+         
+         
+         <form method="post" action=" " id="deleteSectionForm">
+            <select id = 'section3ID' name='section3ID'>
+               <option selected="selected">Choose A Section</option>
+               <?
+                  $section2Sql = "SELECT * FROM Section INNER JOIN Course ON Section.courseID=Course.courseID";
+                  $section2Result = mysqli_query($dataBase, $section2Sql);
+
+                  while ($section2Row = mysqli_fetch_array($section2Result)) { $section2Rows[] = $section2Row; }
+                  foreach ($section2Rows as $section2Row) { 
+                     print "<option value='" . $section2Row['sectionID'] . "'>" . $section2Row['courseName'] . " ". $section2Row['sectionNum'] ."</option>";
+                  }
+               ?>
+            </select><br>
+            
+             <input type="hidden" value="6" name="hiddenButton" id="hiddenButton">
+            <input type="submit" value="Submit" id="submitButton">
+         </form>
+         
 
       <script>
          var acc = document.getElementsByClassName("accordion");
