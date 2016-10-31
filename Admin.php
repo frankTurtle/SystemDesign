@@ -161,11 +161,11 @@
       }
 
       if($_POST['hiddenButton'] == 2){
-         $course     = $_POST['courseIDInput'];
-         $term       = $_POST['termIDInput'];
-         $timeslot   = $_POST['timeSlotInput'];
-         $room       = $_POST['roomIDInput'];
-         $faculty    = $_POST['facultyIDInput'];
+         $course     = $_POST['courseID'];
+         $term       = $_POST['termID'];
+         $timeslot   = $_POST['timeSlotID'];
+         $room       = $_POST['roomID'];
+         $faculty    = $_POST['facultyID'];
          $sectionNum = $_POST['sectionNumInput'];
          
         // $sqler ="SELECT buildingID FROM `Room` WHERE `roomID`= 1";
@@ -181,7 +181,8 @@
          if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
          else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
       }
-       if($_POST['hiddenButton'] == 3){
+      
+      if($_POST['hiddenButton'] == 3){
          $course2ID  = $_POST['course2ID'];
          $department2  = $_POST['department2ID'];
          $creditHours2 = $_POST['creditHours2Input'];
@@ -211,7 +212,24 @@
          if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
          else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
       }
-   }
+      
+       if($_POST['hiddenButton'] == 5){
+         $section2    = $_POST['section2ID'];
+         $course2     = $_POST['course5ID'];
+         $term2       = $_POST['term2ID'];
+         $timeslot2   = $_POST['timeSlot2ID'];
+         $room2       = $_POST['room2ID'];
+         $faculty2    = $_POST['faculty2ID'];
+         $sectionNum2 = $_POST['sectionNum2Input'];
+         
+     
+               
+         $section2Sql = "UPDATE `Section` SET `courseID` = '$course2'  , `sectionNum` = '$sectionNum2' , `timeslotID` = '$timeslot2' , `termID`= '$term2', `roomID` ='$room2', `facultyID` = '$faculty2'
+                 WHERE `sectionID` = '$section2' ;";
+
+         if (mysqli_query($dataBase, $section2Sql)) { echo "New record created successfully"; }
+         else { echo "Error: " . $section2Sql . "<br>" . mysqli_error($dataBase); }
+      }
    }
 
    function getCorrectUserType( $formType ){
@@ -309,7 +327,7 @@
          </form>
       </div>
 
-       <button class="accordion">Course</button>
+      <button class="accordion">Course</button>
       <div class="panel">
          <div class="buttonBlock" id="buttonBlock2">
             <button class="button" onclick="toggleElement( 'buttonBlock2', 'newCourseDiv' );" id="addNewCourseButton">Add New Course</button>
@@ -540,6 +558,95 @@
             <input type="submit" value="Submit" id="submitButton">
          </form>
       </div>
+      
+      <form method="post" action=" " id="EditSectionForm">
+            <select id = 'section2ID' name='section2ID'>
+               <option selected="selected">Choose A Section</option>
+               <?
+                  $sectionSql = "SELECT * FROM Section INNER JOIN Course ON Section.courseID=Course.courseID";
+                  $sectionResult = mysqli_query($dataBase, $sectionSql);
+
+                  while ($sectionRow = mysqli_fetch_array($sectionResult)) { $sectionRows[] = $sectionRow; }
+                  foreach ($sectionRows as $sectionRow) { 
+                     print "<option value='" . $sectionRow['sectionID'] . "'>" . $sectionRow['courseName'] . " ". $sectionRow['sectionNum'] ."</option>";
+                  }
+               ?>
+            </select>
+            
+            <select id = 'course5ID' name='course5ID'>
+               <option selected="selected">Choose A Course</option>
+               <?
+                  $course5Sql = "SELECT * FROM Course";
+                  $course5Result = mysqli_query($dataBase, $course5Sql);
+
+                  while ($course5Row = mysqli_fetch_array($course5Result)) { $course5Rows[] = $course5Row; }
+                  foreach ($course5Rows as $course5Row) { 
+                     print "<option value='" . $course5Row['courseID'] . "'>" . $course5Row['courseName'] . "</option>";
+                  }
+               ?>
+            </select>
+                <input type="text" name="sectionNum2Input" placeholder="Section Number" required="true"><br>
+                   
+               <select id = 'term2ID' name='term2ID'>
+                       <option selected="selected">Choose A Term</option>
+                  <?
+                      $term2Sql = "SELECT * FROM Term";
+                  $term2Result = mysqli_query($dataBase, $term2Sql);
+
+                  while ($term2Row = mysqli_fetch_array($term2Result)) { $term2Rows[] = $term2Row; }
+                  foreach ($term2Rows as $row2Term) { 
+                     print "<option value='" . $row2Term['termID'] . "'>" . $row2Term['semester'] . " " . $row2Term['year'] . "</option>";
+                  }
+               ?>
+            </select>
+                  
+            
+             <select id = 'timeSlot2ID' name='timeSlot2ID'>
+                       <option selected="selected">Choose A Timeslot </option>
+                  <?
+                      $timeSlot2sql = "SELECT * FROM Timeslot INNER JOIN Time ON Timeslot.timeID=Time.timeID INNER JOIN Day ON Timeslot.dayID=Day.DayID";
+                  $timeSlot2result = mysqli_query($dataBase, $timeSlot2sql);
+                  
+                  
+                  while ($timeSlot2row = mysqli_fetch_array($timeSlot2result)) { $timeSlot2rows[] = $timeSlot2row; }
+                  foreach ($timeSlot2rows as $timeSlot2row) { 
+                     print "<option value='" . $timeSlot2row['timeslotID'] . "'>" . $timeSlot2row['timeStart'] . "-" . $timeSlot2row['timeEnd'] . " " . $timeSlot2row['days'] ."</option>";
+                  }
+               ?>
+            </select><br>
+
+             <select id = 'room2ID' name='room2ID'>
+                       <option selected="selected">Choose A Room</option>
+                  <?
+                      $room2Sql = "SELECT * FROM Room INNER JOIN Building ON Room.buildingID=Building.buildingID";
+                  $room2Result = mysqli_query($dataBase, $room2Sql);
+
+                  while ($room2Row = mysqli_fetch_array($room2Result)) { $room2Rows[] = $room2Row; }
+                  foreach ($room2Rows as $room2Row) { 
+                     print "<option value='" . $room2Row['roomID'] . "'>" . $room2Row['roomNum'] . " " . $room2Row['buildingName'] . "</option>";
+                  }
+               ?>
+            </select><br>
+            
+              <select id = 'faculty2ID' name='faculty2ID'>
+                       <option selected="selected">Choose A Faculty</option>
+                  <?
+                      $faculty2Sql = "SELECT * FROM Faculty INNER JOIN User ON Faculty.facultyID=User.userID";
+                  $faculty2Result = mysqli_query($dataBase, $facultySql);
+
+                  while ($faculty2Row = mysqli_fetch_array($faculty2Result)) { $faculty2Rows[] = $faculty2Row; }
+                  foreach ($faculty2Rows as $faculty2Row) { 
+                     print "<option value='" . $faculty2Row['facultyID'] . "'>" ."Faculty ID: ". $faculty2Row['facultyID'] . " " . $faculty2Row['firstName'] . " ". $faculty2Row['lastName']  ."</option>";
+                  }
+               ?>
+            </select><br>
+        
+           
+
+            <input type="hidden" value="5" name="hiddenButton" id="hiddenButton">
+            <input type="submit" value="Submit" id="submitButton">
+         </form>
+
       <script>
          var acc = document.getElementsByClassName("accordion");
          var i;
