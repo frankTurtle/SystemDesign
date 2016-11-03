@@ -36,7 +36,7 @@
             break;
 
         case 2:
-            header( 'Location: Faculty.php' );
+            header( 'Location: FacultyT.php' );
             break;
 
         case 3:
@@ -89,6 +89,8 @@
                   <label>Password  :</label><input type = "password" name = "password" class = "box" /><br/><br />
                   <input type = "submit" value = " Submit "/><br />
                </form>
+
+               <button class="box">View Courses</button>
                
                <div style = "font-size:11px; color:#cc0000; margin-top:10px"><?php echo $error; ?></div>
                     
