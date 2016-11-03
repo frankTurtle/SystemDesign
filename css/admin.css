@@ -173,7 +173,7 @@ header {
   letter-spacing: 7px;
 }
 
-#newUserForm, #createCourseForm, #searchUserForm {
+form {
   position: relative;
   width: 500px;
   margin: 50px auto 100px auto;
@@ -296,4 +296,9 @@ textarea:hover {
     position:relative;
     top:1px;
     outline:none;
+}
+
+.buttonBlock {
+  display: flex;
+  justify-content: space-between;
 }
