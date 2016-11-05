@@ -15,11 +15,13 @@
       // If result matched $myusername and $mypassword, table row must be 1 row
       if($count == 1) {
         session_start();
-         $_SESSION['login_user'] = $myusername;
+        $row = mysqli_fetch_row($result);
 
-         $typeOfUser = getUserType(mysqli_fetch_row($result));
+        $_SESSION['login_user'] = $myusername;
+
+        $typeOfUser = getUserType($row);
          
-         navigate( $typeOfUser );
+        navigate( $typeOfUser );
       }else {
          $error = "Your Login Name or Password is invalid";
       }
