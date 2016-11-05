@@ -40,69 +40,81 @@
 
          <div id="newUserDiv">
             <div id="sliderResult" class="transition">
-				<table class="table-fill">
-					<thead>
-						<tr>
-							<th class="text-left">Hold Type</th>
-							<th class="text-left">Active</th>
-							<th class="text-left">Days Left</th>
-							<th class="text-left">Description</th>
-						</tr>
-					</thead>
+            	<?
+            		$getHoldsSQL = "SELECT * FROM StudentHolds INNER JOIN Holds ON StudentHolds.holdID = Holds.holdID WHERE studentID = $userID";
+            		$result = mysqli_query($dataBase, $getHoldsSQL);
+            		while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
 
-					<tbody class="table-hover">
-						<?
-							$getHoldsSQL = "SELECT * FROM StudentHolds INNER JOIN Holds ON StudentHolds.holdID = Holds.holdID WHERE studentID = $userID";
+            		if( count( $rows ) == 0 ){
+            			print "<h1 style='text-align: center'> Congratulations no holds!</h1>";
+            		}
+            		else{
+            			echo'
+	            			<table class="table-fill">
+						
+							<thead>
+								<tr>
+									<th class="text-left">Hold Type</th>
+									<th class="text-left">Active</th>
+									<th class="text-left">Days Left</th>
+									<th class="text-left">Description</th>
+								</tr>
+							</thead>
 
-		                  	$result = mysqli_query($dataBase, $getHoldsSQL);
+							<tbody class="table-hover">
+						';
 
-		                  	while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+						function getHoldTypeName( $holdType ){
+	                  		switch ($holdType) {
+	                  			case 0:
+	                  				return "Disciplinary";
+	                  				break;
 
-		                  	foreach ($rows as $row) { 
-		                  		$index = 0;
+                  				case 1:
+	                  				return "Financial";
+	                  				break;
 
-			                  	print "<tr data-row-id=" . $row['userID'] . ">";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . getHoldTypeName( $row['holdType'] ) . "</td>";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . isActive( $row['active'] ) . "</td>";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . timeLeft( $row['dateCreated'], $row['durationInDays'] ). "</td>";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $row['description'] . "</td>";
-			                  	print "</tr>";
-		                  	}
+                  				case 2:
+	                  				return "Academic";
+	                  				break;
 
-		                  	function getHoldTypeName( $holdType ){
-		                  		switch ($holdType) {
-		                  			case 0:
-		                  				return "Disciplinary";
-		                  				break;
+                  				case 3:
+	                  				return "Immunization";
+	                  				break;
+	                  		}
+	                  	}
 
-	                  				case 1:
-		                  				return "Financial";
-		                  				break;
+	                  	function isActive( $active ){
+	                  		return ( $active == 1 )
+	                  			? "Yes"
+	                  			: "No";
+	                  	}
 
-	                  				case 2:
-		                  				return "Academic";
-		                  				break;
+	                  	function timeLeft( $dateCreated, $duration ){
+							$daysPassed = round(abs(time() - strtotime($dateCreated)) / 86400);
+							return $duration - $daysPassed;
+	                  	}
 
-	                  				case 3:
-		                  				return "Immunization";
-		                  				break;
-		                  		}
-		                  	}
+	                  	foreach ($rows as $row) { 
+	                  		$index = 0;
 
-		                  	function isActive( $active ){
-		                  		return ( $active == 1 )
-		                  			? "Yes"
-		                  			: "No";
-		                  	}
+		                  	print "<tr data-row-id=" . $row['userID'] . ">";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . getHoldTypeName( $row['holdType'] ) . "</td>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . isActive( $row['active'] ) . "</td>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . timeLeft( $row['dateCreated'], $row['durationInDays'] ). "</td>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . $row['description'] . "</td>";
+		                  	print "</tr>";
+	                  	}
+			                  	
+			            echo'
+							</tbody>
 
-		                  	function timeLeft( $dateCreated, $duration ){
-								$daysPassed = round(abs(time() - strtotime($dateCreated)) / 86400);
-								return $duration - $daysPassed;
-		                  	}
-		               ?>
-					</tbody>
+							</table>
+						';
+            		}
+     
 
-				</table>
+				?>
 			</div>
 
 			<br>
