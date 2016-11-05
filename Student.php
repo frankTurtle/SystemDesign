@@ -30,15 +30,10 @@
 
       <button class="accordion">Holds</button> 
       <div class="panel">
-         <!-- <div class="buttonBlock" id="buttonBlock">
-            <button class="button" onclick="toggleElement( 'buttonBlock', 'newUserDiv' );" id="addNewUserButton">New User</button>
-            <button class="button" onclick="toggleElement( 'buttonBlock', 'searchUserDiv' );" id="searchUserButton">Search User</button>
-            <button class="button" onclick="toggleElement( 'buttonBlock', 'searchUserDiv' );" id="editUserButton">Edit User</button>
-         </div> -->
 
          <br>
 
-         <div id="newUserDiv">
+         <div id="holdsDive">
             <div id="sliderResult" class="transition">
             	<?
             		$getHoldsSQL = "SELECT * FROM StudentHolds INNER JOIN Holds ON StudentHolds.holdID = Holds.holdID WHERE studentID = $userID";
@@ -120,18 +115,76 @@
 			<br>
 
          </div>
-     </div>
+      </div>
 
-     <script>
-         var acc = document.getElementsByClassName("accordion");
-         var i;
+      <button class="accordion">Add or Drop Classes</button> 
+      <div class="panel">
 
-         for (i = 0; i < acc.length; i++) {
-             acc[i].onclick = function(){
-                 this.classList.toggle("active");
-                 this.nextElementSibling.classList.toggle("show");
-           }
-         }
-      </script>
+         <br>
+
+         <div id="holdsDive">
+            <div id="sliderResult" class="transition">
+
+            	<form method="post" action="" id="addOrDropClassForm">
+
+                   	<select id='termID' name='termID' onchange="getSubject(this.value, subject);">
+                       	<option selected="selected">Choose A Term</option>
+
+	                  	<?
+		                    $termSql = "SELECT * FROM Term";
+		                  	$termResult = mysqli_query($dataBase, $termSql);
+
+		                	while ($termRow = mysqli_fetch_array($termResult)) { $termRows[] = $termRow; }
+		                  	foreach ($termRows as $rowTerm) { 
+		                    	print "<option value='" . $rowTerm['termID'] . "'>" . $rowTerm['semester'] . " " . $rowTerm['year'] . "</option>";
+		                  	}
+		               ?>
+
+ 	               	</select>
+
+ 	               	<select id='subject' name='subject' style='display:none'>
+
+	               	<input type="submit" value="Register" id="submitButton">
+
+            	</form>
+			</div>
+
+			<br>
+
+         </div>
+      </div>
+
+    <script>
+	    var acc = document.getElementsByClassName("accordion");
+	    var i;
+
+	    for (i = 0; i < acc.length; i++) {
+	        acc[i].onclick = function(){
+	            this.classList.toggle("active");
+	            this.nextElementSibling.classList.toggle("show");
+    	    }
+     	}
+
+     	function getSubject( term, unhideThis ){
+     		document.getElementById("subject").innerHTML = "";
+     		document.getElementById("subject").style.display = '';
+
+			$.ajax({
+					type: 'POST',
+					url: 'GetSubject.php',
+					data: {
+						  termSelected:term
+			 		},
+
+			 		success:
+			 		function (response) {
+			  			document.getElementById("subject").innerHTML = response; 
+		 			}
+			});
+		}
+
+    </script>
+
+	</body>
    
 </html>
