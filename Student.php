@@ -64,7 +64,7 @@
 			                  	print "<tr data-row-id=" . $row['userID'] . ">";
 			                  	print "<td class='text-left' col-index=" . $index++ . ">" . getHoldTypeName( $row['holdType'] ) . "</td>";
 			                  	print "<td class='text-left' col-index=" . $index++ . ">" . isActive( $row['active'] ) . "</td>";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . timeLeft( $row['dateCreated'] ). "</td>";
+			                  	print "<td class='text-left' col-index=" . $index++ . ">" . timeLeft( $row['dateCreated'], $row['durationInDays'] ). "</td>";
 			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $row['description'] . "</td>";
 			                  	print "</tr>";
 		                  	}
@@ -95,8 +95,9 @@
 		                  			: "No";
 		                  	}
 
-		                  	function timeLeft( $dateCreated ){
-								return round(abs(time() - strtotime($dateCreated)) / 86400);
+		                  	function timeLeft( $dateCreated, $duration ){
+								$daysPassed = round(abs(time() - strtotime($dateCreated)) / 86400);
+								return $duration - $daysPassed;
 		                  	}
 		               ?>
 					</tbody>
@@ -105,7 +106,7 @@
 			</div>
 
 			<br>
-			
+
          </div>
      </div>
 
