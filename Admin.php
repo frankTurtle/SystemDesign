@@ -227,7 +227,7 @@
          $section2Sql = "UPDATE `Section` SET `courseID` = '$course2'  , `sectionNum` = '$sectionNum2' , `timeslotID` = '$timeslot2' , `termID`= '$term2', `roomID` ='$room2', `facultyID` = '$faculty2'
                  WHERE `sectionID` = '$section2' ;";
 
-         if (mysqli_query($dataBase, $section2Sql)) { echo "New record created successfully"; }
+         if (mysqli_query($dataBase, $section2Sql)) { echo "New record Edited successfully"; }
          else { echo "Error: " . $section2Sql . "<br>" . mysqli_error($dataBase); }
       }
       
@@ -239,16 +239,55 @@
                
          $section3sql = "DELETE FROM `Section` WHERE `sectionID` = '$section3ID';";
 
-         if (mysqli_query($dataBase, $section3sql)) { echo "New record created successfully"; }
+         if (mysqli_query($dataBase, $section3sql)) { echo "New record Deleted successfully"; }
          else { echo "Error: " . $section3sql . "<br>" . mysqli_error($dataBase); }
       }
       
-      if($_POST['hiddenButton'] = 7){
+      if($_POST['hiddenButton'] == 7){
          $student  = $_POST['studentID'];
          $faculty3 = $_POST['faculty3ID'];
          $date     = $_POST['studAdvDateButton'];
+         $convertedDate = date("Y-m-d", strtotime($_POST['studAdvDateButton']));
+
+         print "<h1>date: " . $date . "</h1>";
+         print "<h1>converted: " . $convertedDate . "</h1>";
+         
+         $advisorSql = "INSERT INTO `StudentAdviser`(`studentID`, `facultyID`, `dateAssigned`)
+                 VALUES ( '$student', '$faculty3' , '$convertedDate');";
+         
+          if (mysqli_query($dataBase, $advisorSql)) { echo "New record created successfully"; }
+         else { echo "Error: " . $advisorSql . "<br>" . mysqli_error($dataBase); }
+         
       
       }
+      
+      if($_POST['hiddenButton'] == 8){
+         $student2  = $_POST['studAdvID'];
+         $faculty4 = $_POST['faculty4ID'];
+         $date2     = $_POST['studAdvDate2Button'];
+         $date2 = date('Y-m-d', strtotime($date2));
+         
+         $advisor2Sql = "UPDATE `StudentAdviser` SET `facultyID` = '$faculty4' , `dateAssigned` = '$date2' 
+                 WHERE `studentID` = '$student2' ;";
+         
+          if (mysqli_query($dataBase, $advisor2Sql)) { echo "New record created successfully"; }
+         else { echo "Error: " . $advisor2Sql . "<br>" . mysqli_error($dataBase); }
+         
+      
+      }
+      
+      if($_POST['hiddenButton'] == 9){
+         $student3  = $_POST['studAdv2ID'];
+        
+         
+         $advisor3Sql = "DELETE FROM `StudentAdviser` WHERE `studentID` = '$student3';";
+         
+          if (mysqli_query($dataBase, $advisor3Sql)) { echo "record deleted successfully"; }
+         else { echo "Error: " . $advisor3Sql . "<br>" . mysqli_error($dataBase); }
+         
+      
+      }
+      
    }
 
    function getCorrectUserType( $formType ){
@@ -731,16 +770,16 @@
           <button class="accordion">Advisor</button>
       <div class="panel">
          <div class="buttonBlock" id="buttonBlock4">
-            <button class="button" onclick="toggleElement( 'buttonBlock4', 'newStudentAdvisorDiv' );" id="addNewStudAdvButton">New Section</button>
-            <button class="button" onclick="toggleElement( 'buttonBlock4', 'editStudentAdvisorDiv' );" id="editStudAdvButton">Edit Section</button>
-            <button class="button" onclick="toggleElement( 'buttonBlock4', 'deleteStudentAdvisorDiv' );" id="deleteStudAdvButton">Delete Section</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock4', 'newStudentAdvisorDiv' );" id="addNewStudAdvButton">New Advisor</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock4', 'editStudentAdvisorDiv' );" id="editStudAdvButton">Edit Advisor</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock4', 'deleteStudentAdvisorDiv' );" id="deleteStudAdvButton">Delete Advisor</button>
          </div>
          <div id ="newStudentAdvisorDiv" style="display:none">
         <form method="post" action=" " id="createStudentAdvisorForm">
         
         
         <input type="hidden" value="7" name="hiddenButton" id="hiddenButton">
-        <input type="date" value="" id="studAdvDateButton"><br>
+        <input type="date" value="" id="studAdvDateButton" name="studAdvDateButton"><br>
        
         <select id = 'studentID' name='studentID'>
                <option selected="selected">Choose A Student</option>
@@ -770,7 +809,69 @@
             <input type="submit" value="Submit" id="submitButton">
             
             </form>
+            <button id="doneButton" class="button" onclick="toggleElement( 'newStudentAdvisorDiv', 'buttonBlock4' );">Done</button>
          </div>
+         
+          <div id ="editStudentAdvisorDiv" style="display:none">
+        <form method="post" action=" " id="editStudentAdvisorForm">
+        
+        
+        <input type="hidden" value="8" name="hiddenButton" id="hiddenButton">
+        <input type="date" value="" id="studAdvDate2Button"><br>
+        
+        <select id = 'studAdvID' name='studAdvID'>
+               <option selected="selected">Choose A student Advisor</option>
+               <?
+                  $studentAdvSql = "SELECT * FROM StudentAdviser INNER JOIN User ON StudentAdviser.studentID = User.userID ";
+                  $studentAdvResult = mysqli_query($dataBase, $studentAdvSql);
+
+                  while ($studentAdvRow = mysqli_fetch_array($studentAdvResult)) { $studentAdvRows[] = $studentAdvRow; }
+                  foreach ($studentAdvRows as $studentAdvRow) { 
+                     print "<option value='" . $studentAdvRow['studentID'] . "'>". $studentAdvRow['studentID']. " " . $studentAdvRow['firstName'] ." ". $studentAdvRow['lastName']  ."</option>";
+                  }
+               ?>
+            </select><br>
+        
+   
+             <select id = 'faculty4ID' name='faculty4ID'>
+               <option selected="selected">Choose A Faculty</option>
+               <?
+                  $faculty3Sql = "SELECT * FROM Faculty INNER JOIN User ON Faculty.facultyID = User.userID";
+                  $faculty3Result = mysqli_query($dataBase, $faculty3Sql);
+
+                  while ($faculty3Row = mysqli_fetch_array($faculty3Result)) { $faculty3Rows[] = $faculty3Row; }
+                  foreach ($faculty3Rows as $faculty3Row) { 
+                     print "<option value='" . $faculty3Row['facultyID'] . "'>". $faculty3Row['facultyID']. " " . $faculty3Row['firstName'] ." ". $faculty3Row['lastName']  ."</option>";
+                  }
+               ?>
+            </select><br>
+             <input type="submit" value="Submit" id="submitButton">
+         </form>
+         <button id="doneButton" class="button" onclick="toggleElement( 'editStudentAdvisorDiv', 'buttonBlock4' );">Done</button>
+         </div>
+          <div id ="deleteStudentAdvisorDiv" style="display:none">
+        <form method="post" action=" " id="deleteStudentAdvisorForm">
+        
+        
+        <input type="hidden" value="9" name="hiddenButton" id="hiddenButton">
+        
+        <select id = 'studAdv2ID' name='studAdv2ID'>
+               <option selected="selected">Choose A student</option>
+               <?
+                  $studentAdv2Sql = "SELECT * FROM StudentAdviser INNER JOIN User ON StudentAdviser.studentID = User.userID ";
+                  $studentAdv2Result = mysqli_query($dataBase, $studentAdv2Sql);
+
+                  while ($studentAdv2Row = mysqli_fetch_array($studentAdv2Result)) { $studentAdv2Rows[] = $studentAdv2Row; }
+                  foreach ($studentAdv2Rows as $studentAdv2Row) { 
+                     print "<option value='" . $studentAdv2Row['studentID'] . "'>". $studentAdv2Row['studentID']. " " . $studentAdv2Row['firstName'] ." ". $studentAdv2Row['lastName']  ."</option>";
+                  }
+               ?>
+            </select><br>
+                  <input type="submit" value="Submit" id="submitButton">
+            </form>
+            <button id="doneButton" class="button" onclick="toggleElement( 'deleteStudentAdvisorDiv', 'buttonBlock4' );">Done</button>
+            </div>
+         
          </div>
 
       <script>
