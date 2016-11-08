@@ -6,6 +6,7 @@
 	<head>
      <link rel="stylesheet" type="text/css" href="css/student.css">
      <script src="javascript/admin.js" type="text/javascript"></script>
+     <script src="javascript/student.js" type="text/javascript"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
      <title>Student Page</title>
    </head>
@@ -122,9 +123,72 @@
 
          <br>
 
-         <div id="holdsDive">
+         <div id="currentClassesDiv">
             <div id="sliderResult" class="transition">
 
+            	<div id="currentClasses">
+	            	<?
+	            		$getCurrentClassesSQL = "SELECT * FROM CourseEnrollment 
+	            		                         JOIN Section ON CourseEnrollment.sectionID = Section.sectionID 
+	            		                         JOIN User ON Section.facultyID = User.userID 
+	            		                         JOIN Room ON Section.roomID = Room.roomID 
+	            		                         JOIN Course ON Section.courseID = Course.courseID 
+	            		                         WHERE studentID = 112";
+
+	            		$currentClassesResult = mysqli_query($dataBase, $getCurrentClassesSQL);
+	            		while ($classesRow = mysqli_fetch_array($currentClassesResult)) { $currentClassesRows[] = $classesRow; }
+
+	            		if( count( $currentClassesRows ) == 0 ){
+	            			print "<h1 style='text-align: center'>You're not currently enrolled in any classes</h1>";
+	            		}
+	            		else{
+	            			echo'
+	            				<h1 style="text-align: center">Here is your current schedule</h1>
+	            				<br>
+		            			<table class="table-fill">
+							
+								<thead>
+									<tr>
+										<th class="text-left">Course</th>
+										<th class="text-left">Credit Hours</th>
+										<th class="text-left">Room Number</th>
+										<th class="text-left">Professor</th>
+										<th class="text-left">Section</th>
+										<th class="text-left"></th>
+									</tr>
+								</thead>
+
+								<tbody class="table-hover">
+							';
+
+		                  	foreach ($currentClassesRows as $classesRow) { 
+		                  		$index = 0;
+
+			                  	print "<tr data-row-id=" . $classesRow['userID'] . ">";
+			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['courseName'] . "</td>";
+			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['creditHours'] . "</td>";
+			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['roomNum'] . "</td>";
+			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['firstName'] . " " . $classesRow['lastName'] . "</td>";
+			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['sectionNum'] . "</td>";
+			                  	print "<td class='text-center' col-index=" . $index++ . "><button class='deleteButton'>Delete</button></td>";
+			                  	print "</tr>";
+		                  	}
+				                  	
+				            echo'
+								</tbody>
+
+								</table>
+							';
+	            		}
+	     
+
+					?>
+				</div>
+				<br>
+
+				<hr>
+
+				<h1 style='text-align: center'>Add a new Class</h1>
             	<form method="post" action="" id="addOrDropClassForm">
 
                    	<select id='termID' name='termID' onchange="getSubject(this.value, subject);">
@@ -142,7 +206,8 @@
 
  	               	</select>
 
- 	               	<select id='subject' name='subject' style='display:none'>
+ 	               	<select id='subject' name='subject' style='display:none' onchange="getTimeSlot(this.value);"></select>
+ 	               	<select id='timeSlot' name='timeSlot' style='display:none'> </select>
 
 	               	<input type="submit" value="Register" id="submitButton">
 
@@ -154,37 +219,17 @@
          </div>
       </div>
 
-    <script>
-	    var acc = document.getElementsByClassName("accordion");
-	    var i;
+      <script>
+      	var acc = document.getElementsByClassName("accordion");
+		var i;
 
-	    for (i = 0; i < acc.length; i++) {
-	        acc[i].onclick = function(){
-	            this.classList.toggle("active");
-	            this.nextElementSibling.classList.toggle("show");
-    	    }
-     	}
-
-     	function getSubject( term, unhideThis ){
-     		document.getElementById("subject").innerHTML = "";
-     		document.getElementById("subject").style.display = '';
-
-			$.ajax({
-					type: 'POST',
-					url: 'GetSubject.php',
-					data: {
-						  termSelected:term
-			 		},
-
-			 		success:
-			 		function (response) {
-			  			document.getElementById("subject").innerHTML = response; 
-		 			}
-			});
+		for (i = 0; i < acc.length; i++) {
+		    acc[i].onclick = function(){
+		        this.classList.toggle("active");
+		        this.nextElementSibling.classList.toggle("show");
+		    }
 		}
-
-    </script>
-
+	</script>
 	</body>
    
 </html>

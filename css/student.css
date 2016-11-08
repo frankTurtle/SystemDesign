@@ -437,3 +437,15 @@ td.text-center {
 td.text-right {
   text-align: right;
 }
+
+/*td.deleteButton{
+  border: 0px;
+  outline: none;
+  font-size: 35px;
+}
+
+td.deleteButton:hover{
+  background:#4E5066;
+  color:#FFFFFF;
+}
+*/
