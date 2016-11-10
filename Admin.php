@@ -1012,7 +1012,7 @@
             <button id="doneButton" class="button" onclick="toggleElement( 'editRoomDiv', 'buttonBlock5' );">Done</button>
        </div>
        <div id ="deleteRoomDiv" style="display:none">>
-         <form method="post" action=" " id="editRoomForm">
+         <form method="post" action=" " id="deleteRoomForm">
          <input type="hidden" value="12" name="hiddenButton" id="hiddenButton">
 
           <select id = 'room4ID' name='room4ID'>
@@ -1034,7 +1034,60 @@
 
        </div>
      </div>
-        
+       <button class="accordion">Building</button>
+      <div class="panel">
+         <div class="buttonBlock" id="buttonBlock6">
+            <button class="button" onclick="toggleElement( 'buttonBlock6', 'newBuildingDiv' );" id="addBuildingButton">New Room</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock6', 'editBuildingDiv' );" id="editBuildingButton">Edit Room</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock6', 'deleteBuildingDiv' );" id="deleteBuildingButton">Delete Room</button>
+         </div>
+         <div id ="newBuildingDiv" style="display:none">
+        <form method="post" action=" " id="createBuildingForm">
+        <input type="hidden" value="13" name="hiddenButton" id="hiddenButton">
+         <input type="text" name="buildNameInput" placeholder="Building Name" required="true"><br>
+        <input type="submit" value="Submit" id="submitButton">
+        </form>
+        <button id="doneButton" class="button" onclick="toggleElement( 'newBuildingDiv', 'buttonBlock6' );">Done</button>
+ </div>
+ <div id = "editBuildingDiv" style="display:none">
+ <form method="post" action=" " id="editBuildingForm">
+ <select id='editBuilding' name="editBuilding">
+ <option selected = "selected">Choose a Building</option>
+ <?
+  $build3Sql = "SELECT * FROM Building";
+                  $build3Result = mysqli_query($dataBase, $build3Sql);
+
+                  while ($build3Row = mysqli_fetch_array($build3Result)) { $build3Rows[] = $build3Row; }
+                  foreach ($build3Rows as $build3Row) { 
+                     print "<option value='" . $build3Row['buildingID'] . "'>" . $build3Row['buildingName'] ."</option>";
+                  }
+               ?>
+</select><br>
+<input type ="text" name="buildName2Input" placeholder="Building Name" required="true"><br>
+<input type="hidden" value="14" name="hiddenButton" id="hiddenButton">
+<input type="submit" value="Submit" id="submitButton">
+</form>
+ <button id="doneButton" class="button" onclick="toggleElement( 'editBuildingDiv', 'buttonBlock6' );">Done</button>
+ </div>
+<div id ="deleteBuildingDiv" style="display:none">
+<form method ="post" action=" " id="deleteBuildingForm">
+<select id="deleteBuilding" name="deleteBuilding">
+<?
+  $build4Sql = "SELECT * FROM Building";
+                  $build4Result = mysqli_query($dataBase, $build4Sql);
+
+                  while ($build4Row = mysqli_fetch_array($build4Result)) { $build4Rows[] = $build4Row; }
+                  foreach ($build4Rows as $build4Row) { 
+                     print "<option value='" . $build4Row['buildingID'] . "'>" . $build4Row['buildingName'] ."</option>";
+                  }
+               ?>
+</select><br>
+<input type="hidden" value="15" name="hiddenButton" id="hiddenButton">
+<input type="submit" value = "Submit" id="submitButton">
+</form>
+ <button id="doneButton" class="button" onclick="toggleElement( 'deleteBuildingDiv', 'buttonBlock6' );">Done</button>
+ </div>
+</div>
         
       <script>
          var acc = document.getElementsByClassName("accordion");
