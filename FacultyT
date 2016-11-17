@@ -1,0 +1,341 @@
+<?php
+   include('Session.php');
+   include("Config.php");
+   
+   if($_SERVER["REQUEST_METHOD"] == "POST") {
+      if($_POST['hiddenButton'] == 2){
+         $section      = $_POST['classselect'];
+         $date         = $_POST['dateclass'];
+         $count        = $_POST['classcount'];
+
+         $sql3 = "SELECT * FROM CourseEnrollment INNER JOIN User ON User.userID = CourseEnrollment.studentID WHERE sectionID =".$section."";
+         if($result3 = mysqli_query($dataBase, $sql3) )//AND mysqli_num_rows($result3)==$count) 
+         {
+
+            while ($row3 = mysqli_fetch_array($result3)) { $rows3[] = $row3; }
+            foreach ($rows3 as $row3) { 
+
+               $student  = $row3['userID'];
+               $status   = $_POST['status'.$student];
+
+               $sql4 = "INSERT INTO `Attendance`(`studentID`, `sectionID`, `absentPresent`, `meetingDate`)
+                        VALUES ( '$student', '$section', '$status', '$date');";
+
+               if (mysqli_query($dataBase, $sql4)) { echo "Passed, "; }
+               else { echo "Error: " . $sql4 . "<br>" . mysqli_error($dataBase); }
+            }
+         }
+      }
+      if($_POST['hiddenButtonGrade'] == 3){
+         $section      = $_POST['classselect'];
+         $count        = $_POST['classcount'];
+         $gType        = $_POST['gType'];
+
+         $sql3 = "SELECT * FROM CourseEnrollment INNER JOIN User ON User.userID = CourseEnrollment.studentID WHERE sectionID =".$section."";
+         if($result3 = mysqli_query($dataBase, $sql3) )//AND mysqli_num_rows($result3)==$count) 
+         {
+
+            while ($row3 = mysqli_fetch_array($result3)) { $rows3[] = $row3; }
+            foreach ($rows3 as $row3) { 
+
+               $student  = $row3['userID'];
+               $status   = $_POST['status'.$student];
+
+               if ($gType == 0) {
+                  $sql4 = "UPDATE `CourseEnrollment` SET `midtermGrade` = '$status' WHERE `studentID` = '$student' AND `sectionID` = '$section';";
+               } else if ($gType == 1) {
+                  $sql4 = "UPDATE `CourseEnrollment` SET `finalGrade` = '$status' WHERE `studentID` = '$student' AND `sectionID` = '$section';";
+               } else {
+                  break;
+               }
+
+               if (mysqli_query($dataBase, $sql4)) { echo "Passed, "; }
+               else { echo "Error: " . $sql4 . "<br>" . mysqli_error($dataBase); }
+            }
+         }
+      }
+   }
+?>
+<html>
+   
+   <head>
+     <link rel="stylesheet" type="text/css" href="css/faculty.css">
+     <script src="javascript/admin.js" type="text/javascript"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <title>Admin Page</title>
+   </head>
+   
+   <body>
+      <h1>Welcome <?php echo $login_session; ?></h1> 
+
+      <ul>
+        <li><a class="active" href="FacultyT.php">Home</a></li>
+
+        <li><a class = "active" href = "Logout.php">Sign Out</a></li>
+      </ul>
+
+      <button class="accordion">Attendance</button> 
+      <div class="panel">
+
+      <?php
+
+         if($_POST['hiddenButton'] == 1) {
+            $classselect = $_POST['classlist'];
+
+            print "<form method='post' action=' ' id='attendanceform'>";
+
+               print "<input type='date' name='dateclass' required='true'><br>";
+
+               $sql2 = "SELECT * FROM CourseEnrollment INNER JOIN User ON User.userID = CourseEnrollment.studentID WHERE sectionID =".$classselect."";
+               $result2 = mysqli_query($dataBase, $sql2);
+               $rowcount = mysqli_num_rows($result2);
+
+               while ($row2 = mysqli_fetch_array($result2)) { $rows2[] = $row2; }
+               foreach ($rows2 as $row2) { 
+
+                  print "<p>".$row2['lastName'].", ".$row2['firstName']."</p>";
+                  print "<input type='radio' name='status".$row2['userID']."' value='0' checked='checked'> Absent";
+                  print "<input type='radio' name='status".$row2['userID']."' value='1'> Present <br>";
+               }
+               
+               print "<input type='hidden' value='".$classselect."' name='classselect' id='classselect'>";
+               print "<input type='hidden' value='".$rowcount."' name='classcount' id='classcount'>";
+               print "<input type='hidden' value='2' name='hiddenButton' id='hiddenButton'>";
+               print "<input type='submit' value='Submit' id='submitButton'>";
+               print "</form>";
+
+         } else {
+
+            print "<form method='post' action=' ' id='attendanceselect'>";
+
+               print "<select id = 'classes' style='display:display;' name='classlist'>";
+                  print "<option selected='selected'>Choose A Class</option>";
+                  
+                     $sql = "SELECT * FROM Section INNER JOIN Course ON Course.courseID = Section.courseID WHERE facultyID =18";
+                     $result = mysqli_query($dataBase, $sql);
+
+                     while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+                     foreach ($rows as $row) { 
+                        print "<option value='" . $row['sectionID'] . "'>" . $row['courseName'] . "  " . $row['sectionNum'] . "</option>";
+                     }
+                  
+               print "</select>";
+
+               print "<input type='hidden' value='1' name='hiddenButton' id='hiddenButton'>";
+               print "<input type='submit' value='Submit' id='submitButton'>";
+            print "</form>";
+
+         }
+
+      ?>
+      </div>
+
+      <button class="accordion">Grading</button> 
+      <div class="panel show">
+
+      <?php
+
+         if($_POST['hiddenButtonGrade'] == 2 && $_POST['gType'] == 1) {
+            $classselect = $_POST['classlist'];
+            $gType = $_POST['gType'];
+
+            print "<form method='post' action=' ' id='attendanceform'>";
+
+               $sql2 = "SELECT * FROM CourseEnrollment INNER JOIN User ON User.userID = CourseEnrollment.studentID WHERE sectionID =".$classselect."";
+               $result2 = mysqli_query($dataBase, $sql2);
+               $rowcount = mysqli_num_rows($result2);
+
+               while ($row2 = mysqli_fetch_array($result2)) { $rows2[] = $row2; }
+               foreach ($rows2 as $row2) { 
+
+                  print "<p>".$row2['lastName'].", ".$row2['firstName']."</p>";
+                  print "<input type='text' name='status".$row2['userID']."' placeholder='4.0' required='true'><br>";
+
+               }
+               
+               print "<input type='hidden' value='".$gType."' name='gType' id='gType'>"; 
+               print "<input type='hidden' value='".$classselect."' name='classselect' id='classselect'>";
+               print "<input type='hidden' value='".$rowcount."' name='classcount' id='classcount'>";
+               print "<input type='hidden' value='3' name='hiddenButtonGrade' id='hiddenButtonGrade'>";
+               print "<input type='submit' value='Submit' id='submitButton'>";
+               print "</form>";
+
+         } else if($_POST['hiddenButtonGrade'] == 2 && $_POST['gType'] == 0)  {
+            $classselect = $_POST['classlist'];
+            $gType = $_POST['gType'];
+            print "<form method='post' action=' ' id='grademidterm'>";
+
+               $sql9 = "SELECT * FROM CourseEnrollment INNER JOIN User ON User.userID = CourseEnrollment.studentID WHERE sectionID =".$classselect."";
+               $result9 = mysqli_query($dataBase, $sql9);
+               $rowcount = mysqli_num_rows($result9);
+
+               while ($row9 = mysqli_fetch_array($result9)) { $rows9[] = $row9; }
+               foreach ($rows9 as $row9) { 
+
+                  print "<p>".$row9['lastName'].", ".$row9['firstName']."</p>";
+                  print "<input type='radio' name='status".$row9['userID']."' value='S' checked='checked'> Satisfactory";
+                  print "<input type='radio' name='status".$row9['userID']."' value='U'> Unsatisfactory";
+                  print "<input type='radio' name='status".$row9['userID']."' value='N/A'> N/a<br>";
+               }
+               
+               print "<input type='hidden' value='".$gType."' name='gType' id='gType'>"; 
+               print "<input type='hidden' value='".$classselect."' name='classselect' id='classselect'>";
+               print "<input type='hidden' value='".$rowcount."' name='classcount' id='classcount'>";
+               print "<input type='hidden' value='3' name='hiddenButtonGrade' id='hiddenButtonGrade'>";
+               print "<input type='submit' value='Submit' id='submitButton'>";
+               print "</form>";
+
+
+         } else if($_POST['hiddenButtonGrade'] == 1)  {
+
+            $gType = $_POST['gType'];
+            print "<form method='post' action=' ' id='gradeclass'>";
+
+               print "<select id = 'classes' style='display:display;' name='classlist'>";
+                  print "<option selected='selected'>Choose A Class</option>";
+                  
+                     $sql = "SELECT * FROM Section INNER JOIN Course ON Course.courseID = Section.courseID WHERE facultyID =18";
+                     $result = mysqli_query($dataBase, $sql);
+
+                     while ($row = mysqli_fetch_array($result)) { $rows[] = $row; }
+                     foreach ($rows as $row) { 
+                        print "<option value='" . $row['sectionID'] . "'>" . $row['courseName'] . "  " . $row['sectionNum'] . "</option>";
+                     }
+                  
+               print "</select>";
+
+               print "<input type='hidden' value='".$gType."' name='gType' id='gType'>"; 
+               print "<input type='hidden' value='2' name='hiddenButtonGrade' id='hiddenButtonGrade'>";
+               print "<input type='submit' value='Submit' id='submitButton'>";
+            print "</form>";
+
+         } else {
+
+            print "<form method='post' action=' ' id='gradetype'>";
+
+
+
+                  print "<p>MidtermGrade</p>";
+                  print "<input type='radio' name='gType' value='0' checked='checked'> Midterm";
+                  print "<p>FinalGrade</p>";
+                  print "<input type='radio' name='gType' value='1'> Final<br>";
+         
+               
+
+               print "<input type='hidden' value='1' name='hiddenButtonGrade' id='hiddenButtonGrade'>";
+               print "<input type='submit' value='Submit' id='submitButton'>";
+               print "</form>";
+
+         }
+
+      ?>
+      </div>
+
+      <button class="accordion">Advising</button> 
+      <div class="panel">
+
+      <?php
+
+         if($_POST['hiddenButtonAdvisor'] == 2) {
+            
+            $student = $_POST['advisee'];
+            $sql5 = "SELECT * FROM User WHERE userID =$student";
+                     $result5 = mysqli_query($dataBase, $sql5);
+
+                     while ($row5 = mysqli_fetch_array($result5)) { $rows5[] = $row5; }
+                     foreach ($rows5 as $row5) { 
+                        print "<option vale='" . $row5['userID'] . "'>" . $row5['firstName'] . "  " . $row5['lastName'] . "</option>";
+                     }
+
+
+            print "<table>
+                <tr>
+                  <th scope='col' colspan='2'>Name</th>
+                  <th scope='col'></th>
+                  <th scope='col'></th>
+                </tr>
+                <tr>
+                  <td>Email : </td>
+                  <td>Place Holda</td>
+                </tr>
+                <tr>
+                  <td>Status : </td>
+                  <td>Place Holda</td>
+                </tr>
+                <tr>
+                  <td>Phone# : </td>
+                  <td>Place Holda</td>
+                </tr>
+            </table>";
+            print "<form method='post' action=' ' id='returnswitch'>";
+
+            print "<input type='hidden' value='1' name='hiddenButtonAdvisor' id='hiddenButtonAdvisor'>";
+            print "<input type='submit' value='Back' id='submitButton'>";
+            print "</form>";
+
+         } else if($_POST['hiddenButtonAdvisor'] == 1)  {
+
+            print "<form method='post' action=' ' id='advisorstudents'>";
+
+               print "<select id = 'advisee' style='display:display;' name='advisee'>";
+                  print "<option selected='selected'>Select A Student</option>";
+                  
+                     $sql8 = "SELECT * FROM StudentAdviser INNER JOIN User ON User.userID = StudentAdviser.studentID WHERE facultyID =18";
+                     $result8 = mysqli_query($dataBase, $sql8);
+
+                     while ($row8 = mysqli_fetch_array($result8)) { $rows8[] = $row8; }
+                     foreach ($rows8 as $row8) { 
+                        print "<option value='" . $row8['userID'] . "'>" . $row8['firstName'] . "  " . $row8['lastName'] . "</option>";
+                     }
+                  
+               print "</select>";
+               print "<input type='hidden' value='2' name='hiddenButtonAdvisor' id='hiddenButtonAdvisor'>";
+               print "<input type='submit' value='Submit' id='submitButton'>";
+            print "</form>";
+
+         } else {
+
+            print "<form method='post' action=' ' id='advisorselect'>";
+
+            $sql = "SELECT * FROM StudentAdviser WHERE facultyID =18";
+            $result = mysqli_query($dataBase, $sql);
+            $rowcount = mysqli_num_rows($result);
+
+            print "<p>You are Currently assigned to (".$rowcount.") students</p>";
+            print "<input type='hidden' value='1' name='hiddenButtonAdvisor' id='hiddenButtonAdvisor'>";
+            print "<input type='submit' value='Submit' id='submitButton'>";
+            print "</form>";
+
+         }
+
+      ?>
+      </div>
+
+
+      <script>
+         var acc = document.getElementsByClassName("accordion");
+         var i;
+
+         for (i = 0; i < acc.length; i++) {
+             acc[i].onclick = function(){
+                 this.classList.toggle("active");
+                 this.nextElementSibling.classList.toggle("show");
+           }
+         }
+      </script>
+
+      <div id="success">
+            <?php
+               echo $typeOfUser;
+            ?>
+      </div>
+
+      <div>
+         <?php
+            echo $id;
+         ?>
+      </div>
+
+   </body>
+   
+</html>
