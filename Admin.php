@@ -249,8 +249,7 @@
          $date     = $_POST['studAdvDateButton'];
          $convertedDate = date("Y-m-d", strtotime($_POST['studAdvDateButton']));
 
-         print "<h1>date: " . $date . "</h1>";
-         print "<h1>converted: " . $convertedDate . "</h1>";
+ 
          
          $advisorSql = "INSERT INTO `StudentAdviser`(`studentID`, `facultyID`, `dateAssigned`)
                  VALUES ( '$student', '$faculty3' , '$convertedDate');";
@@ -351,6 +350,121 @@
           if (mysqli_query($dataBase, $deleteRoomSql)) { echo "record deleted successfully"; }
          else { echo "Error: " . $deleteRoomSql . "<br>" . mysqli_error($dataBase); }
          }
+         
+         if($_POST['hiddenButton']==13){
+         $addBuildName = $_POST['buildNameInput'];
+         
+         $addBuildingSql = "INSERT INTO `Building` (`buildingName`)
+         VALUES ('$addBuildName');";
+         
+         if(mysqli_query($dataBase,$addBuildingSql)) { echo "Record created successfully"; }
+         else { echo "Error: " . $addBuildingSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         if($_POST['hiddenButton'] == 14){
+         $editBuildId      = $_POST['editBuilding'];
+         $editBuildingName = $_POST['buildName2Input'];
+         
+         $editBuildingSql = "UPDATE `Building` SET `buildingName` = '$editBuildingName'
+         WHERE `buildingID` = '$editBuildID';";
+         
+         if(mysqli_query($dataBase, $editBuildingSql)) { echo "Record updated successfully"; }
+         else {echo "Error: " . $editBuildingSql . "<br>" . mysqli_error($dataBase);}
+         
+         }
+         
+         if($_POST['hiddenButton'] == 15){
+         $deleteBuildID    = $_Post['deleteBuilding'];
+         
+         $deleteBuildingSql = "DELETE FROM `Building` WHERE `buildingID` = '$deleteBuildID' ;"; 
+         
+         if(mysqli_query($dataBase, $deleteBuildingSql)) { echo "Record deleted successfully"; }
+         else {echo "Error: " . $deleteBuildingSql . "<br>" . mysqli_error($dataBase);}
+         
+         }
+             if($_POST['hiddenButton']==16){
+         $addStudMajor = $_POST['newStudentMajSel'];
+         $addMajor     = $_POST['newMajorSel'];
+         $addDate      = $_POST['newMajMinButton'];
+         $addDate = date('Y-m-d', strtotime($addDate));
+         
+         
+         $addStudMajorSql = "INSERT INTO `StudentMajor` (`studentID`, `majorID`,`dateDeclared`)
+         VALUES ('$addStudMajor','$addMajor','$addDate');";
+         
+         if(mysqli_query($dataBase, $addStudMajorSql)) { echo "Record created successfully"; }
+         else { echo "Error: " . $addStudMajorSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
+         if($_POST['hiddenButton']==17){
+         $editStudMajor = $_POST['editStudentMajSel'];
+         $editMajor     = $_POST['editStudentMajSel'];
+         $editDate      = $_POST['editMajDateButton'];
+         $editDate = date('Y-m-d', strtotime($editDate));
+         
+         
+         $editStudMajorSql = "UPDATE `StudentMajor` SET `majorID` = '$editMajor',`dateDeclared`='$editDate'
+         WHERE `studentID` = '$editStudMajor';";
+         
+         if(mysqli_query($dataBase, $editStudMajorSql)) { echo "Record Updated successfully"; }
+         else { echo "Error: " . $editStudMajorSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
+         if($_POST['hiddenButton']==18){
+         $deleteStudMajor = $_POST['deleteStudentMajSel'];
+     
+         
+         $deleteStudMajorSql = "DELETE FROM `StudentMajor` WHERE `studentID` = '$deleteStudMajor';";
+         
+         if(mysqli_query($dataBase, $deleteStudMajorSql)) { echo "Record created successfully"; }
+         else { echo "Error: " . $deleteStudMajorSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+              if($_POST['hiddenButton']==19){
+         $addStudMinor = $_POST['newStudentMinSel'];
+         $addMinor     = $_POST['newMinorSel'];
+         $addDate      = $_POST['newMinButton'];
+         $addDate = date('Y-m-d', strtotime($addDate));
+         
+         
+         $addStudMinorSql = "INSERT INTO `StudentMinor` (`studentID`, `MinorID`,`dateDeclared`)
+         VALUES ('$addStudMinor','$addMinor','$addDate');";
+         
+         if(mysqli_query($dataBase, $addStudMinorSql)) { echo "Record created successfully"; }
+         else { echo "Error: " . $addStudMinorSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
+         if($_POST['hiddenButton']==20){
+         $editStudMinor = $_POST['editStudentMinSel'];
+         $editMinor     = $_POST['editMinorSel'];
+         $editDate      = $_POST['editMinDateButton'];
+         $editDate = date('Y-m-d', strtotime($editDate));
+         
+         
+         $editStudMinorSql = "UPDATE `StudentMinor` SET `MinorID` = '$editMinor',`dateDeclared`='$editDate'
+         WHERE `studentID` = '$editStudMinor';";
+         
+         if(mysqli_query($dataBase, $editStudMinorSql)) { echo "Record Updated successfully"; }
+         else { echo "Error: " . $editStudMinorSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
+         if($_POST['hiddenButton']==21){
+         $deleteStudMinor = $_POST['deleteStudentMinSel'];
+     
+         
+         $deleteStudMinorSql = "DELETE FROM `StudentMinor` WHERE `studentID` = '$deleteStudMinor';";
+         
+         if(mysqli_query($dataBase, $deleteStudMinorSql)) { echo "Record created successfully"; }
+         else { echo "Error: " . $deleteStudMinorSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
+         
+      
    }
 
    function getCorrectUserType( $formType ){
@@ -946,10 +1060,10 @@
          <div id ="newRoomDiv" style="display:none">
         <form method="post" action=" " id="createRoomForm">
         <input type="hidden" value="10" name="hiddenButton" id="hiddenButton">
-         <input type="text" name="roomNumInput" placeholder="Room Number" required="true"><br>
-         <input type="text" name="roomCapacityInput" placeholder="Room Capacity" required="true"><br>
+          <input type="text" name="roomNumInput" placeholder="Room Number" required="true"><br>
+          <input type="text" name="roomCapacityInput" placeholder="Room Capacity" required="true"><br>
 
-         <select id = 'buildID' name='buildID'>
+          <select id = 'buildID' name='buildID'>
                <option selected="selected">Choose A building</option>
                <?
                   $buildSql = "SELECT * FROM Building";
@@ -975,7 +1089,7 @@
         <form method="post" action=" " id="editRoomForm">
         <input type="hidden" value="11" name="hiddenButton" id="hiddenButton">
 
-         <select id = 'room3ID' name='room3ID'>
+          <select id = 'room3ID' name='room3ID'>
                <option selected="selected">Choose A Room</option>
                <?
                   $editRoomSql = "SELECT * FROM Room Inner Join Building ON Room.buildingID = Building.buildingID";
@@ -987,9 +1101,9 @@
                   }
                ?>
             </select><br>
-         <input type="text" name="roomNum2Input" placeholder="Room Number" required="true"><br>
-         <input type="text" name="roomCapacity2Input" placeholder="Room Capacity" required="true"><br>
-         <select id = 'build2ID' name='build2ID'>
+          <input type="text" name="roomNum2Input" placeholder="Room Number" required="true"><br>
+          <input type="text" name="roomCapacity2Input" placeholder="Room Capacity" required="true"><br>
+          <select id = 'build2ID' name='build2ID'>
                <option selected="selected">Choose A building</option>
                <?
                   $build2Sql = "SELECT * FROM Building";
@@ -1037,14 +1151,14 @@
        <button class="accordion">Building</button>
       <div class="panel">
          <div class="buttonBlock" id="buttonBlock6">
-            <button class="button" onclick="toggleElement( 'buttonBlock6', 'newBuildingDiv' );" id="addBuildingButton">New Room</button>
-            <button class="button" onclick="toggleElement( 'buttonBlock6', 'editBuildingDiv' );" id="editBuildingButton">Edit Room</button>
-            <button class="button" onclick="toggleElement( 'buttonBlock6', 'deleteBuildingDiv' );" id="deleteBuildingButton">Delete Room</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock6', 'newBuildingDiv' );" id="addBuildingButton">New Building</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock6', 'editBuildingDiv' );" id="editBuildingButton">Edit Building</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock6', 'deleteBuildingDiv' );" id="deleteBuildingButton">Delete Building</button>
          </div>
          <div id ="newBuildingDiv" style="display:none">
         <form method="post" action=" " id="createBuildingForm">
         <input type="hidden" value="13" name="hiddenButton" id="hiddenButton">
-         <input type="text" name="buildNameInput" placeholder="Building Name" required="true"><br>
+          <input type="text" name="buildNameInput" placeholder="Building Name" required="true"><br>
         <input type="submit" value="Submit" id="submitButton">
         </form>
         <button id="doneButton" class="button" onclick="toggleElement( 'newBuildingDiv', 'buttonBlock6' );">Done</button>
@@ -1088,6 +1202,197 @@
  <button id="doneButton" class="button" onclick="toggleElement( 'deleteBuildingDiv', 'buttonBlock6' );">Done</button>
  </div>
 </div>
+
+
+ <button class="accordion">Assign Major</button>
+      <div class="panel">
+         <div class="buttonBlock" id="buttonBlock7">
+            <button class="button" onclick="toggleElement( 'buttonBlock7', 'newMajorDiv' );" id="addMajorButton">New Major</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock7', 'editMajorDiv' );" id="editMajorButton">Edit Major</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock7', 'deleteMajorDiv' );" id="deleteMajorButton">Delete Major</button>
+         </div>
+         <div id ="newMajorDiv" style="display:none">
+        <form method="post" action=" " id="createMajorMinorForm">
+        <input type ="hidden" value="16" name="hiddenButton" id="hiddenButton">
+        <select id="newStudentMajSel" name="newStudentMajSel">
+        <?
+        $newMajMinSql = "SELECT * FROM Student INNER JOIN User ON Student.studentID = User.userID ";
+                  $newMajMinSqlResult = mysqli_query($dataBase, $newMajMinSql);
+
+                  while ($newMajMinSqlRow = mysqli_fetch_array($newMajMinSqlResult)) { $newMajMinSqlRows[] = $newMajMinSqlRow; }
+                  foreach ($newMajMinSqlRows as $newMajMinSqlRow) { 
+                     print "<option value='" . $newMajMinSqlRow['studentID'] . "'>". $newMajMinSqlRow['studentID']. " " . $newMajMinSqlRow['firstName'] ." ". $newMajMinSqlRow['lastName']  ."</option>";
+                  }
+               ?>
+            </select><br>
+        <select id="newMajorSel" name="newMajorSel">
+       <?
+                  $newMajSelectSql = "SELECT * FROM Major";
+                  $newMajSelectSqlResult = mysqli_query($dataBase, $newMajSelectSql);
+
+                  while ($newMajSelectSqlRow = mysqli_fetch_array($newMajSelectSqlResult)) { $newMajSelectSqlRows[] = $newMajSelectSqlRow; }
+                  foreach ($newMajSelectSqlRows as $newMajSelectSqlRow) { 
+                     print "<option value='" . $newMajSelectSqlRow['majorID'] . "'>". $newMajSelectSqlRow['majorName']."</option>";
+                  }
+               ?>
+            </select><br>
+        
+
+                    <input type="date" value="" id="newMajMinButton" name="newMajMinButton"><br>
+                    <input type ="submit" value="submit" id="submitButton" name="submitButton"><br>
+                    </form>
+                    <button id="doneButton" class="button" onclick="toggleElement( 'newMajorDiv', 'buttonBlock7' );">Done</button>
+ </div>
+   <div id ="editMajorDiv" style="display:none">
+        <form method="post" action=" " id="editMajorForm">
+        <input type ="hidden" value="17" name="hiddenButton" id="hiddenButton">
+        <select id="editStudentMajSel" name="editStudentMajSel">
+        <?
+        $editMajMinSql = "SELECT * FROM StudentMajor INNER JOIN User ON StudentMajor.studentID = User.userID";
+        $editMajMinResult = mysqli_query($dataBase, $editMajMinSql);
+
+              while ($editMajMinRow = mysqli_fetch_array($editMajMinResult)) { $editMajMinRows[] = $editMajMinRow; }
+                  foreach ($editMajMinRows as $editMajMinRow) { 
+                     print "<option value='" . $editMajMinRow['studentID'] . "'>". $editMajMinRow['studentID']. " " . $editMajMinRow['firstName'] ." ". $editMajMinRow['lastName']  ."</option>";
+                  }
+               ?>
+            </select><br>
+        <select id="editMajorSel" name="editMajorSel">
+       <?
+        $editMajSelectSql = "SELECT * FROM Major";
+                  $editMajSelectSqlResult = mysqli_query($dataBase, $editMajSelectSql);
+
+                  while ($editMajSelectSqlRow = mysqli_fetch_array($editMajSelectSqlResult)) { $editMajSelectSqlRows[] = $editMajSelectSqlRow; }
+                  foreach ($editMajSelectSqlRows as $editMajSelectSqlRow) { 
+                     print "<option value='" . $editMajSelectSqlRow['majorID'] . "'>". $editMajSelectSqlRow['majorName']."</option>";
+                  }
+               ?>
+            </select><br>
+        
+
+                    <input type="date" value="" id="editMajDateButton" name="editMajDateButton"><br>
+                    <input type ="submit" value="submit" id="submitButton" name="submitButton"><br>
+                    </form>
+                    <button id="doneButton" class="button" onclick="toggleElement( 'editMajorDiv', 'buttonBlock7' );">Done</button>
+ </div>
+  <div id ="deleteMajorDiv" style="display:none">
+        <form method="post" action=" " id="deleteMajorForm">
+        <input type ="hidden" value="18" name="hiddenButton" id="hiddenButton">
+        <select id="deleteStudentMajSel" name="deleteStudentMajSel">
+        <?
+        $deleteMajSql = "SELECT * FROM StudentMajor INNER JOIN User ON StudentMajor.studentID = User.userID";
+        $deleteMajResult = mysqli_query($dataBase, $deleteMajSql);
+
+              while ($deleteMajRow = mysqli_fetch_array($deleteMajResult)) { $deleteMajRows[] = $deleteMajRow; }
+                  foreach ($deleteMajRows as $deleteMajRow) { 
+                     print "<option value='" . $deleteMajRow['studentID'] . "'>". $deleteMajRow['studentID']. " " . $deleteMajRow['firstName'] ." ". $deleteMajRow['lastName']  ." " .$deleteMajRow['majorName'] . "</option>";
+                  }
+               ?>
+            </select><br>
+        
+
+                   
+                    <input type ="submit" value="submit" id="submitButton" name="submitButton"><br>
+                    </form>
+                    <button id="doneButton" class="button" onclick="toggleElement( 'deleteMajorDiv', 'buttonBlock7' );">Done</button>
+ </div>
+</div>
+<button class="accordion">Assign Minor</button>
+      <div class="panel">
+         <div class="buttonBlock" id="buttonBlock8">
+            <button class="button" onclick="toggleElement( 'buttonBlock8', 'newMinorDiv' );" id="addMinorButton">New Minor</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock8', 'editMinorDiv' );" id="editMinorButton">Edit Minor</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock8', 'deleteMinorDiv' );" id="deleteMinorButton">Delete Minor</button>
+         </div>
+         <div id ="newMinorDiv" style="display:none">
+        <form method="post" action=" " id="createMinorForm">
+        <input type ="hidden" value="19" name="hiddenButton" id="hiddenButton">
+        <select id="newStudentMinSel" name="newStudentMinSel">
+        <?
+        $newMinSql = "SELECT * FROM Student INNER JOIN User ON Student.studentID = User.userID ";
+                  $newMinSqlResult = mysqli_query($dataBase, $newMinSql);
+
+                  while ($newMinSqlRow = mysqli_fetch_array($newMinSqlResult)) { $newMinSqlRows[] = $newMinSqlRow; }
+                  foreach ($newMinSqlRows as $newMinSqlRow) { 
+                     print "<option value='" . $newMinSqlRow['studentID'] . "'>". $newMinSqlRow['studentID']. " " . $newMinSqlRow['firstName'] ." ". $newMinSqlRow['lastName']  ."</option>";
+                  }
+               ?>
+            </select><br>
+        <select id="newMinorSel" name="newMinorSel">
+       <?
+                  $newMinSelectSql = "SELECT * FROM Minor";
+                  $newMinSelectSqlResult = mysqli_query($dataBase, $newMinSelectSql);
+
+                  while ($newMinSelectSqlRow = mysqli_fetch_array($newMinSelectSqlResult)) { $newMinSelectSqlRows[] = $newMinSelectSqlRow; }
+                  foreach ($newMinSelectSqlRows as $newMinSelectSqlRow) { 
+                     print "<option value='" . $newMinSelectSqlRow['minorID'] . "'>". $newMinSelectSqlRow['minorName']."</option>";
+                  }
+               ?>
+            </select><br>
+        
+
+                    <input type="date" value="" id="newMinButton" name="newMinButton"><br>
+                    <input type ="submit" value="submit" id="submitButton" name="submitButton"><br>
+                    </form>
+                    <button id="doneButton" class="button" onclick="toggleElement( 'newMinorDiv', 'buttonBlock8' );">Done</button>
+ </div>
+   <div id ="editMinorDiv" style="display:none">
+        <form method="post" action=" " id="editMinorForm">
+        <input type ="hidden" value="20" name="hiddenButton" id="hiddenButton">
+        <select id="editStudentMinSel" name="editStudentMinSel">
+        <?
+        $editminSql = "SELECT * FROM StudentMinor INNER JOIN User ON StudentMinor.studentID = User.userID";
+        $editminResult = mysqli_query($dataBase, $editminSql);
+
+              while ($editminRow = mysqli_fetch_array($editminResult)) { $editminRows[] = $editminRow; }
+                  foreach ($editminRows as $editminRow) { 
+                     print "<option value='" . $editminRow['studentID'] . "'>". $editminRow['studentID']. " " . $editminRow['firstName'] ." ". $editminRow['lastName']  ."</option>";
+                  }
+               ?>
+            </select><br>
+        <select id="editMinorSel" name="editMinorSel">
+       <?
+        $editMinSelectSql = "SELECT * FROM Minor";
+                  $editMinSelectSqlResult = mysqli_query($dataBase, $editMinSelectSql);
+
+                  while ($editMinSelectSqlRow = mysqli_fetch_array($editMinSelectSqlResult)) { $editMinSelectSqlRows[] = $editMinSelectSqlRow; }
+                  foreach ($editMinSelectSqlRows as $editMinSelectSqlRow) { 
+                     print "<option value='" . $editMinSelectSqlRow['minorID'] . "'>". $editMinSelectSqlRow['minorName']."</option>";
+                  }
+               ?>
+            </select><br>
+        
+
+                    <input type="date" value="" id="editMinDateButton" name="editMinDateButton"><br>
+                    <input type ="submit" value="submit" id="submitButton" name="submitButton"><br>
+                    </form>
+                    <button id="doneButton" class="button" onclick="toggleElement( 'editMinorDiv', 'buttonBlock8' );">Done</button>
+ </div>
+  <div id ="deleteMinorDiv" style="display:none">
+        <form method="post" action=" " id="deleteMinorForm">
+        <input type ="hidden" value="21" name="hiddenButton" id="hiddenButton">
+        <select id="deleteStudentMinSel" name="deleteStudentMinSel">
+        <?
+        $deleteMinSql = "SELECT * FROM StudentMinor INNER JOIN User ON StudentMinor.studentID = User.userID";
+        $deleteMinResult = mysqli_query($dataBase, $deleteMinSql);
+
+              while ($deleteMinRow = mysqli_fetch_array($deleteMinResult)) { $deleteMinRows[] = $deleteMinRow; }
+                  foreach ($deleteMinRows as $deleteMinRow) { 
+                     print "<option value='" . $deleteMinRow['studentID'] . "'>". $deleteMinRow['studentID']. " " . $deleteMinRow['firstName'] ." ". $deleteMinRow['lastName']  ." " .$deleteMinRow['minorName'] . "</option>";
+                  }
+               ?>
+            </select><br>
+        
+
+                   
+                    <input type ="submit" value="submit" id="submitButton" name="submitButton"><br>
+                    </form>
+                    <button id="doneButton" class="button" onclick="toggleElement( 'deleteMinorDiv', 'buttonBlock8' );">Done</button>
+ </div>
+ </div>
+
+ 
+ 
         
       <script>
          var acc = document.getElementsByClassName("accordion");
