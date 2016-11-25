@@ -1,11 +1,16 @@
-var acc = document.getElementsByClassName("accordion");
-var i;
+function deleteClass(){
+	$.ajax({
+        url:"DeleteClass.php", 
+        type: "POST", 
+        // data: {
 
-for (i = 0; i < acc.length; i++) {
-    acc[i].onclick = function(){
-        this.classList.toggle("active");
-        this.nextElementSibling.classList.toggle("show");
-    }
+        // },
+
+        success:
+        function(result){
+        	 alert(result);
+       	}
+     });
 }
 
 function getSubject( term, unhideThis ){

@@ -1,5 +1,18 @@
 <?php
    include('Session.php');
+
+   if($_SERVER["REQUEST_METHOD"] == "POST") {
+   		$subject = $_POST['sectionID'];
+
+   		$sql = "INSERT INTO `CourseEnrollment`( `studentID`, `sectionID` )
+                 VALUES ( '$userID', '$subject');";
+
+        $message = "Successfully Registered";
+        $error = "Duplicate Entry, try again";
+
+        if (mysqli_query($dataBase, $sql)) { echo "<script type='text/javascript'>alert('$message');</script>"; }
+        else { echo "<script type='text/javascript'>alert('$message');</script>"; }
+   }
 ?>
 <html>
 
@@ -16,17 +29,8 @@
 
       <ul>
         <li><a class="active" href="Student.php">Home</a></li>
-
-        <!-- <li class="dropdown">
-          <a href="#" class="dropbtn">Menu</a>
-          <div class="dropdown-content">
-           <a href=# onclick="javascript:generateNewUserForm()">Add New User</a>
-           <a href=# onclick="createCourse();">Add New Course</a>
-           <a href=# onclick="createSection();">Add New Section</a>
-          </div>
-        </li> -->
-
-        <li><a class = "active" href = "Logout.php">Sign Out</a></li>
+        <li><a class="active" href = "Logout.php">Sign Out</a></li>
+        <li><a class="active" href="PasswordReset.php">Reset Password</a></li>
       </ul>
 
       <button class="accordion">Holds</button> 
@@ -118,7 +122,7 @@
          </div>
       </div>
 
-      <button class="accordion">Add or Drop Classes</button> 
+      <button class="accordion">Add / Drop / View Classes</button> 
       <div class="panel">
 
          <br>
@@ -133,7 +137,7 @@
 	            		                         JOIN User ON Section.facultyID = User.userID 
 	            		                         JOIN Room ON Section.roomID = Room.roomID 
 	            		                         JOIN Course ON Section.courseID = Course.courseID 
-	            		                         WHERE studentID = 112";
+	            		                         WHERE studentID = $userID";
 
 	            		$currentClassesResult = mysqli_query($dataBase, $getCurrentClassesSQL);
 	            		while ($classesRow = mysqli_fetch_array($currentClassesResult)) { $currentClassesRows[] = $classesRow; }
@@ -145,7 +149,7 @@
 	            			echo'
 	            				<h1 style="text-align: center">Here is your current schedule</h1>
 	            				<br>
-		            			<table class="table-fill">
+		            			<table id="currentScheduleTable" class="table-fill">
 							
 								<thead>
 									<tr>
@@ -154,7 +158,6 @@
 										<th class="text-left">Room Number</th>
 										<th class="text-left">Professor</th>
 										<th class="text-left">Section</th>
-										<th class="text-left"></th>
 									</tr>
 								</thead>
 
@@ -164,14 +167,17 @@
 		                  	foreach ($currentClassesRows as $classesRow) { 
 		                  		$index = 0;
 
-			                  	print "<tr data-row-id=" . $classesRow['userID'] . ">";
+			                  	print "<tr name='" . $classesRow['sectionID'] . "' data-row-id=" . $classesRow['sectionID'] . " id=" . $classesRow['sectionID'] . " class='toggler'>";
 			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['courseName'] . "</td>";
 			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['creditHours'] . "</td>";
 			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['roomNum'] . "</td>";
 			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['firstName'] . " " . $classesRow['lastName'] . "</td>";
 			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['sectionNum'] . "</td>";
-			                  	print "<td class='text-center' col-index=" . $index++ . "><button class='deleteButton'>Delete</button></td>";
 			                  	print "</tr>";
+
+			                  	print"<tr class='cat" . $classesRow['sectionID'] . "' style='display:none;' id=" . $classesRow['sectionID'] . ">";
+			                  	print"<td colspan = 5 style='text-align:center'><a href='#' class='deleteButton' onclick='deleteClass(" . $classesRow['sectionID'] . ");'>Delete</a></td>";
+							    print"</tr>";
 		                  	}
 				                  	
 				            echo'
@@ -200,13 +206,13 @@
 
 		                	while ($termRow = mysqli_fetch_array($termResult)) { $termRows[] = $termRow; }
 		                  	foreach ($termRows as $rowTerm) { 
-		                    	print "<option value='" . $rowTerm['termID'] . "'>" . $rowTerm['semester'] . " " . $rowTerm['year'] . "</option>";
+		                    	print "<option name='term' value='" . $rowTerm['termID'] . "'>" . $rowTerm['semester'] . " " . $rowTerm['year'] . "</option>";
 		                  	}
 		               ?>
 
  	               	</select>
 
- 	               	<select id='subject' name='subject' style='display:none' onchange="getTimeSlot(this.value);"></select>
+ 	               	<select id='subject' name='sectionID' style='display:none' onchange="getTimeSlot(this.value);"></select>
  	               	<select id='timeSlot' name='timeSlot' style='display:none'> </select>
 
 	               	<input type="submit" value="Register" id="submitButton">
@@ -219,6 +225,128 @@
          </div>
       </div>
 
+      <button class="accordion">View Adviser</button> 
+      <div class="panel">
+
+         <br>
+
+         <div id="adviser">
+           
+			<br>
+
+			<?
+            		$getAdviser = "SELECT * FROM StudentAdviser INNER JOIN User on User.userID = StudentAdviser.facultyID WHERE studentID = '$userID'";
+            		$adviserResult = mysqli_query($dataBase, $getAdviser);
+            		while ($adviserRow = mysqli_fetch_array($adviserResult)) { $adviserRows[] = $adviserRow; }
+
+            		if( count( $adviserRows ) == 0 ){
+            			print "<h1 style='text-align: center'>You have no Adviser</h1>";
+            		}
+            		else{
+            			echo'
+	            			<table class="table-fill">
+						
+							<thead>
+								<tr>
+									<th class="text-left">First Name</th>
+									<th class="text-left">Last Name</th>
+									<th class="text-left">Email</th>
+									<th class="text-left">Phone Number</th>
+								</tr>
+							</thead>
+
+							<tbody class="table-hover">
+						';
+
+	                  	foreach ($adviserRows as $adviserRow2) { 
+	                  		$index = 0;
+
+		                  	print "<tr>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . $adviserRow2['firstName']  . "</td>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . $adviserRow2['lastName']  . "</td>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . $adviserRow2['email'] . "</td>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . $adviserRow2['phoneNumber'] . "</td>";
+		                  	print "</tr>";
+	                  	}
+			                  	
+			            echo'
+							</tbody>
+
+							</table>
+
+							<br>
+						';
+            		}
+     
+
+				?>
+
+    	 </div>
+      </div>
+
+      <button class="accordion">View Grades</button> 
+      <div class="panel">
+
+         <br>
+
+         <div id="grades">
+           
+			<br>
+
+			<?
+            		$getGrades = "SELECT * FROM CourseEnrollment 
+		                         JOIN Section ON CourseEnrollment.sectionID = Section.sectionID 
+		                         JOIN User ON Section.facultyID = User.userID 
+		                         JOIN Course ON Section.courseID = Course.courseID 
+		                         WHERE studentID = '$userID'";
+
+            		$getGrades = mysqli_query($dataBase, $getGrades);
+            		while ($gradesRow = mysqli_fetch_array($getGrades)) { $gradeRows[] = $gradesRow; }
+
+            		if( count( $gradeRows ) == 0 ){
+            			print "<h1 style='text-align: center'>You have no Adviser</h1>";
+            		}
+            		else{
+            			echo'
+	            			<table class="table-fill">
+						
+							<thead>
+								<tr>
+									<th class="text-left">Course Name</th>
+									<th class="text-left">Midterm Grade</th>
+									<th class="text-left">Final Grade</th>
+								</tr>
+							</thead>
+
+							<tbody class="table-hover">
+						';
+
+	                  	foreach ($gradeRows as $gradeRows2) { 
+	                  		$index = 0;
+
+		                  	print "<tr>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . $gradeRows2['courseName']  . "</td>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . $gradeRows2['midtermGrade']  . "</td>";
+		                  	print "<td class='text-left' col-index=" . $index++ . ">" . $gradeRows2['finalGrade'] . "</td>";
+		                  	print "</tr>";
+	                  	}
+			                  	
+			            echo'
+							</tbody>
+
+							</table>
+
+							<br>
+						';
+            		}
+     
+
+				?>
+
+    	 </div>
+      </div>
+
+
       <script>
       	var acc = document.getElementsByClassName("accordion");
 		var i;
@@ -229,6 +357,11 @@
 		        this.nextElementSibling.classList.toggle("show");
 		    }
 		}
+
+		$(".toggler").click(function(e){
+	        e.preventDefault();
+	        $('.cat'+$(this).attr('data-row-id')).toggle();
+	    });
 	</script>
 	</body>
    
