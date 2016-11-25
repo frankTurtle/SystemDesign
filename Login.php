@@ -2,29 +2,68 @@
    include("Config.php");
    
    if($_SERVER["REQUEST_METHOD"] == "POST") {
-      // username and password sent from form 
-      
-      $myusername = $_POST['emailAddress'];
-      $mypassword = $_POST['password']; 
+      session_start();
 
-      $sql = "SELECT * FROM User WHERE email = '$myusername' and password = '$mypassword'";
+      if (isset($_SESSION['loginCount'])){
+         $_SESSION['loginCount']++;
 
-      $result = mysqli_query( $dataBase, $sql );
-      $count = mysqli_num_rows( $result );
+         if ($_SESSION['loginCount'] > 3){
+           $error =  'Too many attempts, contact the System administrator';
+         }
+         else{
+          $myusername = $_POST['emailAddress'];
+          $mypassword = $_POST['password']; 
 
-      // If result matched $myusername and $mypassword, table row must be 1 row
-      if($count == 1) {
-        session_start();
-        $row = mysqli_fetch_row($result);
+          $sql = "SELECT * FROM User WHERE email = '$myusername' and password = '$mypassword'";
 
-        $_SESSION['login_user'] = $myusername;
+          $result = mysqli_query( $dataBase, $sql );
+          $count = mysqli_num_rows( $result );
 
-        $typeOfUser = getUserType($row);
-         
-        navigate( $typeOfUser );
-      }else {
-         $error = "Your Login Name or Password is invalid";
+          // If result matched $myusername and $mypassword, table row must be 1 row
+          if($count == 1) {
+            $row = mysqli_fetch_row($result);
+
+            $_SESSION['login_user'] = $myusername;
+
+            $typeOfUser = getUserType($row);
+             
+            navigate( $typeOfUser );
+          }else {
+             $error = "Your Login Name or Password is invalid";
+          }
+         }
       }
+      else {
+        $_SESSION['loginCount'] = 1;
+
+        if ($_SESSION['loginCount'] > 3){
+           $error =  'Too many attempts, contact the System administrator';
+         }
+         else{
+          $myusername = $_POST['emailAddress'];
+          $mypassword = $_POST['password']; 
+
+          $sql = "SELECT * FROM User WHERE email = '$myusername' and password = '$mypassword'";
+
+          $result = mysqli_query( $dataBase, $sql );
+          $count = mysqli_num_rows( $result );
+
+          // If result matched $myusername and $mypassword, table row must be 1 row
+          if($count == 1) {
+            $row = mysqli_fetch_row($result);
+
+            $_SESSION['login_user'] = $myusername;
+
+            $typeOfUser = getUserType($row);
+             
+            navigate( $typeOfUser );
+          }else {
+             $error = "Your Login Name or Password is invalid";
+          }
+         }
+      }
+      
+      
    }
 
    function navigate( $typeOfUser ){
