@@ -11,7 +11,7 @@
         $error = "Duplicate Entry, try again";
 
         if (mysqli_query($dataBase, $sql)) { echo "<script type='text/javascript'>alert('$message');</script>"; }
-        else { echo "<script type='text/javascript'>alert('$message');</script>"; }
+        else { echo "<script type='text/javascript'>alert('$error');</script>"; }
    }
 ?>
 <html>
@@ -132,64 +132,33 @@
 
             	<div id="currentClasses">
 	            	<?
-	            		$getCurrentClassesSQL = "SELECT * FROM CourseEnrollment 
-	            		                         JOIN Section ON CourseEnrollment.sectionID = Section.sectionID 
-	            		                         JOIN User ON Section.facultyID = User.userID 
-	            		                         JOIN Room ON Section.roomID = Room.roomID 
-	            		                         JOIN Course ON Section.courseID = Course.courseID 
-	            		                         WHERE studentID = $userID";
-
-	            		$currentClassesResult = mysqli_query($dataBase, $getCurrentClassesSQL);
-	            		while ($classesRow = mysqli_fetch_array($currentClassesResult)) { $currentClassesRows[] = $classesRow; }
-
-	            		if( count( $currentClassesRows ) == 0 ){
-	            			print "<h1 style='text-align: center'>You're not currently enrolled in any classes</h1>";
-	            		}
-	            		else{
-	            			echo'
-	            				<h1 style="text-align: center">Here is your current schedule</h1>
-	            				<br>
-		            			<table id="currentScheduleTable" class="table-fill">
-							
-								<thead>
-									<tr>
-										<th class="text-left">Course</th>
-										<th class="text-left">Credit Hours</th>
-										<th class="text-left">Room Number</th>
-										<th class="text-left">Professor</th>
-										<th class="text-left">Section</th>
-									</tr>
-								</thead>
-
-								<tbody class="table-hover">
-							';
-
-		                  	foreach ($currentClassesRows as $classesRow) { 
-		                  		$index = 0;
-
-			                  	print "<tr name='" . $classesRow['sectionID'] . "' data-row-id=" . $classesRow['sectionID'] . " id=" . $classesRow['sectionID'] . " class='toggler'>";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['courseName'] . "</td>";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['creditHours'] . "</td>";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['roomNum'] . "</td>";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['firstName'] . " " . $classesRow['lastName'] . "</td>";
-			                  	print "<td class='text-left' col-index=" . $index++ . ">" . $classesRow['sectionNum'] . "</td>";
-			                  	print "</tr>";
-
-			                  	print"<tr class='cat" . $classesRow['sectionID'] . "' style='display:none;' id=" . $classesRow['sectionID'] . ">";
-			                  	print"<td colspan = 5 style='text-align:center'><a href='#' class='deleteButton' onclick='deleteClass(" . $classesRow['sectionID'] . ");'>Delete</a></td>";
-							    print"</tr>";
-		                  	}
-				                  	
-				            echo'
-								</tbody>
-
-								</table>
-							';
-	            		}
-	     
-
+	            		print"<script>getSchedule(1)</script>";
 					?>
 				</div>
+
+				<div>
+					<form method="post" action="" id="chooseTerm">
+
+	                   	<select id='chooseTermID' name='chooseTermID' onchange="getSchedule(this.value);">
+
+	                       	<option selected="selected">View Another Term</option>
+
+		                  	<?
+			                    $scheduleTerm = "SELECT * FROM Term";
+			                  	$scheduleTermResult = mysqli_query($dataBase, $scheduleTerm);
+
+			                	while ($scheduleTermRow = mysqli_fetch_array($scheduleTermResult)) { $scheduleTermRows[] = $scheduleTermRow; }
+			                  	foreach ($scheduleTermRows as $scheduleRowTerm) { 
+			                    	print "<option name='term' value='" . $scheduleRowTerm['termID'] . "'>" . $scheduleRowTerm['semester'] . " " . $scheduleRowTerm['year'] . "</option>";
+			                  	}
+			               ?>
+
+	 	               	</select>
+
+            		</form>
+				</div>
+
+
 				<br>
 
 				<hr>
@@ -198,6 +167,7 @@
             	<form method="post" action="" id="addOrDropClassForm">
 
                    	<select id='termID' name='termID' onchange="getSubject(this.value, subject);">
+
                        	<option selected="selected">Choose A Term</option>
 
 	                  	<?
@@ -357,11 +327,6 @@
 		        this.nextElementSibling.classList.toggle("show");
 		    }
 		}
-
-		$(".toggler").click(function(e){
-	        e.preventDefault();
-	        $('.cat'+$(this).attr('data-row-id')).toggle();
-	    });
 	</script>
 	</body>
    

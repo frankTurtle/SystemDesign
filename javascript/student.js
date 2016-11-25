@@ -1,14 +1,15 @@
-function deleteClass(){
+function deleteClass( section ){
 	$.ajax({
         url:"DeleteClass.php", 
         type: "POST", 
-        // data: {
-
-        // },
+        data: {
+    		sectionID:section
+        },
 
         success:
         function(result){
         	 alert(result);
+        	 getSchedule( 1 );
        	}
      });
 }
@@ -49,4 +50,25 @@ function getTimeSlot( timeslot, unhideThis ){
   			document.getElementById("timeSlot").innerHTML = response; 
 			}
 	});
+}
+
+function getSchedule( term ){
+	document.getElementById("currentClasses").innerHTML = ""; 
+
+	$.ajax({
+		type: 'POST',
+		url: 'GetSchedule.php',
+		data: {
+			  termSelected:term
+ 		},
+
+ 		success:
+ 		function (response) {
+  			document.getElementById("currentClasses").innerHTML = response; 
+		}
+	});
+}
+
+function showDeleteClassButton( element ){
+	$('.cat'+$(element).attr('data-row-id')).toggle();
 }
