@@ -7,12 +7,13 @@
       if (isset($_SESSION['loginCount'])){
          $_SESSION['loginCount']++;
 
-         if ($_SESSION['loginCount'] > 3){
+         $myusername = $_POST['emailAddress'];
+         $mypassword = $_POST['password'];
+
+         if ($_SESSION['loginCount'] > 3 && $_SESSION['login_user'] == $myusername){
            $error =  'Too many attempts, contact the System administrator';
          }
          else{
-          $myusername = $_POST['emailAddress'];
-          $mypassword = $_POST['password']; 
 
           $sql = "SELECT * FROM User WHERE email = '$myusername' and password = '$mypassword'";
 
@@ -34,14 +35,12 @@
          }
       }
       else {
-        $_SESSION['loginCount'] = 1;
-
-        if ($_SESSION['loginCount'] > 3){
-           $error =  'Too many attempts, contact the System administrator';
-         }
-         else{
+          $_SESSION['loginCount'] = 1;
+          
           $myusername = $_POST['emailAddress'];
           $mypassword = $_POST['password']; 
+
+          $_SESSION['login_user'] = $myusername;
 
           $sql = "SELECT * FROM User WHERE email = '$myusername' and password = '$mypassword'";
 
@@ -52,15 +51,13 @@
           if($count == 1) {
             $row = mysqli_fetch_row($result);
 
-            $_SESSION['login_user'] = $myusername;
-
             $typeOfUser = getUserType($row);
              
             navigate( $typeOfUser );
-          }else {
+          }
+          else {
              $error = "Your Login Name or Password is invalid";
           }
-         }
       }
       
       
