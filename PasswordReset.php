@@ -43,7 +43,7 @@
 
 
 		<script>
-			$("#resetPassword").submit( 
+			$("#submitButton").on('click',  
 				function(e){
 					e.preventDefault(); 
 
@@ -56,7 +56,7 @@
 				        return false;
 				    }
 				    else{
-				        $( "#resetPassword" ).submit();
+				        $("#resetPassword").submit();
 				    }
 				}
 			);
