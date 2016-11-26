@@ -399,7 +399,7 @@
          
          if($_POST['hiddenButton']==17){
          $editStudMajor = $_POST['editStudentMajSel'];
-         $editMajor     = $_POST['editStudentMajSel'];
+         $editMajor     = $_POST['editMajorSel'];
          $editDate      = $_POST['editMajDateButton'];
          $editDate = date('Y-m-d', strtotime($editDate));
          
@@ -458,8 +458,57 @@
          
          $deleteStudMinorSql = "DELETE FROM `StudentMinor` WHERE `studentID` = '$deleteStudMinor';";
          
-         if(mysqli_query($dataBase, $deleteStudMinorSql)) { echo "Record created successfully"; }
+         if(mysqli_query($dataBase, $deleteStudMinorSql)) { echo "Record deleted successfully"; }
          else { echo "Error: " . $deleteStudMinorSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+                 if($_POST['hiddenButton']==22){
+         $newDeptName        = $_POST['newDeptName'];
+         $newDeptCollege     = $_POST['newCollegeSel'];
+         $newDeptChair       = $_POST['newDeptChair'];
+         $newDeptContact     = $_POST['newDeptContact'];
+         $newDeptDescription = $_POST['newDeptDescription'];
+         $newDeptLocation    = $_POST['newDeptLocation'];
+         
+         
+         $newDeptSql = "INSERT INTO `Department` (`deptName`, `collegeID`,`chair`,`contact`,`location`,`description`)
+         VALUES ('$newDeptName','$newDeptCollege','$newDeptChair','$newDeptContact','$newDeptLocation','$newDeptDescription');";
+         
+         if(mysqli_query($dataBase, $newDeptSql)) { echo "Record created successfully"; }
+         else { echo "Error: " . $newDeptSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
+         if($_POST['hiddenButton']==23){
+         $editDeptID          = $_POST['editDepartmentSel'];
+         $editDeptName        = $_POST['editDeptName'];
+         $editDeptCollege     = $_POST['editCollegeSel'];
+         $editDeptChair       = $_POST['editDeptChair'];
+         $editDeptContact     = $_POST['editDeptContact'];
+         $editDeptDescription = $_POST['editDeptDescription'];
+         $editDeptLocation    = $_POST['editDeptLocation'];
+         
+         
+
+         
+         
+         $editDeptSql = "UPDATE `Department` SET `deptName` = '$editDeptName',`collegeID`='$editDeptCollege', `chair`= '$editDeptChair', `location`='$editDeptLocation', 
+         `description`='$editDeptDescription',`contact`='$editDeptContact'
+         WHERE `departmentID` = '$editDeptID';";
+         
+         if(mysqli_query($dataBase, $editDeptSql)) { echo "Record updated successfully"; }
+         else { echo "Error: " . $editDeptSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
+         if($_POST['hiddenButton']==24){
+         $deleteDept = $_POST['deleteDepartmentSel'];
+     
+         
+         $deleteDeptSql = "DELETE FROM `Department` WHERE `departmentID` = '$deleteDept';";
+         
+         if(mysqli_query($dataBase, $deleteDeptSql)) { echo "Record deleted successfully"; }
+         else { echo "Error: " . $deleteDeptSql . "<br>" . mysqli_error($dataBase);}
                 
          }
          
@@ -1186,6 +1235,7 @@
 <div id ="deleteBuildingDiv" style="display:none">
 <form method ="post" action=" " id="deleteBuildingForm">
 <select id="deleteBuilding" name="deleteBuilding">
+ <option selected="selected">Choose A Building</option>
 <?
   $build4Sql = "SELECT * FROM Building";
                   $build4Result = mysqli_query($dataBase, $build4Sql);
@@ -1215,6 +1265,7 @@
         <form method="post" action=" " id="createMajorMinorForm">
         <input type ="hidden" value="16" name="hiddenButton" id="hiddenButton">
         <select id="newStudentMajSel" name="newStudentMajSel">
+         <option selected="selected">Choose A Student</option>
         <?
         $newMajMinSql = "SELECT * FROM Student INNER JOIN User ON Student.studentID = User.userID ";
                   $newMajMinSqlResult = mysqli_query($dataBase, $newMajMinSql);
@@ -1226,6 +1277,7 @@
                ?>
             </select><br>
         <select id="newMajorSel" name="newMajorSel">
+         <option selected="selected">Choose A Major</option>
        <?
                   $newMajSelectSql = "SELECT * FROM Major";
                   $newMajSelectSqlResult = mysqli_query($dataBase, $newMajSelectSql);
@@ -1247,6 +1299,7 @@
         <form method="post" action=" " id="editMajorForm">
         <input type ="hidden" value="17" name="hiddenButton" id="hiddenButton">
         <select id="editStudentMajSel" name="editStudentMajSel">
+         <option selected="selected">Choose A Student</option>
         <?
         $editMajMinSql = "SELECT * FROM StudentMajor INNER JOIN User ON StudentMajor.studentID = User.userID";
         $editMajMinResult = mysqli_query($dataBase, $editMajMinSql);
@@ -1258,6 +1311,7 @@
                ?>
             </select><br>
         <select id="editMajorSel" name="editMajorSel">
+         <option selected="selected">Choose A Major</option>
        <?
         $editMajSelectSql = "SELECT * FROM Major";
                   $editMajSelectSqlResult = mysqli_query($dataBase, $editMajSelectSql);
@@ -1279,6 +1333,7 @@
         <form method="post" action=" " id="deleteMajorForm">
         <input type ="hidden" value="18" name="hiddenButton" id="hiddenButton">
         <select id="deleteStudentMajSel" name="deleteStudentMajSel">
+         <option selected="selected">Choose A Student</option>
         <?
         $deleteMajSql = "SELECT * FROM StudentMajor INNER JOIN User ON StudentMajor.studentID = User.userID";
         $deleteMajResult = mysqli_query($dataBase, $deleteMajSql);
@@ -1308,6 +1363,7 @@
         <form method="post" action=" " id="createMinorForm">
         <input type ="hidden" value="19" name="hiddenButton" id="hiddenButton">
         <select id="newStudentMinSel" name="newStudentMinSel">
+         <option selected="selected">Choose A Student</option>
         <?
         $newMinSql = "SELECT * FROM Student INNER JOIN User ON Student.studentID = User.userID ";
                   $newMinSqlResult = mysqli_query($dataBase, $newMinSql);
@@ -1319,6 +1375,7 @@
                ?>
             </select><br>
         <select id="newMinorSel" name="newMinorSel">
+         <option selected="selected">Choose A Minor</option>
        <?
                   $newMinSelectSql = "SELECT * FROM Minor";
                   $newMinSelectSqlResult = mysqli_query($dataBase, $newMinSelectSql);
@@ -1340,6 +1397,7 @@
         <form method="post" action=" " id="editMinorForm">
         <input type ="hidden" value="20" name="hiddenButton" id="hiddenButton">
         <select id="editStudentMinSel" name="editStudentMinSel">
+         <option selected="selected">Choose A Student</option>
         <?
         $editminSql = "SELECT * FROM StudentMinor INNER JOIN User ON StudentMinor.studentID = User.userID";
         $editminResult = mysqli_query($dataBase, $editminSql);
@@ -1351,6 +1409,7 @@
                ?>
             </select><br>
         <select id="editMinorSel" name="editMinorSel">
+         <option selected="selected">Choose A Minor</option>
        <?
         $editMinSelectSql = "SELECT * FROM Minor";
                   $editMinSelectSqlResult = mysqli_query($dataBase, $editMinSelectSql);
@@ -1372,6 +1431,7 @@
         <form method="post" action=" " id="deleteMinorForm">
         <input type ="hidden" value="21" name="hiddenButton" id="hiddenButton">
         <select id="deleteStudentMinSel" name="deleteStudentMinSel">
+         <option selected="selected">Choose A Student</option>
         <?
         $deleteMinSql = "SELECT * FROM StudentMinor INNER JOIN User ON StudentMinor.studentID = User.userID";
         $deleteMinResult = mysqli_query($dataBase, $deleteMinSql);
@@ -1390,6 +1450,106 @@
                     <button id="doneButton" class="button" onclick="toggleElement( 'deleteMinorDiv', 'buttonBlock8' );">Done</button>
  </div>
  </div>
+   <button class="accordion">Departments</button>
+      <div class="panel">
+         <div class="buttonBlock" id="buttonBlock9">
+            <button class="button" onclick="toggleElement( 'buttonBlock9', 'newDepartmentDiv' );" id="addDepartmentButton">New Department</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock9', 'editDepartmentDiv' );" id="editDepartmentButton">Edit Department</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock9', 'deleteDepartmentDiv' );" id="deleteDepartmentButton">Delete Department</button>
+         </div>
+         <div id ="newDepartmentDiv" style="display:none">
+        <form method="post" action=" " id="createDepartmentForm">
+        <input type ="hidden" value="22" name="hiddenButton" id="hiddenButton">
+        <select id="newCollegeSel" name="newCollegeSel">
+         <option selected="selected">Choose A College</option>
+        <?
+        $newCollegeSql = "SELECT * FROM College ";
+                  $newCollegeResult = mysqli_query($dataBase, $newCollegeSql);
+
+
+                  while ($newCollegeRow = mysqli_fetch_array($newCollegeResult)) { $newCollegeRows[] = $newCollegeRow; }
+                  foreach ($newCollegeRows as $newCollegeRow) { 
+                     print "<option value='" . $newCollegeRow['collegeID'] . "'>". $newCollegeRow['collegeName']."</option>";
+                  }
+               ?>
+            </select><br>
+          <input type="text" name="newDeptName" placeholder="Department Name" required="true"><br>
+          <input type="text" name="newDeptChair" placeholder="Department Chair" required="true"><br>
+          <input type="text" name="newDeptContact" placeholder="Contact" required="true"><br>
+          <input type="text" name="newDeptDescription" placeholder="Department Description" required="true"><br>
+          <input type="text" name="newDeptLocation" placeholder="Department Location" required="true"><br>
+          <input type="submit" value="Submit" id="submitButton">
+          </form>
+          <button id="doneButton" class="button" onclick="toggleElement( 'newDepartmentDiv', 'buttonBlock9' );">Done</button>
+          </div>
+          <div id="editDepartmentDiv" style="display:none">
+          <form method="post" action=" " id="editDepartmentForm">
+          <input type ="hidden" value="23" name="hiddenButton" id="hiddenButton">
+          <select id="editDepartmentSel" name="editDepartmentSel">
+           <option selected="selected">Choose A Department</option>
+          <?
+          $editDepartmentSql = "SELECT * FROM Department ";
+                  $editDepartmentResult = mysqli_query($dataBase, $editDepartmentSql);
+
+
+                  while ($editDepartmentRow = mysqli_fetch_array($editDepartmentResult)) { $editDepartmentRows[] = $editDepartmentRow; }
+                  foreach ($editDepartmentRows as $editDepartmentRow) { 
+                     print "<option value='" . $editDepartmentRow['departmentID'] . "'>". $editDepartmentRow['deptName']."</option>";
+                  }
+               ?>
+               </select><br>
+               <select id="editCollegeSel" name="editCollegeSel">
+                <option selected="selected">Choose A College</option>
+          <?
+            $editCollegeSql = "SELECT * FROM College ";
+                  $editCollegeResult = mysqli_query($dataBase, $editCollegeSql);
+
+
+                  while ($editCollegeRow = mysqli_fetch_array($editCollegeResult)) { $editCollegeRows[] = $editCollegeRow; }
+                  foreach ($editCollegeRows as $editCollegeRow) { 
+                     print "<option value='" . $editCollegeRow['collegeID'] . "'>". $editCollegeRow['collegeName']."</option>";
+                  }
+               ?>
+            </select><br>
+            <input type="text" name="editDeptName" placeholder="Department Name" required="true"><br>
+          <input type="text" name="editDeptChair" placeholder="Department Chair" required="true"><br>
+          <input type="text" name="editDeptContact" placeholder="Contact" required="true"><br>
+          <input type="text" name="editDeptDescription" placeholder="Department Description" required="true"><br>
+          <input type="text" name="editDeptLocation" placeholder="Department Location" required="true"><br>
+          <input type="submit" value="Submit" id="submitButton">
+          </form>
+          <button id="doneButton" class="button" onclick="toggleElement( 'editDepartmentDiv', 'buttonBlock9' );">Done</button>
+
+          </div>
+          <div id="deleteDepartmentDiv" style="display:none">
+          <form method="post" action=" " id="deleteDepartmentForm">
+          <input type ="hidden" value="24" name="hiddenButton" id="hiddenButton">
+          <select id="deleteDepartmentSel" name="deleteDepartmentSel">
+           <option selected="selected">Choose A Department</option>
+          <?
+          $deleteDepartmentSql = "SELECT * FROM Department ";
+                  $deleteDepartmentResult = mysqli_query($dataBase, $deleteDepartmentSql);
+
+
+                  while ($deleteDepartmentRow = mysqli_fetch_array($deleteDepartmentResult)) { $deleteDepartmentRows[] = $deleteDepartmentRow; }
+                  foreach ($deleteDepartmentRows as $deleteDepartmentRow) { 
+                     print "<option value='" . $deleteDepartmentRow['departmentID'] . "'>". $deleteDepartmentRow['deptName']."</option>";
+                  }
+               ?>
+               </select><br>
+               <input type="submit" value="Submit" id="submitButton">
+          </form>
+          <button id="doneButton" class="button" onclick="toggleElement( 'deleteDepartmentDiv', 'buttonBlock9' );">Done</button>
+
+          </div>
+          </div>
+
+
+
+
+
+
+ 
 
  
  
