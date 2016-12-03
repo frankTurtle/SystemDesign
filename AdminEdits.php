@@ -178,6 +178,41 @@
 
           print"<input type='submit' value='Edit' id='submitButton'>";
       }
+
+      if( isset($_POST['deptIDSent']) ){
+          $deptID = $_POST['deptIDSent'];
+
+          $deptSQL = "SELECT * FROM Department WHERE departmentID = '$deptID'";
+          $deptSQLResult = mysqli_query($dataBase, $deptSQL);
+
+          $deptData = mysqli_fetch_assoc( $deptSQLResult );
+
+          print"<select id='editCollegeSel' name='editCollegeSel'>";
+
+          $editCollegeSql = "SELECT * FROM College";
+          $editCollegeResult = mysqli_query($dataBase, $editCollegeSql);
+
+          while ($editCollegeRow = mysqli_fetch_array($editCollegeResult)) { $editCollegeRows[] = $editCollegeRow; }
+          foreach ($editCollegeRows as $editCollegeRow) { 
+              if( $editCollegeRow['collegeID'] == $deptData['collegeID'] ){
+                  print "<option selected='selected' value='" . $editCollegeRow['collegeID'] . "'>". $editCollegeRow['collegeName']."</option>";
+              }
+              else{
+                  print "<option value='" . $editCollegeRow['collegeID'] . "'>". $editCollegeRow['collegeName']."</option>";
+              }
+          }
+          
+          print"</select><br>";
+
+          print"<input type='text' name='editDeptName' value='" . $deptData['deptName'] . "'><br>";
+          print"<input type='text' name='editDeptChair' value='" . $deptData['chair'] . "'><br>";
+          print"<input type='text' name='editDeptContact' value='" . $deptData['contact'] . "'><br>";
+          print"<input type='text' name='editDeptDescription' value='" . $deptData['description'] . "'><br>";
+          print"<input type='text' name='editDeptLocation' value='" . $deptData['location'] . "'><br>";
+          print"<input type='submit' value='Edit' id='submitButton'>";
+      }
+
+
   }
 
   function getSelectedRoom( $roomType, $value ){

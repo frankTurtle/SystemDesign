@@ -137,3 +137,18 @@ function populateRoomData( roomID ){
 			}
 	});
 }
+
+function populateDeptData( deptID ){
+	$.ajax({
+		type: 'POST',
+		url: 'AdminEdits.php',
+		data: {
+			  deptIDSent:deptID
+ 		},
+
+ 		success:
+ 		function (response) {
+  			document.getElementById("restOfDepartmentEdit").innerHTML = response; 
+			}
+	});
+}

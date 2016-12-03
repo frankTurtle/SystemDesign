@@ -329,7 +329,7 @@
           if (mysqli_query($dataBase, $editRoomSql)) { echo "Successfully updated the Room Information"; }
          else { echo "Error: " . $editRoomSql . "<br>" . mysqli_error($dataBase); }
          
-         }
+      }
          
          if($_POST['hiddenButton'] ==12){
          $deleteRoomID =  $_POST['room4ID'];
@@ -1496,10 +1496,11 @@
           </form>
           <button id="doneButton" class="button" onclick="toggleElement( 'newDepartmentDiv', 'buttonBlock9' );">Done</button>
           </div>
+
           <div id="editDepartmentDiv" style="display:none">
           <form method="post" action=" " id="editDepartmentForm">
           <input type ="hidden" value="23" name="hiddenButton" id="hiddenButton">
-          <select id="editDepartmentSel" name="editDepartmentSel">
+          <select id="editDepartmentSel" name="editDepartmentSel" onchange="populateDeptData(this.value);">
            <option selected="selected">Choose A Department</option>
           <?
           $editDepartmentSql = "SELECT * FROM Department ";
@@ -1512,25 +1513,10 @@
                   }
                ?>
                </select><br>
-               <select id="editCollegeSel" name="editCollegeSel">
-                <option selected="selected">Choose A College</option>
-          <?
-            $editCollegeSql = "SELECT * FROM College ";
-                  $editCollegeResult = mysqli_query($dataBase, $editCollegeSql);
 
-
-                  while ($editCollegeRow = mysqli_fetch_array($editCollegeResult)) { $editCollegeRows[] = $editCollegeRow; }
-                  foreach ($editCollegeRows as $editCollegeRow) { 
-                     print "<option value='" . $editCollegeRow['collegeID'] . "'>". $editCollegeRow['collegeName']."</option>";
-                  }
-               ?>
-            </select><br>
-            <input type="text" name="editDeptName" placeholder="Department Name" required="true"><br>
-          <input type="text" name="editDeptChair" placeholder="Department Chair" required="true"><br>
-          <input type="text" name="editDeptContact" placeholder="Contact" required="true"><br>
-          <input type="text" name="editDeptDescription" placeholder="Department Description" required="true"><br>
-          <input type="text" name="editDeptLocation" placeholder="Department Location" required="true"><br>
-          <input type="submit" value="Submit" id="submitButton">
+               <div id="restOfDepartmentEdit">
+               </div>
+               
           </form>
           <button id="doneButton" class="button" onclick="toggleElement( 'editDepartmentDiv', 'buttonBlock9' );">Done</button>
 
