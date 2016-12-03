@@ -140,8 +140,50 @@
             
           print"<input type='hidden' value='5' name='hiddenButton' id='hiddenButton'>";
           print"<input type='submit' value='Edit' id='submitButton'>";
-      }      
-    
+      }
+
+      if( isset($_POST['roomIDSent']) ){
+          $roomID = $_POST['roomIDSent'];
+
+          $editRoomSql = "SELECT * FROM Room Inner Join Building ON Room.buildingID = Building.buildingID WHERE roomID = '$roomID'";
+          $editRoomResult = mysqli_query($dataBase, $editRoomSql);
+
+          $roomData = mysqli_fetch_assoc( $editRoomResult );
+
+          print"<input type='text' name='roomNum2Input' value='" . $roomData['roomNum'] . "'><br>";
+          print"<input type='text' name='roomCapacity2Input' value='" . $roomData['capacity'] . "'><br>";
+
+          print"<select id = 'build2ID' name='build2ID'>";
+
+          $build2Sql = "SELECT * FROM Building";
+          $build2Result = mysqli_query($dataBase, $build2Sql);
+
+          while ($build2Row = mysqli_fetch_array($build2Result)) { $build2Rows[] = $build2Row; }
+          foreach ($build2Rows as $build2Row) { 
+              if( $build2Row['buildingID'] == $roomData['buildingID'] ){
+                  print "<option selected='selected' value='" . $build2Row['buildingID'] . "'>" . $build2Row['buildingName'] ."</option>";
+              }
+              else{
+                  print "<option value='" . $build2Row['buildingID'] . "'>" . $build2Row['buildingName'] ."</option>";
+              }   
+          }
+
+          print"</select><br>";
+          
+          print"<select name='roomType2' required='true' id='roomType2'>";
+          print"<option " . getSelectedRoom( $roomData['roomType'], 0 ) . " value='0'>Lab</option>";
+          print"<option " . getSelectedRoom( $roomData['roomType'], 1 ) . " value='1'>Classroom</option>";
+          print"<option " . getSelectedRoom( $roomData['roomType'], 2 ) . " value='2'>Office</option>";
+          print"</select><br>";
+
+          print"<input type='submit' value='Edit' id='submitButton'>";
+      }
+  }
+
+  function getSelectedRoom( $roomType, $value ){
+      if( $roomType == $value ){
+          return "selected='selected'";
+      }
   }
 
 ?>

@@ -122,3 +122,18 @@ function populateSectionData( sectionID ){
 			}
 	});
 }
+
+function populateRoomData( roomID ){
+	$.ajax({
+		type: 'POST',
+		url: 'AdminEdits.php',
+		data: {
+			  roomIDSent:roomID
+ 		},
+
+ 		success:
+ 		function (response) {
+  			document.getElementById("restOfRoomEdit").innerHTML = response; 
+			}
+	});
+}

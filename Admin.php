@@ -326,7 +326,7 @@
           $editRoomSql = "UPDATE `Room` SET `buildingID` = '$buildID', `roomType`='$roomType2',`roomNum` = '$roomNum2',`capacity` = '$roomCapacity2' 
           WHERE `roomID` = '$editRoomID';";
          
-          if (mysqli_query($dataBase, $editRoomSql)) { echo "record deleted successfully"; }
+          if (mysqli_query($dataBase, $editRoomSql)) { echo "Successfully updated the Room Information"; }
          else { echo "Error: " . $editRoomSql . "<br>" . mysqli_error($dataBase); }
          
          }
@@ -1169,7 +1169,7 @@
         <form method="post" action=" " id="editRoomForm">
         <input type="hidden" value="11" name="hiddenButton" id="hiddenButton">
 
-         <select id = 'room3ID' name='room3ID'>
+         <select id = 'room3ID' name='room3ID' onchange="populateRoomData(this.value);">
                <option selected="selected">Choose A Room</option>
                <?
                   $editRoomSql = "SELECT * FROM Room Inner Join Building ON Room.buildingID = Building.buildingID";
@@ -1180,29 +1180,12 @@
                      print "<option value='" . $editRoomRow['roomID'] . "'>" . $editRoomRow['roomNum'] ." " . $editRoomRow['buildingName'] . "</option>";
                   }
                ?>
-            </select><br>
-         <input type="text" name="roomNum2Input" placeholder="Room Number" required="true"><br>
-         <input type="text" name="roomCapacity2Input" placeholder="Room Capacity" required="true"><br>
-         <select id = 'build2ID' name='build2ID'>
-               <option selected="selected">Choose A building</option>
-               <?
-                  $build2Sql = "SELECT * FROM Building";
-                  $build2Result = mysqli_query($dataBase, $build2Sql);
+         </select><br>
 
-                  while ($build2Row = mysqli_fetch_array($build2Result)) { $build2Rows[] = $build2Row; }
-                  foreach ($build2Rows as $build2Row) { 
-                     print "<option value='" . $build2Row['buildingID'] . "'>" . $build2Row['buildingName'] ."</option>";
-                  }
-               ?>
-            </select><br>
-            <select name="roomType2" required="true" id="roomType2">
-                  <option selected="selected">Type of Room</option>
-                  <option value="0">lab</option>
-                  <option value="1">classroom</option>
-                  <option value="2">office</option>
-               </select><br>
-                <input type="submit" value="Submit" id="submitButton">
-           </form>
+         <div id="restOfRoomEdit">
+         </div>
+
+        </form>
             <button id="doneButton" class="button" onclick="toggleElement( 'editRoomDiv', 'buttonBlock5' );">Done</button>
        </div>
        <div id ="deleteRoomDiv" style="display:none">>
