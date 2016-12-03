@@ -525,13 +525,12 @@
          $editCollAddress       = $_POST['editCollegeAddress'];
          $editCollPhone     = $_POST['editCollegePhone'];
          $editCollAdmitted = $_POST['editCollegeAdmitted'];
-         $editCollFound = date('Y-m-d', strtotime($editCollFound));
          
          
 
          
          
-         $editCollegeSql = "UPDATE `College` SET `CollegeName` = '$editCollName',`collegeFounded`='$editCollFound', `collegeAddress`= '$editCollAddress', `collegePhone`='$editCollegePhone', 
+         $editCollegeSql = "UPDATE `College` SET `CollegeName` = '$editCollName', `collegeAddress`= '$editCollAddress', `collegePhone`='$editCollPhone', 
          `collegeAdmitted`='$editCollAdmitted'
          WHERE `collegeID` = '$editCollID';";
          
@@ -1516,7 +1515,7 @@
 
                <div id="restOfDepartmentEdit">
                </div>
-               
+
           </form>
           <button id="doneButton" class="button" onclick="toggleElement( 'editDepartmentDiv', 'buttonBlock9' );">Done</button>
 
@@ -1564,11 +1563,13 @@
           </form>
           <button id="doneButton" class="button" onclick="toggleElement( 'newCollegeDiv', 'buttonBlock10' );">Done</button>
           </div>
+
+
           <div id="editCollegeDiv" style="display:none">
           <form method="post" action=" " id="editCollegeForm">
           <input type ="hidden" value="26" name="hiddenButton" id="hiddenButton">
           
-               <select id="editCollegeSelect" name="editCollegeSelect">
+               <select id="editCollegeSelect" name="editCollegeSelect" onchange="populateCollegeData(this.value);">
                 <option selected="selected">Choose A College</option>
           <?
             $editCollege2Sql = "SELECT * FROM College ";
@@ -1581,12 +1582,10 @@
                   }
                ?>
             </select><br>
-            <input type="text" name="editCollegeName" placeholder="College Name" required="true"><br>
-          <input type="date" name="editCollegeFound" placeholder="College Founded Date" required="true"><br>
-          <input type="text" name="editCollegeAddress" placeholder="College address" required="true"><br>
-          <input type="text" name="editCollegePhone" placeholder="College Phone Number" required="true"><br>
-          <input type="number" name="editCollegeAdmitted" placeholder="College Admitted" required="true"><br>
-          <input type="submit" value="Submit" id="submitButton">
+
+            <div id="editCollegeData">
+            </div>
+
           </form>
           <button id="doneButton" class="button" onclick="toggleElement( 'editCollegeDiv', 'buttonBlock10' );">Done</button>
 

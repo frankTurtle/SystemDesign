@@ -152,3 +152,18 @@ function populateDeptData( deptID ){
 			}
 	});
 }
+
+function populateCollegeData( collegeID ){
+	$.ajax({
+		type: 'POST',
+		url: 'AdminEdits.php',
+		data: {
+			  collegeIDSent:collegeID
+ 		},
+
+ 		success:
+ 		function (response) {
+  			document.getElementById("editCollegeData").innerHTML = response; 
+			}
+	});
+}

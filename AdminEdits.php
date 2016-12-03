@@ -212,7 +212,20 @@
           print"<input type='submit' value='Edit' id='submitButton'>";
       }
 
+      if( isset($_POST['collegeIDSent']) ){
+          $collegeID = $_POST['collegeIDSent'];
 
+          $collegeSQL = "SELECT * FROM College WHERE collegeID = '$collegeID'";
+          $collegeSQLResult = mysqli_query($dataBase, $collegeSQL);
+
+          $collegeData = mysqli_fetch_assoc( $collegeSQLResult );
+
+          print"<input type='text' name='editCollegeName' value='" . $collegeData['collegeName'] . "'><br>";
+          print"<input type='text' name='editCollegeAddress' value='" . $collegeData['collegeAddress'] . "'><br>";
+          print"<input type='text' name='editCollegePhone' value='" . $collegeData['collegePhone'] . "'><br>";
+          print"<input type='text' name='editCollegeAdmitted' value='" . $collegeData['collegeAdmitted'] . "'><br>";
+          print"<input type='submit' value='Edit' id='submitButton'>";
+      }
   }
 
   function getSelectedRoom( $roomType, $value ){
