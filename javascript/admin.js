@@ -107,3 +107,18 @@ function populateCourseData( courseID ){
 			}
 	});
 }
+
+function populateSectionData( sectionID ){
+	$.ajax({
+		type: 'POST',
+		url: 'AdminEdits.php',
+		data: {
+			  sectionIDSent:sectionID
+ 		},
+
+ 		success:
+ 		function (response) {
+  			document.getElementById("restOfSectionEdit").innerHTML = response; 
+			}
+	});
+}

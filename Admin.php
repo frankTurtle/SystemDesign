@@ -863,6 +863,7 @@
 
             <div id='restOfCourseEdit'>
             </div>
+
          </form>
          <button id="doneButton" class="button" onclick="toggleElement( 'editCourseDiv', 'buttonBlock2' );">Done</button>
          </div>
@@ -894,7 +895,7 @@
          <button id="doneButton" class="button" onclick="toggleElement( 'deleteCourseDiv', 'buttonBlock2' );">Done</button>
       </div>
       
-</div>
+   </div>
       <button class="accordion">Section</button>
       <div class="panel">
          <div class="buttonBlock" id="buttonBlock3">
@@ -981,7 +982,7 @@
       </div>
       <div id ="editSectionDiv" style="display:none">
       <form method="post" action=" " id="EditSectionForm">
-            <select id = 'section2ID' name='section2ID'>
+            <select id = 'section2ID' name='section2ID' onchange="populateSectionData(this.value);">
                <option selected="selected">Choose A Section</option>
                <?
                   $sectionSql = "SELECT * FROM Section INNER JOIN Course ON Section.courseID=Course.courseID";
@@ -993,79 +994,11 @@
                   }
                ?>
             </select><br>
+
+            <div id="restOfSectionEdit">
+            </div>
             
-            <select id = 'course5ID' name='course5ID'>
-               <option selected="selected">Choose A Course</option>
-               <?
-                  $course5Sql = "SELECT * FROM Course";
-                  $course5Result = mysqli_query($dataBase, $course5Sql);
-
-                  while ($course5Row = mysqli_fetch_array($course5Result)) { $course5Rows[] = $course5Row; }
-                  foreach ($course5Rows as $course5Row) { 
-                     print "<option value='" . $course5Row['courseID'] . "'>" . $course5Row['courseName'] . "</option>";
-                  }
-               ?>
-            </select><br>
-                <input type="text" name="sectionNum2Input" placeholder="Section Number" required="true"><br>
-                   
-               <select id = 'term2ID' name='term2ID'>
-                       <option selected="selected">Choose A Term</option>
-                  <?
-                      $term2Sql = "SELECT * FROM Term";
-                  $term2Result = mysqli_query($dataBase, $term2Sql);
-
-                  while ($term2Row = mysqli_fetch_array($term2Result)) { $term2Rows[] = $term2Row; }
-                  foreach ($term2Rows as $row2Term) { 
-                     print "<option value='" . $row2Term['termID'] . "'>" . $row2Term['semester'] . " " . $row2Term['year'] . "</option>";
-                  }
-               ?>
-            </select><br>
-                  
             
-             <select id = 'timeSlot2ID' name='timeSlot2ID'>
-                       <option selected="selected">Choose A Timeslot </option>
-                  <?
-                      $timeSlot2sql = "SELECT * FROM Timeslot INNER JOIN Time ON Timeslot.timeID=Time.timeID INNER JOIN Day ON Timeslot.dayID=Day.DayID";
-                  $timeSlot2result = mysqli_query($dataBase, $timeSlot2sql);
-                  
-                  
-                  while ($timeSlot2row = mysqli_fetch_array($timeSlot2result)) { $timeSlot2rows[] = $timeSlot2row; }
-                  foreach ($timeSlot2rows as $timeSlot2row) { 
-                     print "<option value='" . $timeSlot2row['timeslotID'] . "'>" . $timeSlot2row['timeStart'] . "-" . $timeSlot2row['timeEnd'] . " " . $timeSlot2row['days'] ."</option>";
-                  }
-               ?>
-            </select><br>
-
-             <select id = 'room2ID' name='room2ID'>
-                       <option selected="selected">Choose A Room</option>
-                  <?
-                      $room2Sql = "SELECT * FROM Room INNER JOIN Building ON Room.buildingID=Building.buildingID";
-                  $room2Result = mysqli_query($dataBase, $room2Sql);
-
-                  while ($room2Row = mysqli_fetch_array($room2Result)) { $room2Rows[] = $room2Row; }
-                  foreach ($room2Rows as $room2Row) { 
-                     print "<option value='" . $room2Row['roomID'] . "'>" . $room2Row['roomNum'] . " " . $room2Row['buildingName'] . "</option>";
-                  }
-               ?>
-            </select><br>
-            
-              <select id = 'faculty2ID' name='faculty2ID'>
-                       <option selected="selected">Choose A Faculty</option>
-                  <?
-                      $faculty2Sql = "SELECT * FROM Faculty INNER JOIN User ON Faculty.facultyID=User.userID";
-                  $faculty2Result = mysqli_query($dataBase, $facultySql);
-
-                  while ($faculty2Row = mysqli_fetch_array($faculty2Result)) { $faculty2Rows[] = $faculty2Row; }
-                  foreach ($faculty2Rows as $faculty2Row) { 
-                     print "<option value='" . $faculty2Row['facultyID'] . "'>" ."Faculty ID: ". $faculty2Row['facultyID'] . " " . $faculty2Row['firstName'] . " ". $faculty2Row['lastName']  ."</option>";
-                  }
-               ?>
-            </select><br>
-        
-           
-
-            <input type="hidden" value="5" name="hiddenButton" id="hiddenButton">
-            <input type="submit" value="Submit" id="submitButton">
          </form>
          <button id="doneButton" class="button" onclick="toggleElement( 'editSectionDiv', 'buttonBlock3' );">Done</button>
          </div>
