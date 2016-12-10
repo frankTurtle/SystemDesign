@@ -94,10 +94,6 @@
 			    data['val'] = $(this).text();
 			    data['id'] = $(this).parent('tr').attr('data-row-id');
 			    data['index'] = $(this).attr('col-index');
-
-			    window.console&&console.log($(this).text());
-			    window.console&&console.log($(this).parent('tr').attr('data-row-id'));
-			    window.console&&console.log($(this).attr('col-index'));
 			    
 			    $.ajax({   
 			          
@@ -108,9 +104,6 @@
 			          dataType: "json",       
 			          success: function(response)  
 			          {   
-
-			          	 window.console&&console.log(response.sql);
-			          	 window.console&&console.log(response.col);
 
 			            if(response.status) {
 			              $("#msg").removeClass('alert-danger');

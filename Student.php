@@ -344,7 +344,7 @@
 		                         JOIN User ON Section.facultyID = User.userID 
 		                         JOIN Course ON Section.courseID = Course.courseID 
 		                         WHERE studentID = '$userID'
-                                         AND termID = $semester";
+                                 AND termID = $semester";
 
             		$getGrades = mysqli_query($dataBase, $getGrades);
             		while ($gradesRow = mysqli_fetch_array($getGrades)) { $gradeRows[] = $gradesRow; }
@@ -387,105 +387,204 @@
             		}
      
 
-				?>
+			?>
 
     	 </div>
       </div>
-         <button class="accordion">Schedule</button> 
-   <div class="panel">
 
-   <?php
+      <button class="accordion">Schedule</button> 
+      <div class="panel">
 
-      if($_POST['XXX'] == 2) {
-         
+	   <?php
 
-      } else if($_POST['XXX'] == 1)  {
+	      if($_POST['XXX'] == 2) {
+	         
 
-
-      } else {
-
-         $sql = "SELECT a.firstname, a.lastname, c.termID, f.courseName, c.sectionNum, g.dayID, g.days, e.timeStart, e.timeEnd FROM User a 
-         INNER JOIN CourseEnrollment b on a.userID = b.studentID INNER JOIN Section c on b.sectionID = c.sectionID INNER JOIN Timeslot d 
-         on c.timeslotID = d.timeslotID INNER JOIN Time e on d.timeID = e.timeID INNER JOIN Course f on c.courseID = f.courseID INNER JOIN Day g on d.dayID = g.dayID 
-         WHERE a.userID =".$userID." AND c.termID =".$semester." ORDER BY e.timeStart, g.dayID";
-         $result6 = mysqli_query($dataBase, $sql);
-         $rowcount = mysqli_num_rows($result6);
-
-         $slot = array('07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00') ;
-         print "<br><table width='80%' align='center' if='schdulefaculty'>";
-         print "<tr>
-                   <th>Time</th>
-                   <th>Monday</th>
-                   <th>Tuesday</th>
-                   <th>Wednesday</th>
-                   <th>Thrusday</th>
-                   <th>Friday</th>
-                   <th>Saturday</th></tr>";
-
-         for($x = 0; $x <= 15; $x++) {
-
-             print "<tr><th>".$slot[$x]."</th>";
-             print "<th>";
+	      } else if($_POST['XXX'] == 1)  {
 
 
-             $result6 = mysqli_query($dataBase, $sql);
-             while ($row6 = mysqli_fetch_array($result6)) {                            
-                     if(($row6['days'] =='M' || $row6['days'] == 'MW') && $slot[$x] == $row6['timeStart']){
-                         print $row6['courseName'];
-                     }
-               }
-                        print "</th><th>";
+	      } else {
 
-             $result6 = mysqli_query($dataBase, $sql);
-             while ($row6 = mysqli_fetch_array($result6)) {                            
-                     if(($row6['days'] =='T' || $row6['days'] == 'TTH') && $slot[$x] == $row6['timeStart']){
-                         print $row6['courseName'];
-                     }
-               }
-                        print "</th><th>";
+	         $sql = "SELECT a.firstname, a.lastname, c.termID, f.courseName, c.sectionNum, g.dayID, g.days, e.timeStart, e.timeEnd FROM User a 
+	         INNER JOIN CourseEnrollment b on a.userID = b.studentID INNER JOIN Section c on b.sectionID = c.sectionID INNER JOIN Timeslot d 
+	         on c.timeslotID = d.timeslotID INNER JOIN Time e on d.timeID = e.timeID INNER JOIN Course f on c.courseID = f.courseID INNER JOIN Day g on d.dayID = g.dayID 
+	         WHERE a.userID =".$userID." AND c.termID =".$semester." ORDER BY e.timeStart, g.dayID";
+	         $result6 = mysqli_query($dataBase, $sql);
+	         $rowcount = mysqli_num_rows($result6);
 
-             $result6 = mysqli_query($dataBase, $sql);
-             while ($row6 = mysqli_fetch_array($result6)) {                            
-                     if(($row6['days'] =='W' || $row6['days'] == 'MW') && $slot[$x] == $row6['timeStart']){
-                         print $row6['courseName'];
-                     }
-               }
-                        print "</th><th>";
+	         $slot = array('07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00') ;
+	         print "<br><table width='80%' align='center' if='schdulefaculty'>";
+	         print "<tr>
+	                   <th>Time</th>
+	                   <th>Monday</th>
+	                   <th>Tuesday</th>
+	                   <th>Wednesday</th>
+	                   <th>Thrusday</th>
+	                   <th>Friday</th>
+	                   <th>Saturday</th></tr>";
 
-             $result6 = mysqli_query($dataBase, $sql);
-             while ($row6 = mysqli_fetch_array($result6)) {                            
-                     if(($row6['days'] =='TH' || $row6['days'] == 'TTH') && $slot[$x] == $row6['timeStart']){
-                         print $row6['courseName'];
-                     }
-               }
-                        print "</th><th>";
+	         for($x = 0; $x <= 15; $x++) {
 
-             $result6 = mysqli_query($dataBase, $sql);
-             while ($row6 = mysqli_fetch_array($result6)) {                            
-                     if(($row6['days'] =='F') && $slot[$x] == $row6['timeStart']){
-                         print $row6['courseName'];
-                     }
-               }
-                        print "</th><th>";
-
-             $result6 = mysqli_query($dataBase, $sql);
-             while ($row6 = mysqli_fetch_array($result6)) {                            
-                     if(($row6['days'] =='S') && $slot[$x] == $row6['timeStart']){
-                         print $row6['courseName'];
-                     }
-               }
-                        print "</th></tr>";
+	             print "<tr><th>".$slot[$x]."</th>";
+	             print "<th>";
 
 
-         }
-         print "</table>";
-         print "<input type='hidden' value='1' name='hiddenButtonAdvisor' id='XXX'>";
-         print "</form>";
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='M' || $row6['days'] == 'MW') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
 
-      }
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='T' || $row6['days'] == 'TTH') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
 
-   ?>
-   </div>
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='W' || $row6['days'] == 'MW') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
+
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='TH' || $row6['days'] == 'TTH') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
+
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='F') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
+
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='S') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th></tr>";
+
+
+	         }
+	         print "</table>";
+	         print "<input type='hidden' value='1' name='hiddenButtonAdvisor' id='XXX'>";
+	         print "</form>";
+
+	      }
+
+	   ?>
+      </div>
+
+      <button class="accordion">Transcript</button> 
+      <div class="panel">
+
+        <br>
+
+        	<?php
+        		// include 'Transcript.php';
+        		// getTranscript();
+
+        		$getGradesSQL = "SELECT * FROM CourseEnrollment 
+                     JOIN Section ON CourseEnrollment.sectionID = Section.sectionID 
+                     JOIN Course ON Section.courseID = Course.courseID 
+                     WHERE studentID = $userID
+                     AND finalGrade > 0";
+
+		        $getGradesAgain = mysqli_query($dataBase, $getGradesSQL);
+
+		        while ($gradesRow1 = mysqli_fetch_array($getGradesAgain)) { $gradeRows1[] = $gradesRow1; }
+
+		        if( count( $gradeRows1 ) == 0 ){
+		          print "<h1 style='text-align: center'>You have no Grades</h1>";
+		        }
+		        else{
+		          echo'
+		            <table class="table-fill">
+		    
+		            <thead>
+		              <tr>
+		                <th class="text-left">Course Name</th>
+		                <th class="text-left">Final Grade</th>
+		              </tr>
+		            </thead>
+
+		            <tbody class="table-hover">
+		          ';
+
+		          foreach ($gradeRows1 as $gradeRows3) { 
+		                $index = 0;
+
+		                print "<tr>";
+		                print "<td class='text-left' col-index=" . $index++ . ">" . $gradeRows3['courseName']  . "</td>";
+		                print "<td class='text-left' col-index=" . $index++ . ">" . $gradeRows3['finalGrade'] . "</td>";
+		                print "</tr>";
+		          }
+
+		          echo'
+		            <tr>
+		              <td colspan="2" style="background:black; height:10px;"></td>
+		            </tr>
+
+		            <tr>
+		              <td class="text-right">Total GPA</td>
+		              <td>
+	              '; 
+		          print"" . totalGPA($gradeRows1) . "</td>
+		            </tr>
+
+		            <tr>
+		              <td class='text-right'>Total credits</td>
+		              <td>" . totalCredits( $gradeRows1 ) . "</td>
+		            </tr>
+
+		            </tbody>
+
+		            </table>
+
+		            <br>
+		          " ;
+		        }
+
+		        function totalGPA( $grades ){
+		        	$totalCredits = 0;
+		        	$calculation = 0;
+
+		        	foreach( $grades as $grade ){
+		        		$totalCredits += $grade['creditHours'];
+		        		$calculation += $grade['finalGrade'] * $grade['creditHours'];
+		        	}
+
+		        	return $calculation / $totalCredits;
+		        }
+
+		        function totalCredits( $grades ){
+		        	$totalCredits = 0;
+
+		        	foreach( $grades as $grade ){
+		        		$totalCredits += $grade['creditHours'];
+		        	}
+
+		        	return $totalCredits;
+		        }
+
+        	?>
+
+        <br>
+
+      </div>
 
 
       <script>
