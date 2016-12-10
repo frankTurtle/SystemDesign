@@ -9,7 +9,7 @@ function deleteClass( section ){
         success:
         function(result){
         	 alert(result);
-        	 getSchedule( 1 );
+        	 getSchedule( 3 );
        	}
      });
 }
@@ -19,6 +19,7 @@ function getSubject( term, unhideThis ){
 	document.getElementById("subject").style.display = '';
 	document.getElementById("timeSlot").innerHTML = "";
 	document.getElementById("timeSlot").style.display = 'none';
+	document.getElementById("answer").innerHTML = "";
 
 	$.ajax({
 		type: 'POST',
@@ -70,5 +71,6 @@ function getSchedule( term ){
 }
 
 function showDeleteClassButton( element ){
+	// var id = element.getAttribute( 'data-row-id' );
 	$('.cat'+$(element).attr('data-row-id')).toggle();
 }
