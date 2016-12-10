@@ -501,7 +501,7 @@
                      JOIN Section ON CourseEnrollment.sectionID = Section.sectionID 
                      JOIN Course ON Section.courseID = Course.courseID 
                      WHERE studentID = $userID
-                     AND finalGrade > 0";
+                     AND finalGrade != 'F'";
 
 		        $getGradesAgain = mysqli_query($dataBase, $getGradesSQL);
 
@@ -564,10 +564,62 @@
 
 		        	foreach( $grades as $grade ){
 		        		$totalCredits += $grade['creditHours'];
-		        		$calculation += $grade['finalGrade'] * $grade['creditHours'];
+		        		$calculation += convertToNumber($grade['finalGrade']) * $grade['creditHours'];
 		        	}
 
 		        	return $calculation / $totalCredits;
+		        }
+
+		        function convertToNumber( $letter ){
+		        	switch (strtoupper($letter)) {
+		        		case 'A':
+		        			return 4.0;
+		        			break;
+
+	        			case 'A-':
+		        			return 3.67;
+		        			break;
+
+	        			case 'B+':
+		        			return 3.33;
+		        			break;
+
+	        			case 'B':
+		        			return 3;
+		        			break;
+
+	        			case 'B-':
+		        			return 2.67;
+		        			break;
+
+	        			case 'C+':
+	        				return 2.33;
+		        			break;
+
+	        			case 'C':
+		        			return 2;
+		        			break;
+
+	        			case 'C-':
+		        			return 1.67;
+		        			break;
+
+	        			case 'D+':
+		        			return 1.33;
+		        			break;
+
+	        			case 'D':
+		        			return 1;
+		        			break;
+
+	        			case 'D-':
+		        			return 0.7;
+		        			break;
+		        		
+		        		default:
+		        			return 0.0;
+		        			break;
+		        	}
 		        }
 
 		        function totalCredits( $grades ){
