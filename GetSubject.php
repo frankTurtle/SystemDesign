@@ -14,7 +14,7 @@
         while ($sectionRow = mysqli_fetch_array($sectionResult)) { $sectionRows[] = $sectionRow; }
 
         foreach ($sectionRows as $row) { 
-            echo "<option value=" . $row['sectionID'] . ">" . $row['courseName'] . "</option>";
+            echo "<option name='subject' value=" . $row['sectionID'] . ">" . $row['courseName'] . "</option>";
         }
     } 
   }

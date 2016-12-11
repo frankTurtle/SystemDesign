@@ -167,11 +167,29 @@
          $room       = $_POST['roomID'];
          $faculty    = $_POST['facultyID'];
          $sectionNum = $_POST['sectionNumInput'];
-               
-         $sql = "INSERT INTO `Section`(`courseID`, `sectionNum`, `timeslotID`, `termID`, `roomID`, `facultyID`)
-                 VALUES ( '$course', '$sectionNum', '$timeslot', '$term', '$room' , '$faculty');";
 
-         if (mysqli_query($dataBase, $sql)) { echo "New record created successfully"; }
+         $sql = "INSERT INTO Section (courseID, sectionNum, timeslotID, termID, roomID, facultyID)
+                SELECT '$course', '$sectionNum', '$timeslot', '$term', '$room' , '$faculty'
+                    FROM DUAL
+                    WHERE NOT EXISTS (SELECT roomID, timeslotID, facultyID
+                                          FROM Section
+                                          WHERE roomID='$room'
+                                         AND timeslotID='$timeslot'
+                                         AND facultyID='$faculty')
+                    LIMIT 1";
+
+               
+         // $sql = "INSERT INTO `Section`(`courseID`, `sectionNum`, `timeslotID`, `termID`, `roomID`, `facultyID`)
+         //         VALUES ( '$course', '$sectionNum', '$timeslot', '$term', '$room' , '$faculty');";
+
+         if (mysqli_query($dataBase, $sql)) {
+            if( mysqli_affected_rows($dataBase) == 0 ){
+               echo "Section already exists, try again";
+            }
+            else{
+               echo "New record created successfully";    
+            }
+         }
          else { echo "Error: " . $sql . "<br>" . mysqli_error($dataBase); }
       }
       
@@ -640,6 +658,54 @@
                 
          }
          
+          if($_POST['hiddenButton']==31){
+         $addstudHoldID       = $_POST['newStudHoldSelect'];
+         $addstudHoldStudentID        = $_POST['newStudHoldStudSelect'];
+         $addstudHoldActive   = $_POST['newStudHoldBit'];
+         $addstudHoldDates        = $_POST['newStudHoldDate'];
+         $addstudHoldDates = date('Y-m-d', strtotime($addstudHoldDates));
+         
+      
+         
+         $addstudHoldSql = "INSERT INTO `StudentHolds` (`holdID`, `studentID`,`active`,`dateCreated`)
+         VALUES ('$addstudHoldID','$addstudHoldStudentID','$addstudHoldActive','$addstudHoldDates');";
+         
+         if(mysqli_query($dataBase, $addstudHoldSql)) { echo "Record created successfully"; }
+         else { echo "Error: " . $addstudHoldSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
+          if($_POST['hiddenButton']==32){
+         $editstudHoldStudentID          = $_POST['editStudHoldSelect'];
+         $editstudHoldID                 = $_POST['editStudentHoldSel'];
+         $editstudHoldActive             = $_POST['editStudHoldBit'];
+         $editstudHoldDates              = $_POST['editStudHoldDate'];
+         $editstudHoldDates              = date('Y-m-d', strtotime($editstudHoldDates));
+         
+         
+
+         
+         
+         $editstudHoldSql = "UPDATE `StudentHolds` SET `active` = '$editstudHoldActive', `dateCreated`= '$editstudHoldDates'
+         WHERE `studentID` = '$editstudHoldStudentID' AND `holdID` = '$editstudHoldID';";
+         
+        if(mysqli_query($dataBase, $editstudHoldSql)) { echo "Record updated successfully"; }
+         else { echo "Error: " . $editstudHoldSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
+         if($_POST['hiddenButton']==33){
+         $deletestudHold = $_POST['deleteStudHoldSel'];
+         $deletestudHoldID = $_POST['deleteStudentHoldIDSel'];                             
+     
+         
+         $deletestudHoldSql = "DELETE FROM `StudentHolds` WHERE `studentID` = '$deletestudHold' AND `holdID` = '$deletestudHoldID';";
+         
+         if(mysqli_query($dataBase, $deletestudHoldSql)) { echo "Record deleted successfully"; }
+         else { echo "Error: " . $deletestudHoldSql . "<br>" . mysqli_error($dataBase);}
+                
+         }
+         
          
          
       
@@ -901,6 +967,7 @@
             <button class="button" onclick="toggleElement( 'buttonBlock3', 'newSectionDiv' );" id="addNewSectionButton">New Section</button>
             <button class="button" onclick="toggleElement( 'buttonBlock3', 'editSectionDiv' );" id="editSectionButton">Edit Section</button>
             <button class="button" onclick="toggleElement( 'buttonBlock3', 'deleteSectionDiv' );" id="deleteSectionButton">Delete Section</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock3', 'searchSectionDiv' );" id="searchSectionButton">Search Section</button>
          </div>
          <div id ="newSectionDiv" style="display:none">
         <form method="post" action=" " id="createSectionForm">
@@ -1021,6 +1088,67 @@
          </form>
          <button id="doneButton" class="button" onclick="toggleElement( 'deleteSectionDiv', 'buttonBlock3' );">Done</button>
          </div>
+         
+         <div id ="searchSectionDiv" style="display:none">
+      <form method="post" action="searchSection.php" id="searchSectionForm">
+            
+
+             <select id = 'searchCourse5ID' name='searchCourse5ID'>
+               <option selected="selected">Choose A Course</option>
+               <?
+                  $searchCourse5Sql = "SELECT * FROM Course";
+                  $searchCourse5Result = mysqli_query($dataBase, $searchCourse5Sql);
+                  while ($searchCourse5Row = mysqli_fetch_array($searchCourse5Result)) { $searchCourse5Rows[] = $searchCourse5Row; }
+                  foreach ($searchCourse5Rows as $searchCourse5Row) { 
+                     print "<option value='" . $searchCourse5Row['courseID'] . "'>" . $searchCourse5Row['courseName'] . "</option>";
+                  }
+               ?>
+            </select><br>
+                <input type="text" name="sectionNum2Input" placeholder="Section Number"><br>
+                   
+               <select id = 'searchTerm2ID' name='searchTerm2ID'>
+                       <option selected="selected">Choose A Term</option>
+                  <?
+                      $searchTerm2Sql = "SELECT * FROM Term";
+                  $searchTerm2Result = mysqli_query($dataBase, $searchTerm2Sql);
+                  while ($searchTerm2Row = mysqli_fetch_array($searchTerm2Result)) { $searchTerm2Rows[] = $searchTerm2Row; }
+                  foreach ($searchTerm2Rows as $searchRow2Term) { 
+                     print "<option value='" . $searchRow2Term['termID'] . "'>" . $searchRow2Term['semester'] . " " . $searchRow2Term['year'] . "</option>";
+                  }
+               ?>
+            </select><br>
+                  
+            
+             <select id = 'searchTimeSlot2ID' name='searchTimeSlot2ID'>
+                       <option selected="selected">Choose A Timeslot </option>
+                  <?
+                      $searchTimeSlot2sql = "SELECT * FROM Timeslot INNER JOIN Time ON Timeslot.timeID=Time.timeID INNER JOIN Day ON Timeslot.dayID=Day.DayID";
+                  $searchTimeSlot2result = mysqli_query($dataBase, $searchTimeSlot2sql);
+                  
+                  
+                  while ($searchTimeSlot2row = mysqli_fetch_array($searchTimeSlot2result)) { $searchTimeSlot2rows[] = $searchTimeSlot2row; }
+                  foreach ($searchTimeSlot2rows as $searchTimeSlot2row) { 
+                     print "<option value='" . $searchTimeSlot2row['timeslotID'] . "'>" . $searchTimeSlot2row['timeStart'] . "-" . $searchTimeSlot2row['timeEnd'] . " " . $searchTimeSlot2row['days'] ."</option>";
+                  }
+               ?>
+            </select><br>
+            <select id = 'searchfaculty2ID' name='searchfaculty2ID'>
+                       <option selected="selected">Choose A Faculty</option>
+                  <?
+                      $searchFaculty2Sql = "SELECT * FROM Faculty INNER JOIN User ON Faculty.facultyID=User.userID";
+                  $searchFaculty2Result = mysqli_query($dataBase, $facultySql);
+                  while ($searchFaculty2Row = mysqli_fetch_array($searchFaculty2Result)) { $searchFaculty2Rows[] = $searchFaculty2Row; }
+                  foreach ($searchFaculty2Rows as $searchFaculty2Row) { 
+                     print "<option value='" . $searchFaculty2Row['facultyID'] . "'>" ."Faculty ID: ". $searchFaculty2Row['facultyID'] . " " . $searchFaculty2Row['firstName'] . " ". $searchFaculty2Row['lastName']  ."</option>";
+                  }
+               ?>
+            </select><br>
+            <input type="submit" value="Submit" id="submitButton">
+            <input type="hidden" value="34" name="hiddenButton" id="hiddenButton">
+         </form>
+         <button id="doneButton" class="button" onclick="toggleElement( 'searchSectionDiv', 'buttonBlock3' );">Done</button>
+         </div>
+         
          </div>
          
           <button class="accordion">Advisor</button>
@@ -1690,7 +1818,96 @@
           </div>
 
 
+<button class="accordion">StudHolds</button>
+      <div class="panel">
+         <div class="buttonBlock" id="buttonBlock12">
+            <button class="button" onclick="toggleElement( 'buttonBlock12', 'newStudHoldDiv' );" id="addStudHoldButton">New StudHold</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock12', 'editStudHoldDiv' );" id="editStudHoldButton">Edit StudHold</button>
+            <button class="button" onclick="toggleElement( 'buttonBlock12', 'deleteStudHoldDiv' );" id="deleteStudHoldButton">Delete StudHold</button>
+         </div>
+         <div id ="newStudHoldDiv" style="display:none">
+        <form method="post" action=" " id="createStudHoldForm">
+        <input type ="hidden" value="31" name="hiddenButton" id="hiddenButton">
+        
+          <input type="number" name="newStudHoldBit" placeStudHolder="Hold Active" min="0" max="1" required="true"><br>
+          <input type="date" name="newStudHoldDate" placeStudHolder="Hold Date Assigned" required="true"><br>
+        <select id="newStudHoldSelect" name="newStudHoldSelect">
+                <option selected="selected">Choose A Hold</option>
+          <?
+            $newStudHoldSql = "SELECT * FROM Holds ";
+                  $newStudHoldResult = mysqli_query($dataBase, $newStudHoldSql);
 
+
+                  while ($newStudHoldRow = mysqli_fetch_array($newStudHoldResult)) { $newStudHoldRows[] = $newStudHoldRow; }
+                  foreach ($newStudHoldRows as $newStudHoldRow) { 
+                     print "<option value='" . $newStudHoldRow['holdID'] . "'>". $newStudHoldRow['holdID']. " " . $newStudHoldRow['description'] ."</option>";
+                  }
+               ?></select><br>
+             
+              <select id="newStudHoldStudSelect" name="newStudHoldStudSelect">
+                <option selected="selected">Choose A Student</option>
+          <?
+            $newStudHold2Sql = "SELECT * FROM Student INNER JOIN User ON Student.studentID = User.userID";
+                  $newHoldStud2Result = mysqli_query($dataBase, $newStudHold2Sql);
+
+
+                  while ($newHoldStud2Row = mysqli_fetch_array($newHoldStud2Result)) { $newHoldStud2Rows[] = $newHoldStud2Row; }
+                  foreach ($newHoldStud2Rows as $newHoldStud2Row) { 
+                     print "<option value='" . $newHoldStud2Row['studentID'] . "'>". $newHoldStud2Row['firstName']. " " . $newHoldStud2Row['lastName'] ."</option>";
+                  }
+               ?></select><br>
+          <input type="submit" value="Submit" id="submitButton">
+          </form>
+          <button id="doneButton" class="button" onclick="toggleElement( 'newStudHoldDiv', 'buttonBlock12' );">Done</button>
+          </div>
+          <div id="editStudHoldDiv" style="display:none">
+          <form method="post" action=" " id="editStudHoldForm">
+          <input type ="hidden" value="32" name="hiddenButton" id="hiddenButton">
+          
+               <select id="editStudHoldSelect" name="editStudHoldSelect" onchange="populateStudentHoldData(this.value);">
+                <option selected="selected">Choose A Student Hold</option>
+          <?
+            $editStudHoldSql = "SELECT * FROM StudentHolds INNER JOIN User ON StudentHolds.studentID = User.userID ";
+                  $editStudHoldResult = mysqli_query($dataBase, $editStudHoldSql);
+
+
+                  while ($editStudHoldRow = mysqli_fetch_array($editStudHoldResult)) { $editStudHoldRows[] = $editStudHoldRow; }
+                  foreach ($editStudHoldRows as $editStudHoldRow) { 
+                     print "<option value='" . $editStudHoldRow['studentID'] . "'>". $editStudHoldRow['studentID']. " " . $editStudHoldRow['firstName']. " ". $editStudHoldRow['lastName']. " " . $deleteStudHoldRow['holdID'] ."</option>";
+                  }
+               ?>
+            </select><br>
+
+            <div id="restOfStudentHoldsEdit">
+               </div>
+           
+          </form>
+          <button id="doneButton" class="button" onclick="toggleElement( 'editStudHoldDiv', 'buttonBlock12' );">Done</button>
+
+          </div>
+          <div id="deleteStudHoldDiv" style="display:none">
+          <form method="post" action=" " id="deleteStudHoldForm">
+          <input type ="hidden" value="33" name="hiddenButton" id="hiddenButton">
+          <select id="deleteStudHoldSel" name="deleteStudHoldSel"  onchange="populateDeleteStudentHoldData(this.value);">
+             <option selected="selected">Choose A StudHold</option>
+          <?
+            $deleteStudHoldSql =  "SELECT * FROM StudentHolds INNER JOIN User ON StudentHolds.studentID = User.userID ";
+                  $deleteStudHoldResult = mysqli_query($dataBase, $deleteStudHoldSql);
+
+
+                  while ($deleteStudHoldRow = mysqli_fetch_array($deleteStudHoldResult)) { $deleteStudHoldRows[] = $deleteStudHoldRow; }
+                  foreach ($deleteStudHoldRows as $deleteStudHoldRow) { 
+                     print "<option value='" . $deleteStudHoldRow['studentID'] . "'>". $deleteStudHoldRow['studentID']. " " . $deleteStudHoldRow['firstName'] ." " . $deleteStudHoldRow['lastName'] ."</option>";
+                  }
+               ?>
+            </select><br>
+               <div id="restOfStudentHoldsDelete">
+               </div>
+          </form>
+          <button id="doneButton" class="button" onclick="toggleElement( 'deleteStudHoldDiv', 'buttonBlock12' );">Done</button>
+
+          </div>
+          </div>
 
  
 

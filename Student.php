@@ -486,6 +486,7 @@
 	      }
 
 	   ?>
+	   
       </div>
 
       <button class="accordion">Transcript</button> 

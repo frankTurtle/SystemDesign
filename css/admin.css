@@ -173,7 +173,7 @@ header {
   letter-spacing: 7px;
 }
 
-form {
+form{
   position: relative;
   width: 500px;
   margin: 50px auto 100px auto;
@@ -302,3 +302,4 @@ textarea:hover {
   display: flex;
   justify-content: space-between;
 }
+
