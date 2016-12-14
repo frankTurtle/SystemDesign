@@ -2,16 +2,22 @@
    include('Session.php');
 
    if($_SERVER["REQUEST_METHOD"] == "POST") {
-   		$subject = $_POST['sectionID'];
+   		//Fix for dan's schedule 
+   		if($_POST['hiddenButtonSchedule'] > 0){
 
-   		$sql = "INSERT INTO `CourseEnrollment`( `studentID`, `sectionID` )
-                 VALUES ( '$userID', '$subject');";
+   		}else{
 
-        $message = "Successfully Registered";
-        $error = "Duplicate Entry, try again";
+	   		$subject = $_POST['sectionID'];
 
-        if (mysqli_query($dataBase, $sql)) { echo "<script type='text/javascript'>alert('$message');</script>"; }
-        else { echo "<script type='text/javascript'>alert('$error');</script>"; }
+	   		$sql = "INSERT INTO `CourseEnrollment`( `studentID`, `sectionID` )
+	                 VALUES ( '$userID', '$subject');";
+
+	        $message = "Successfully Registered";
+	        $error = "Duplicate Entry, try again";
+
+	        if (mysqli_query($dataBase, $sql)) { echo "<script type='text/javascript'>alert('$message');</script>"; }
+	        else { echo "<script type='text/javascript'>alert('$error');</script>"; }
+	    }
    }
 ?>
 <html>
@@ -158,10 +164,10 @@
 
 						 		success:
 						 		function (response) {
-						 			alert( response );
+						 			// alert( response );
 						 			
 						 			if( response == "true" ){
-						 				document.getElementById("addOrDropClassForm").submit();	
+						 				checkTimeSlot();
 						 			}
 						 			else{
 						 				document.getElementById("answer").innerHTML = "<h1 style='text-align: center'>Dont meet prerequisites. Try again</h1>"
@@ -170,6 +176,41 @@
 								}
 							});
 						}
+
+						function checkTimeSlot(){
+							var selector = document.getElementById('timeSlot');
+						    var timeValue = selector[selector.selectedIndex].value;
+
+						    var termSelector = document.getElementById('termID');
+						    var termValue = termSelector[termSelector.selectedIndex].value;
+
+						    var sectionSelector = document.getElementById('subject');
+						    var sectionValue = sectionSelector[sectionSelector.selectedIndex].value;
+
+							$.ajax({
+								type: 'POST',
+								url: 'CheckTimeSlot.php',
+								data: {
+									  timeSlot:timeValue,
+									  term:termValue,
+									  sectionID:sectionValue
+						 		},
+
+						 		success:
+						 		function (response) {
+						 			// alert( response );
+						 			
+						 			if( response == "true" ){
+						 				document.getElementById("addOrDropClassForm").submit();	
+						 			}
+						 			else{
+						 				document.getElementById("answer").innerHTML = "<h1 style='text-align: center'>Already have a class in that Timeslot!</h1>"
+						 			}
+						  			
+								}
+							});
+						}
+
 					</script>
 
 	            </div>
@@ -392,28 +433,52 @@
     	 </div>
       </div>
 
-      <button class="accordion">Schedule</button> 
-      <div class="panel">
+   <?php
+      if($_POST['hiddenButtonSchedule'] > 0){
+         print "<button class='accordion active'>Schedule</button>";
+         print "<div class='panel show'>";
+      }else{
+         print "<button class='accordion'>Schedule</button>";
+         print "<div class='panel'>";
+      }
 
-	   <?php
-
-	      if($_POST['XXX'] == 2) {
+	      if($_POST['hiddenButtonSchedule'] == 2) {
 	         
 
-	      } else if($_POST['XXX'] == 1)  {
+	      } else if($_POST['hiddenButtonSchedule'] == 1)  {
 
+	      	 $selectedterm2 = $_POST['termID2'];
+	         print "<form method='post' action=' ' id='scheduleselect'>";
+	         print "<select id = 'termID2' name='termID2'><option selected='selected'>Choose A Term</option>";
 
-	      } else {
+	         $termSql2 = "SELECT * FROM Term";
+	         $termResult2 = mysqli_query($dataBase, $termSql2);
+
+	        while ($termRow2 = mysqli_fetch_array($termResult2)) { $termRows2[] = $termRow2; }
+	        foreach ($termRows2 as $rowTerm2) { 
+	           print "<option value='" . $rowTerm2['termID'] . "'>" . $rowTerm2['semester'] . " " . $rowTerm2['year'] . "</option>";
+	        }
+
+	         print "</select>";
+	         print "<input type='hidden' value='1' name='hiddenButtonSchedule' id='hiddenButtonSchedule'>";
+	         print "<input type='submit' value='Submit' id='submitButton2'><br>";
+
 
 	         $sql = "SELECT a.firstname, a.lastname, c.termID, f.courseName, c.sectionNum, g.dayID, g.days, e.timeStart, e.timeEnd FROM User a 
 	         INNER JOIN CourseEnrollment b on a.userID = b.studentID INNER JOIN Section c on b.sectionID = c.sectionID INNER JOIN Timeslot d 
 	         on c.timeslotID = d.timeslotID INNER JOIN Time e on d.timeID = e.timeID INNER JOIN Course f on c.courseID = f.courseID INNER JOIN Day g on d.dayID = g.dayID 
-	         WHERE a.userID =".$userID." AND c.termID =".$semester." ORDER BY e.timeStart, g.dayID";
+	         WHERE a.userID =".$userID." AND c.termID =".$selectedterm2." ORDER BY e.timeStart, g.dayID";
 	         $result6 = mysqli_query($dataBase, $sql);
 	         $rowcount = mysqli_num_rows($result6);
 
+	         if($result6 == '') {
+		        $sql = "SELECT firstname FROM User";
+		     }else {
+		        $rowcount = mysqli_num_rows($result6);
+		     }
+
 	         $slot = array('07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00') ;
-	         print "<br><table width='80%' align='center' if='schdulefaculty'>";
+	         print "<br><table width='80%' align='center' id='schdulefaculty'>";
 	         print "<tr>
 	                   <th>Time</th>
 	                   <th>Monday</th>
@@ -480,7 +545,101 @@
 
 	         }
 	         print "</table>";
-	         print "<input type='hidden' value='1' name='hiddenButtonAdvisor' id='XXX'>";
+	         print "</form>";
+
+	      } else {
+
+	         print "<form method='post' action=' ' id='scheduleselect'>";
+	         print "<select id = 'termID2' name='termID2'><option selected='selected'>Choose A Term</option>";
+
+	         $termSql2 = "SELECT * FROM Term";
+	         $termResult2 = mysqli_query($dataBase, $termSql2);
+
+	        while ($termRow2 = mysqli_fetch_array($termResult2)) { $termRows2[] = $termRow2; }
+	        foreach ($termRows2 as $rowTerm2) { 
+	           print "<option value='" . $rowTerm2['termID'] . "'>" . $rowTerm2['semester'] . " " . $rowTerm2['year'] . "</option>";
+	        }
+
+	         print "</select>";
+	         print "<input type='hidden' value='1' name='hiddenButtonSchedule' id='hiddenButtonSchedule'>";
+	         print "<input type='submit' value='Submit' id='submitButton2'><br>";
+
+
+	         $sql = "SELECT a.firstname, a.lastname, c.termID, f.courseName, c.sectionNum, g.dayID, g.days, e.timeStart, e.timeEnd FROM User a 
+	         INNER JOIN CourseEnrollment b on a.userID = b.studentID INNER JOIN Section c on b.sectionID = c.sectionID INNER JOIN Timeslot d 
+	         on c.timeslotID = d.timeslotID INNER JOIN Time e on d.timeID = e.timeID INNER JOIN Course f on c.courseID = f.courseID INNER JOIN Day g on d.dayID = g.dayID 
+	         WHERE a.userID =".$userID." AND c.termID =".$semester." ORDER BY e.timeStart, g.dayID";
+	         $result6 = mysqli_query($dataBase, $sql);
+	         $rowcount = mysqli_num_rows($result6);
+
+	         $slot = array('07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00') ;
+	         print "<br><table width='80%' align='center' id='schdulefaculty'>";
+	         print "<tr>
+	                   <th>Time</th>
+	                   <th>Monday</th>
+	                   <th>Tuesday</th>
+	                   <th>Wednesday</th>
+	                   <th>Thrusday</th>
+	                   <th>Friday</th>
+	                   <th>Saturday</th></tr>";
+
+	         for($x = 0; $x <= 15; $x++) {
+
+	             print "<tr><th>".$slot[$x]."</th>";
+	             print "<th>";
+
+
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='M' || $row6['days'] == 'MW') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
+
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='T' || $row6['days'] == 'TTH') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
+
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='W' || $row6['days'] == 'MW') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
+
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='TH' || $row6['days'] == 'TTH') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
+
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='F') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th><th>";
+
+	             $result6 = mysqli_query($dataBase, $sql);
+	             while ($row6 = mysqli_fetch_array($result6)) {                            
+	                     if(($row6['days'] =='S') && $slot[$x] == $row6['timeStart']){
+	                         print $row6['courseName'];
+	                     }
+	               }
+	                        print "</th></tr>";
+
+
+	         }
+	         print "</table>";
 	         print "</form>";
 
 	      }

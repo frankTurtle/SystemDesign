@@ -24,17 +24,28 @@
           while( $gradesArray = mysqli_fetch_array($currentGrades) ) { $grades[] = $gradesArray; }
           while( $preRequeIDS = mysqli_fetch_array($preReqResults) ) { $preReq[] = $preRequeIDS; }
 
-          foreach( $preReq as $id ){
+          // print "Section: " . $sectionID . "  ";
+          // print "ID: " . $userID . "\r\n";
+          // print "Grades count: " . count($grades) . "\r\n";
+
+          if( count($preReq) != 0 && count($grades) != 0 ){
+            foreach( $preReq as $id ){
+              // print "inside prereq for";
               foreach ($grades as $grade) { 
-                  if( $grade['courseID'] == $id ){
-                      if( !is_null($grade['finalGrade']) && $grade['finalGrade'] > 2.0 ){
-                          $answer = "true";
-                      }
-                      else{
+                  // print "inside grades for-- ";
+                  // print $grade['courseID'];
+                  // print "  id ". $id['prerequisiteID'];
+
+                // print "GradeID: " . $grade['courseID'] . " PREID: " . $id['prerequisiteID'] . "\r\n";
+                  if( $grade['courseID'] == $id['prerequisiteID'] ){
+                      // print "***inside if grade == ID***";
+
+                      if( is_null($grade['finalGrade']) && $grade['finalGrade'] < 2.0 ){
                           $answer = "false";
                       }
                   }
               }    
+            }  
           }
 
           print $answer;

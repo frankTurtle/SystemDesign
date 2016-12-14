@@ -226,6 +226,150 @@
           print"<input type='text' name='editCollegeAdmitted' value='" . $collegeData['collegeAdmitted'] . "'><br>";
           print"<input type='submit' value='Edit' id='submitButton'>";
       }
+  
+  
+  if( isset($_POST['studentHoldIDSent']) ){
+          $studentID = $_POST['studentHoldIDSent'];
+
+          $studHoldSQL = "SELECT * FROM StudentHolds WHERE studentID = '$studentID'";
+          $studHoldSQLResult = mysqli_query($dataBase, $studHoldSQL);
+
+          $studHoldData = mysqli_fetch_assoc( $studHoldSQLResult );
+          
+                print"<select id='editStudentHoldSel' name='editStudentHoldSel'>";
+
+          $editStudHoldSql = "SELECT * FROM StudentHolds WHERE studentID = '$studentID'";
+          $editstudHoldResult = mysqli_query($dataBase, $editStudHoldSql);
+
+          while ($editStudHoldRow = mysqli_fetch_array($editstudHoldResult)) { $editStudHoldRows[] = $editStudHoldRow; }
+          foreach ($editStudHoldRows as $editStudHoldRow) { 
+                  print "<option value='" . $editStudHoldRow['holdID'] . "'>". $editStudHoldRow['holdID']."</option>"; 
+          }
+          
+          print"</select><br>";
+           
+
+          print"<input type='number' name='editStudHoldBit' value='" . $studHoldData['active'] . "'><br>";
+          print"<input type='date' name='editStudHoldDate' value='" . $studHoldData['dateCreated'] . "'><br>";
+          print"<input type='submit' value='Edit' id='submitButton'>";
+      }
+      
+      
+      if( isset($_POST['deletestudentHoldIDSent']) ){
+          $studentID = $_POST['deletestudentHoldIDSent'];
+
+          $studHoldSQL = "SELECT * FROM StudentHolds WHERE studentID = '$studentID'";
+          $studHoldSQLResult = mysqli_query($dataBase, $studHoldSQL);
+
+          $studHoldData = mysqli_fetch_assoc( $studHoldSQLResult );
+          
+                print"<select id='deleteStudentHoldIDSel' name='deleteStudentHoldIDSel'>";
+
+          $deleteStudHoldSql = "SELECT * FROM StudentHolds WHERE studentID = '$studentID'";
+          $deletestudHoldResult = mysqli_query($dataBase, $deleteStudHoldSql);
+
+          while ($deleteStudHoldRow = mysqli_fetch_array($deletestudHoldResult)) { $deleteStudHoldRows[] = $deleteStudHoldRow; }
+          foreach ($deleteStudHoldRows as $deleteStudHoldRow) { 
+                  print "<option value='" . $deleteStudHoldRow['holdID'] . "'>". $deleteStudHoldRow['holdID']."</option>"; 
+          }
+          
+          print"</select><br>";
+           
+
+
+          print"<input type='submit' value='delete' id='submitButton'>";
+      }
+      
+      if( isset($_POST['newCourseEnrollTerm']) ){
+          $termID = $_POST['newCourseEnrollTerm'];
+
+         
+          
+                print"<select id='newCourseEnrollSectionSel' name='newCourseEnrollSectionSel'>";
+
+          $addcoureEnrollSQL = "SELECT * FROM Section INNER JOIN Course ON Section.courseID=Course.courseID WHERE termID = '$termID'";
+          $addcoureEnrollResult = mysqli_query($dataBase, $addcoureEnrollSQL);
+
+          while ($addcoureEnrollRow = mysqli_fetch_array($addcoureEnrollResult)) { $addcoureEnrollRows[] = $addcoureEnrollRow; }
+          foreach ($addcoureEnrollRows as $addcoureEnrollRow) { 
+                  print "<option value='" . $addcoureEnrollRow['sectionID'] . "'>". $addcoureEnrollRow['courseName']. " " .$addcoureEnrollRow['sectionNum']. "</option>"; 
+          }
+          
+          print"</select><br>";
+           
+
+
+          print"<input type='submit' value='submit' id='submitButton'>";
+      }
+      
+      if( isset($_POST['editCourseEnrollTerm']) ){
+          $sectionID = $_POST['editCourseEnrollTerm'];
+
+          $coureEnrollSQL = "SELECT * FROM CourseEnrollment WHERE sectionID = '$sectionID'";
+          $coureEnrollSQLResult = mysqli_query($dataBase, $coureEnrollSQL);
+
+          $coureEnrollData = mysqli_fetch_assoc( $studHoldSQLResult );
+          
+                print"<select id='editCourseEnrollSectionSel' name='editCourseEnrollSectionSel'>";
+
+          $editcoureEnrollSQL = "SELECT * FROM CourseEnrollment INNER JOIN User ON CourseEnrollment.studentID=User.userID WHERE sectionID = '$sectionID'";
+          $editcoureEnrollResult = mysqli_query($dataBase, $editcoureEnrollSQL);
+
+          while ($editcoureEnrollRow = mysqli_fetch_array($editcoureEnrollResult)) { $editcoureEnrollRows[] = $editcoureEnrollRow; }
+          foreach ($editcoureEnrollRows as $editcoureEnrollRow) { 
+                  print "<option value='" . $editcoureEnrollRow['studentID'] . "'>". $editcoureEnrollRow['firstName']. " " .$editcoureEnrollRow['lastName']. "</option>"; 
+          }
+          
+          print"</select><br>";
+           
+          print"<select name='midTermGrade' required='true' id='midTermGrade'>";
+          print"<option value='U'>Unsatisfactory</option>";
+          print"<option value='s'>Satisfactory</option>";
+          print"</select><br>";
+          
+          print"<select name='finalGrade' required='true' id='finalGrade'>";
+          print"<option value='A'>A</option>";
+          print"<option value='A-'>A-</option>";
+          print"<option value='B+'>B+</option>";
+          print"<option value='B'>B</option>";
+          print"<option value='B-'>B-</option>";
+          print"<option value='C+'>C+</option>";
+          print"<option value='C'>C</option>";
+          print"<option value='C-'>D-</option>";
+          print"<option value='D+'>D+</option>";
+          print"<option value='D'>D</option>";
+          print"<option value='D-'>D-</option>";
+          print"<option value='F'>F</option>";
+         
+          print"</select><br>";
+
+          print"<input type='submit' value='edit' id='submitButton'>";
+      }
+      
+       if( isset($_POST['deleteCourseEnrollTerm']) ){
+          $sectionID = $_POST['deleteCourseEnrollTerm'];
+
+          $coureEnrollSQL = "SELECT * FROM CourseEnrollment WHERE sectionID = '$sectionID'";
+          $coureEnrollSQLResult = mysqli_query($dataBase, $coureEnrollSQL);
+
+          $coureEnrollData = mysqli_fetch_assoc( $studHoldSQLResult );
+          
+                print"<select id='editCourseEnrollSectionSel' name='editCourseEnrollSectionSel'>";
+
+          $editcoureEnrollSQL = "SELECT * FROM CourseEnrollment INNER JOIN User ON CourseEnrollment.studentID=User.userID WHERE sectionID = '$sectionID'";
+          $editcoureEnrollResult = mysqli_query($dataBase, $editcoureEnrollSQL);
+
+          while ($editcoureEnrollRow = mysqli_fetch_array($editcoureEnrollResult)) { $editcoureEnrollRows[] = $editcoureEnrollRow; }
+          foreach ($editcoureEnrollRows as $editcoureEnrollRow) { 
+                  print "<option value='" . $editcoureEnrollRow['studentID'] . "'>". $editcoureEnrollRow['studentID'] ." ". $editcoureEnrollRow['firstName']. " " .$editcoureEnrollRow['lastName']. "</option>"; 
+          }
+          
+          print"</select><br>";
+           
+     
+
+          print"<input type='submit' value='delete' id='submitButton'>";
+      }
   }
 
   function getSelectedRoom( $roomType, $value ){
